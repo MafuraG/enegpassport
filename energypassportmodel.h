@@ -12,7 +12,7 @@ public:
     ~EnergyPassportModel();
 private:
 	//Energy passport of building
-	QString energy_passport_building = "ЭНЕРГЕТИЧЕСКИЙ ПАСПОРТ ЗДАНИЯ";
+    QString energy_passport_building = "ЭНЕРГЕТИЧЕСКИЙ ПАСПОРТ ЗДАНИЯ";
     //conditions for calculations
     QString calc_conditions = "Расчетные условия";
     QString temp_air_internal  = "Расчетная температура внутреннего воздуха";
@@ -23,7 +23,7 @@ private:
     QString heating_period_degree_days = "Градусо-сутки отопительного периода";
 
     //Geometric and Heating variables
-	QString geometric_thermal_indicators = "Геометрические и теплоэнергетические показатели";
+    QString geometric_thermal_indicators = "Геометрические и теплоэнергетические показатели";
     QString area_all_floors = "Сумма площадей этажей здания";
     QString area_living_space = "Площадь жилых помещений";
     QString area_common_space = "Расчетная площадь (общественных зданий)";
@@ -54,7 +54,7 @@ private:
     QString area_facing_NW = "СЗ";
 
     //Thermal Technical indicators
-	QString thermal_indicators = "Теплотехнические показатели";
+    QString thermal_indicators = "Теплотехнические показатели";
     QString thermal_R_boundary = "Приведенное сопротивление теплопередаче наружных ограждений,   в том числе:";
     QString thermal_R_facade_keramzitbeton = "навесной фасадной системы с основанием из керамзитобетона";
     QString thermal_R_facade_beton = "навесной фасадной системы с основанием из железобетона";
@@ -69,7 +69,7 @@ private:
     QString thermal_R_proezd ="перекрытий над проездами и под эркерами";
 
     //other indicators
-	QString other_indicators = "Показатели вспомагательные";
+    QString other_indicators = "Показатели вспомагательные";
     QString thermal_C_coeff = "Приведенный трмнсмиссионный коэфициент теплопередачи здания"; //thermal conductence
     QString ventilation_cycle = "Кратность воздухообмена здания за отопительный период при удельной норме воздухообмена";
     QString thermal_E_building ="Удельные бытовые тепловыделения в здании"; //thermal emissions
@@ -77,28 +77,28 @@ private:
 
 
     //specific indicators
-	QString specific_indicators = "Удельные характеристики";
+    QString specific_indicators = "Удельные характеристики";
     QString specific_Thermal_Protection = "Удельная теплозащитная характеристика здания";
     QString specific_Ventilation_Characteristics = "Удельная вентиляционная характеристика здания";
     QString specific_Thermal_Emission = "Удельная характеристика бытовых тепловыделений здания";
     QString specific_Solar_Reception = "Удельная характеристика теплопоступлений в здание от солнечной радиации";
 
     //coefficients
-	QString coefficients = "Коэффициенты";
+    QString coefficients = "Коэффициенты";
     QString coeff_auto_reg = "Коэффициент эффективности авторегулирования";
     QString coeff_reduction = "Коэффициент, учитывающий снижение теплопотребления жилых зданий при наличии поквартирного учета тепловой энергии на отопление";
-	QString coeff_recuperation = "Коэффициент эффективности рекуператора";
+    QString coeff_recuperation = "Коэффициент эффективности рекуператора";
     QString coeff_effectiveness = "Коэффициент эффективности рекуператора";
     QString coeff_additional = "Коэффициент учета дополнительного теплопотребления";
 
     //complex indicators
-	QString complex_indicators = "Комплексные показатели расхода тепловой энергии";
+    QString complex_indicators = "Комплексные показатели расхода тепловой энергии";
     QString thermal_usage_calc = "Расчетный удельный расход тепловой энергии на отопление здания";
     QString thermal_usage_norminal ="Нормируемый удельный расход тепловой энергии на отопление здания";
     QString thermal_usage_class = "Класс энергетической эффективности";
 
     //Thermal load of building
-	QString thermal_usage_building = "Энергетические нагрузки здания";
+    QString thermal_usage_building = "Энергетические нагрузки здания";
     QString thermal_usage_spec_heating_season = "Удельный расход тепловой энергии на отопление зданий за отопительный период";
     QString thermal_usage_calc_heating_season = "Расход тепловой энергии на отопление зданий за отопительный период";
     QString thermal_wastage_heating_season = "Общие теплопотери здания за отопительный период";

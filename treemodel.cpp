@@ -1,12 +1,12 @@
 #include "treeitem.h"
 #include "treemodel.h"
 
-TreeModel::TreeModel(const QString &data, QObject *parent)
+TreeModel::TreeModel(const const QString &data, QObject *parent)
 {
     QList<QVariant> rootData;
     rootData<< "Title" << "Summary";
     rootItem = new TreeItem(rootData);
-    setupModelData(data.split(QString("\n")),rootItem);
+    setupModelData(data.split(const QString("\n")),rootItem);
 }
 
 TreeModel::~TreeModel()
@@ -16,11 +16,11 @@ TreeModel::~TreeModel()
 
 QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) const
 {
-    if (!hasIndex(row,column.parent))
+    if (!hasIndex(row,column,parent))
         return QModelIndex();
     TreeItem *parentItem;
 
-    if (!parent.isValid()())
+    if (!parent.isValid())
         parentItem = rootItem;
     else
         parentItem = static_cast<TreeItem*>(parent.internalPointer());
@@ -32,7 +32,7 @@ QModelIndex TreeModel::index(int row, int column, const QModelIndex &parent) con
         return QModelIndex();
 }
 
-QModelIndex TreeModel::parent(const QModelIndex &child) const
+QModelIndex TreeModel::parent(const QModelIndex &index) const
 {
     if (!index.isValid())
         return QModelIndex();
@@ -40,10 +40,10 @@ QModelIndex TreeModel::parent(const QModelIndex &child) const
     TreeItem *childItem = static_cast<TreeItem*>(index.internalPointer());
     TreeItem *parentItem = childItem->parentItem();
 
-    if(parentItem == rootItem)
+    if (parentItem == rootItem)
         return QModelIndex();
 
-    return createIndex(parentItem->row(),0,parentItem);
+    return createIndex(parentItem->row(), 0, parentItem);
 }
 
 int TreeModel::rowCount(const QModelIndex &parent) const
@@ -114,11 +114,11 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
             position++;
         }
 
-        QString lineData = lines[number].mid(position).trimmed();
+        const QString lineData = lines[number].mid(position).trimmed();
 
         if (!lineData.isEmpty()) {
             // Read the column data from the rest of the line.
-            QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
+            QStringList columnStrings = lineData.split("\t", const QString::SkipEmptyParts);
             QList<QVariant> columnData;
             for (int column = 0; column < columnStrings.count(); ++column)
                 columnData << columnStrings[column];
