@@ -1,6 +1,8 @@
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
 
+#include "treeitem.h"
+
 #include <QAbstractItemModel>
 
 
@@ -10,7 +12,7 @@ class TreeModel : public QAbstractItemModel
     Q_OBJECT
 
     public:
-        explicit TreeModel(const const QString &data, QObject *parent = 0);
+        explicit TreeModel(const QString &data, QObject *parent = 0);
         ~TreeModel();
 
         QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;

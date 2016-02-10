@@ -1,12 +1,13 @@
 #include "treeitem.h"
 #include "treemodel.h"
 
-TreeModel::TreeModel(const const QString &data, QObject *parent)
+TreeModel::TreeModel(const QString &data, QObject *parent)
+    :QAbstractItemModel(parent)
 {
     QList<QVariant> rootData;
-    rootData<< "Title" << "Summary";
+    rootData<<" ЭНЕРГЕТИЧЕСКИЙ ПАСПОРТ ЗДАНИЯ ";
     rootItem = new TreeItem(rootData);
-    setupModelData(data.split(const QString("\n")),rootItem);
+    setupModelData(data.split(QString("\n")),rootItem);
 }
 
 TreeModel::~TreeModel()
@@ -118,7 +119,7 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
 
         if (!lineData.isEmpty()) {
             // Read the column data from the rest of the line.
-            QStringList columnStrings = lineData.split("\t", const QString::SkipEmptyParts);
+            QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
             QList<QVariant> columnData;
             for (int column = 0; column < columnStrings.count(); ++column)
                 columnData << columnStrings[column];
