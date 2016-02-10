@@ -8,12 +8,15 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    ui->setupUi(this);
+
+    QStringList headers;
+       headers << tr("Title") << tr("Description");
+
     QFile file(":/menu_structure.txt");
     file.open(QIODevice::ReadOnly);
-    model = new TreeModel(file.readAll());
+    model = new TreeModel(headers,file.readAll());
     file.close();
-
-    ui->setupUi(this);
 
     ui->treeView->setModel(model);
 }
