@@ -81,7 +81,7 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
-    if (index.column() == 0)
+    if (index.column() == 0 || index.column() == 1)
         return QAbstractItemModel::flags(index);
     return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
@@ -223,6 +223,7 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
     QList<int> indentations;
     parents << parent;
     indentations << 0;
+    int columns_max = 5;
 
     int number = 0;
 
@@ -239,6 +240,12 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
         if (!lineData.isEmpty()) {
             // Read the column data from the rest of the line.
             QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
+            //Padding
+            if (columnStrings.count() < columns_max ){
+                for(int column = columnStrings.count();column < columns_max  ; column ++){
+                    columnStrings.append("--");
+                }
+            }
             QVector<QVariant> columnData;
             for (int column = 0; column < columnStrings.count(); ++column)
                 columnData << columnStrings[column];

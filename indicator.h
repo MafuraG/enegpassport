@@ -5,11 +5,11 @@
 
 
 
-class Measure
+class Indicator
 {
 public:
-    Measure();
-    ~Measure();
+    Indicator();
+    ~Indicator();
     QString unit() const;
     void setUnit(const QString &unit);
 
@@ -22,11 +22,15 @@ public:
     double factValue() const;
     void setFactValue(double factValue);
 
+    bool calculated() const;
+    void setCalculated(bool calculated);
+
 private :
     QString m_unit;
     double m_nomValue;
     double m_calcValue;
     double m_factValue;
+    bool m_calculated;
 };
 
 #endif // MEASURE_H

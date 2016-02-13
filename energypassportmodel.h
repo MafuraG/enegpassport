@@ -10,7 +10,7 @@ class EnergyPassportModel
 public:
     EnergyPassportModel();
     ~EnergyPassportModel();
-private:
+
 	//Energy passport of building
     QString energy_passport_building = "ЭНЕРГЕТИЧЕСКИЙ ПАСПОРТ ЗДАНИЯ";
     //conditions for calculations
@@ -102,8 +102,22 @@ private:
     QString thermal_usage_spec_heating_season = "Удельный расход тепловой энергии на отопление зданий за отопительный период";
     QString thermal_usage_calc_heating_season = "Расход тепловой энергии на отопление зданий за отопительный период";
     QString thermal_wastage_heating_season = "Общие теплопотери здания за отопительный период";
+	//Calaculated indicators 
+	//Показатель компактности здания
+    double compactnessFactor (const TreeModel &model);
+	//Кратность воздухообмена здания за отопительный период при удельной норме воздухообмена
+	double kratnostvozdukhobmen(const TreeModel &model);
+	//Удельная теплозащитная характеристика здания
+	double udelnayateplozashita(const TreeModel &model);
+	//Удельная вентиляционная характеристика здания
+	double udelnayaventilyatsii(const TreeModel &model);
+	//Удельная характеристика бытовых тепловыделений здания
+	double udelnayatenlovyidelenie(const TreeModel &model);
+	//Удельная характеристика теплопоступлений в здание от солнечной радиации
+	double udelnayatenlopostunleniesontse(const &model);
+	
 
-
+private:
 
 };
 

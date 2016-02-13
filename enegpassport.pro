@@ -19,13 +19,13 @@ SOURCES += main.cpp\
     treeitem.cpp \
     treemodel.cpp \
     energypassportmodel.cpp \
-    measure.cpp
+    indicator.cpp
 
 HEADERS  += mainwindow.h \
     treeitem.h \
     treemodel.h \
     energypassportmodel.h \
-    measure.h
+    indicator.h
 
 FORMS    += mainwindow.ui
 

@@ -11,7 +11,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     QStringList headers;
-       headers << tr("Title") << tr("Description");
+       headers << tr("Показатель") << tr("Обозначение показателя и единицы измерения")<< tr("Нормативное значение показателя")<< tr("Расчетное (проектное) значение показателя")<<tr("Фактическое значение показателя");
 
     QFile file(":/menu_structure.txt");
     file.open(QIODevice::ReadOnly);
@@ -19,6 +19,10 @@ MainWindow::MainWindow(QWidget *parent) :
     file.close();
 
     ui->treeView->setModel(model);
+
+    for(int column = 0; column< model->columnCount(); ++column){
+        ui->treeView->resizeColumnToContents(column);
+    }
 }
 
 MainWindow::~MainWindow()
