@@ -1,6 +1,8 @@
 #ifndef ENERGYPASSPORTMODEL_H
 #define ENERGYPASSPORTMODEL_H
 
+#include "treemodel.h"
+
 #include <QString>
 
 
@@ -10,6 +12,21 @@ class EnergyPassportModel
 public:
     EnergyPassportModel();
     ~EnergyPassportModel();
+	//Общая информация
+	QString data_zapolnenya  = "Дата заполнения (число, м-ц, год)";	
+	Qstring address_zdaniya = "Адрес здания";
+	QString razrabochik = "Разработчик проекта";
+	QString addr_tel_razrabotchika = "Адрес и телефон разработчика";
+	QString shriff_proekta = "Шифр проекта";	
+	QString naznacheniye_zdaniya = "Назначение здания, серия";
+	QString etaj_kol_sektsii = "Этажность, количество секций";
+	QString kol_kvartir = "Количество квартир";
+	QString kol_zhitelej = "Расчетное количество жителей или служащих";	
+	QString razmeshhenie_zastrojke = "Размещение в застройке";
+	QString konstruktivnoe_reshenie = "Конструктивное решение";
+    QString vysota_zdaniya = "высота здания";
+    QString max_wind_velocity = "максимальная скорость  ветра за январь";
+
 
 	//Energy passport of building
     QString energy_passport_building = "ЭНЕРГЕТИЧЕСКИЙ ПАСПОРТ ЗДАНИЯ";
@@ -90,6 +107,7 @@ public:
     QString coeff_recuperation = "Коэффициент эффективности рекуператора";
     QString coeff_effectiveness = "Коэффициент эффективности рекуператора";
     QString coeff_additional = "Коэффициент учета дополнительного теплопотребления";
+	QString coeff_volume_reduction = "коэффициент снижения объема воздуха в здании, учитывающий наличие внутренних ограждающих конструкций";
 
     //complex indicators
     QString complex_indicators = "Комплексные показатели расхода тепловой энергии";
@@ -102,22 +120,31 @@ public:
     QString thermal_usage_spec_heating_season = "Удельный расход тепловой энергии на отопление зданий за отопительный период";
     QString thermal_usage_calc_heating_season = "Расход тепловой энергии на отопление зданий за отопительный период";
     QString thermal_wastage_heating_season = "Общие теплопотери здания за отопительный период";
+
+    //Other indicators not directly mentioned but used
+    QString  n_chisov_ventilyatsi = "число часов работы вентиляции в течение недели, равное для рассматриваемого здания";
+	QString norm_vozdukh_pronisaemost_dver = "нормируемая воздухопроницаемость дверей";
+	QString norm_vozdukh_pronisaemost_okon = "нормируемая воздухопроницаемость окон";  //Таблица 11 СниП 23-02
 	//Calaculated indicators 
 	//Показатель компактности здания
-    double compactnessFactor (const TreeModel &model);
+    double compactnessFactor ();
 	//Кратность воздухообмена здания за отопительный период при удельной норме воздухообмена
-	double kratnostvozdukhobmen(const TreeModel &model);
+    double kratnostvozdukhobmen();
 	//Удельная теплозащитная характеристика здания
-	double udelnayateplozashita(const TreeModel &model);
+    double udelnayateplozashita();
 	//Удельная вентиляционная характеристика здания
-	double udelnayaventilyatsii(const TreeModel &model);
+    double udelnayaventilyatsii();
 	//Удельная характеристика бытовых тепловыделений здания
-	double udelnayatenlovyidelenie(const TreeModel &model);
+    double udelnayatenlovyidelenie();
 	//Удельная характеристика теплопоступлений в здание от солнечной радиации
-	double udelnayatenlopostunleniesontse(const &model);
+    double udelnayatenlopostunleniesontse();
 	
 
+    TreeModel *getModel() const;
+    void setModel(TreeModel *value);
+
 private:
+    TreeModel *model;
 
 };
 

@@ -81,6 +81,7 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
+    //column 0 and 1 are not editable
     if (index.column() == 0 || index.column() == 1)
         return QAbstractItemModel::flags(index);
     return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
@@ -94,6 +95,18 @@ TreeItem *TreeModel::getItem(const QModelIndex &index) const
             return item;
     }
     return rootItem;
+}
+
+void TreeModel::refreshCache(const TreeItem * item)
+{
+    if (item != null){
+        cache[item->data(0)] = item;
+        if (item->childCount() > 0 ){
+            for (int i = 0 ; i < item->childCount(); i++){
+                refreshCache(item->child(i));
+            }
+        }
+    }
 }
 
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
@@ -180,6 +193,26 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
     endRemoveRows();
 
     return success;
+}
+
+Indicator* TreeModel::getIndicatorByName(const QString name)
+{
+
+    if (cache.contains(name)){
+        //tree item found in this treeitem
+        TreeItem *tree = cache.value(name);
+        Indicator *i = new Indicator();
+        QString val = tree->data(2);
+        i->setNomValue(val::toDouble());
+        val = tree->data(3);
+        i->setCalculated(val::toDouble());
+        val = tree->data(4);
+        i->setFactValue(val::toDouble());
+        return i;
+    }
+
+    return null;
+
 }
 
 int TreeModel::rowCount(const QModelIndex &parent) const
@@ -274,4 +307,6 @@ void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
 
         ++number;
     }
+
+    refreshCache(rootItem);
 }

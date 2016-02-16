@@ -41,6 +41,9 @@
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
 
+#include "indicator.h"
+//#include "treeitem.h"
+
 #include <QAbstractItemModel>
 #include <QModelIndex>
 #include <QVariant>
@@ -80,13 +83,15 @@ public:
     bool insertRows(int position, int rows,
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
     bool removeRows(int position, int rows,
-                    const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
-
+                    const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;    
+    Indicator getIndicatorByName(const QString name);
 private:
     void setupModelData(const QStringList &lines, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;
+    void refreshCache(const TreeItem *item);
 
     TreeItem *rootItem;
+    QHash<QString, TreeItem *> cache; //usefull coz we will be doing a lot of lookups
 };
 
 #endif // TREEMODEL_H
