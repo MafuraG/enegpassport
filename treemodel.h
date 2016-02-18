@@ -41,12 +41,14 @@
 #ifndef TREEMODEL_H
 #define TREEMODEL_H
 
-#include "indicator.h"
 //#include "treeitem.h"
+
+#include "pakazatel.h"
 
 #include <QAbstractItemModel>
 #include <QModelIndex>
 #include <QVariant>
+#include <QHash>
 
 class TreeItem;
 
@@ -84,11 +86,11 @@ public:
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;
     bool removeRows(int position, int rows,
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;    
-    Indicator getIndicatorByName(const QString name);
+    Pakazatel* getIndicatorByName(const QString name);
 private:
     void setupModelData(const QStringList &lines, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;
-    void refreshCache(const TreeItem *item);
+    void refreshCache(TreeItem *item);
 
     TreeItem *rootItem;
     QHash<QString, TreeItem *> cache; //usefull coz we will be doing a lot of lookups

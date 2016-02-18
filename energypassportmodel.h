@@ -14,7 +14,7 @@ public:
     ~EnergyPassportModel();
 	//Общая информация
 	QString data_zapolnenya  = "Дата заполнения (число, м-ц, год)";	
-	Qstring address_zdaniya = "Адрес здания";
+    QString address_zdaniya = "Адрес здания";
 	QString razrabochik = "Разработчик проекта";
 	QString addr_tel_razrabotchika = "Адрес и телефон разработчика";
 	QString shriff_proekta = "Шифр проекта";	
@@ -105,7 +105,7 @@ public:
     QString coeff_auto_reg = "Коэффициент эффективности авторегулирования";
     QString coeff_reduction = "Коэффициент, учитывающий снижение теплопотребления жилых зданий при наличии поквартирного учета тепловой энергии на отопление";
     QString coeff_recuperation = "Коэффициент эффективности рекуператора";
-    QString coeff_effectiveness = "Коэффициент эффективности рекуператора";
+    //QString coeff_effectiveness = "Коэффициент эффективности рекуператора";
     QString coeff_additional = "Коэффициент учета дополнительного теплопотребления";
 	QString coeff_volume_reduction = "коэффициент снижения объема воздуха в здании, учитывающий наличие внутренних ограждающих конструкций";
 
@@ -127,7 +127,7 @@ public:
 	QString norm_vozdukh_pronisaemost_okon = "нормируемая воздухопроницаемость окон";  //Таблица 11 СниП 23-02
 	//Calaculated indicators 
 	//Показатель компактности здания
-    double compactnessFactor ();
+    double kompactnost ();
 	//Кратность воздухообмена здания за отопительный период при удельной норме воздухообмена
     double kratnostvozdukhobmen();
 	//Удельная теплозащитная характеристика здания
@@ -141,11 +141,16 @@ public:
 	
 
     TreeModel *getModel() const;
-    void setModel(TreeModel *value);
+    void setModel(TreeModel *value);    
 
+
+
+    double raschetGSOP();
 private:
     TreeModel *model;
-
+    double paznostDavlenie(const double k, const double y_int, const double v, const double y_ext);
+    double soprativlenieVozdukhProniknovenie(const double Gn, const double delta_P_x, const double delta_P);
+    double kolichestvoinfiltrvozdukh(const double delta_P_okna, const double delta_P_dver, const double A_dv, const double R_ok, const double R_dv, const double A_ok);
 };
 
 #endif // ENERGYPASSPORTMODEL_H

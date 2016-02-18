@@ -97,10 +97,11 @@ TreeItem *TreeModel::getItem(const QModelIndex &index) const
     return rootItem;
 }
 
-void TreeModel::refreshCache(const TreeItem * item)
+void TreeModel::refreshCache(TreeItem * item)
 {
-    if (item != null){
-        cache[item->data(0)] = item;
+    if (item != nullptr){
+        QString key = item->data(0).toString();
+        cache[key] = item;
         if (item->childCount() > 0 ){
             for (int i = 0 ; i < item->childCount(); i++){
                 refreshCache(item->child(i));
@@ -195,23 +196,23 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
     return success;
 }
 
-Indicator* TreeModel::getIndicatorByName(const QString name)
+Pakazatel* TreeModel::getIndicatorByName(const QString name)
 {
 
     if (cache.contains(name)){
         //tree item found in this treeitem
         TreeItem *tree = cache.value(name);
-        Indicator *i = new Indicator();
-        QString val = tree->data(2);
-        i->setNomValue(val::toDouble());
+        Pakazatel *i = new Pakazatel();
+        QVariant val = tree->data(2);
+        i->setNomValue(val.toDouble());
         val = tree->data(3);
-        i->setCalculated(val::toDouble());
+        i->setCalculated(val.toDouble());
         val = tree->data(4);
-        i->setFactValue(val::toDouble());
+        i->setFactValue(val.toDouble());
         return i;
     }
 
-    return null;
+    return nullptr;
 
 }
 

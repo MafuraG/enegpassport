@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui sql
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -19,13 +19,21 @@ SOURCES += main.cpp\
     treeitem.cpp \
     treemodel.cpp \
     energypassportmodel.cpp \
-    indicator.cpp
+    pakazatel.cpp \
+    dbctx.cpp \
+    fragment.cpp \
+    section.cpp \
+    entity.cpp
 
 HEADERS  += mainwindow.h \
     treeitem.h \
     treemodel.h \
     energypassportmodel.h \
-    indicator.h
+    pakazatel.h \
+    dbctx.h \
+    fragment.h \
+    section.h \
+    entity.h
 
 FORMS    += mainwindow.ui
 
