@@ -206,7 +206,7 @@ Pakazatel* TreeModel::getIndicatorByName(const QString name)
         QVariant val = tree->data(2);
         i->setNomValue(val.toDouble());
         val = tree->data(3);
-        i->setCalculated(val.toDouble());
+        i->setCalcValue(val.toDouble());
         val = tree->data(4);
         i->setFactValue(val.toDouble());
         return i;

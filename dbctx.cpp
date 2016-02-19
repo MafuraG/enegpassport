@@ -20,7 +20,7 @@ dbctx::dbctx(const QString &dbtype, const QString &dbname)
     }
     else
     {
-        qDebug()<< "Error :"<<db.lastError();
+        //qDebug()<< "Error :"<<db.lastError();
     }
 }
 
@@ -29,7 +29,7 @@ dbctx::~dbctx()
 
 }
 
-void dbctx::getSections(QList<Section> &sectionList,const QStringList filter)
+void dbctx::getSections(QList<Entity*> &sectionList,const QStringList filter)
 {
     sectionList.clear();
     QStringList columns;
@@ -37,14 +37,15 @@ void dbctx::getSections(QList<Section> &sectionList,const QStringList filter)
     columns.append(Section::Name);
 
     QString q;
-    Section s;
+    Section *s;
     buildSelectQuery(q,columns,Section::EntityName,filter);
 
     if(query.exec(q))
     {
         while (query.next()){
-            s.setId(query.value(Section::ID).toInt());
-            s.setName(query.value(Section::Name).toString());
+            s = new Section();
+            s->setId(query.value(Section::ID).toInt());
+            s->setName(query.value(Section::Name).toString());
             sectionList.append(s);
         }
     }
@@ -52,7 +53,7 @@ void dbctx::getSections(QList<Section> &sectionList,const QStringList filter)
     refreshCache(sectCache,sectionList);
 }
 
-void dbctx::getFragments(QList<Fragment> &fragmentList,const QStringList filter)
+void dbctx::getFragments(QList<Entity *> &fragmentList, const QStringList filter)
 {
     fragmentList.clear();
     QStringList columns;
@@ -62,34 +63,58 @@ void dbctx::getFragments(QList<Fragment> &fragmentList,const QStringList filter)
     columns.append(Fragment::Tnorm);
 
     QString q;
-    Fragment f ;
-    Section s;
+    Fragment *f ;
+    Section *s;
     buildSelectQuery(q,columns,Fragment::EntityName,filter);
 
     if (query.exec(q))
     {
         while (query.next()){
-            f.setId(query.value(Fragment::ID).toInt());
+            f = new Fragment();
+            f->setId(query.value(Fragment::ID).toInt());
             int s_id = query.value(Fragment::SectionID).toInt();
-            s = getEntity(sectCache,s_id);
-            f.setSection(s);
-            f.setArea(query.value(Fragment::Area).toDouble());
-            f.setTnorm(query.value(Fragment::Tnorm).toDouble());
-            fragmentList.append(s);
+            s = (Section*)getEntity(sectCache,s_id);
+            f->setSection(s);
+            f->setArea(query.value(Fragment::Area).toDouble());
+            f->setTnorm(query.value(Fragment::Tnorm).toDouble());
+            fragmentList.append(f);
         }
     }
 
     refreshCache(fragCache,fragmentList);
 }
 
-void dbctx::getPakazateli(QList<Pakazatel> &PakazatelList, const QStringList filter)
+void dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filter)
 {
+    pakazatelList.clear();
+    QStringList columns;
+    columns.append(Pakazatel::ID);
+    columns.append(Pakazatel::Name);
+    columns.append(Pakazatel::Unit);
+    columns.append(Pakazatel::ParentID);
 
+    QString q;
+    Pakazatel *p;
+    Entity *parent;
+    buildSelectQuery(q,columns,Pakazatel::EntityName,filter);
+    if (query.exec(q)){
+        while (query.next()) {
+            p = new Pakazatel();
+            p->setId(query.value(Pakazatel::ID).toInt());
+            int p_id = query.value(Pakazatel::ParentID).toInt();
+            parent = getEntity(pakCache,p_id);
+            p->setParent((Pakazatel*)parent);
+            p->setName(query.value(Pakazatel::Name).toString());
+            p->setUnit(query.value(Pakazatel::Unit).toString());
+            pakazatelList.append(p);
+        }
+    }
+    refreshCache(pakCache,pakazatelList);
 }
 
 
 
-Entity dbctx::getEntity(QHash<int,Entity> cache,const int id)
+Entity *dbctx::getEntity(QHash<int,Entity*> cache,const int id)
 {
     if (cache.contains(id)){
         return cache.value(id);
@@ -107,7 +132,7 @@ void dbctx::buildSelectQuery(QString &q, const QStringList &columns, const QStri
     }
     else
     {
-        build_string(q_str,columns,QString(","));
+        buildString(q_str,columns,QString(","));
     }
 
     q_str.append("FROM ");
@@ -118,7 +143,7 @@ void dbctx::buildSelectQuery(QString &q, const QStringList &columns, const QStri
     {
         q_str.append("WHERE ");
 
-        build_string(q_str,filter,QString(" AND "));
+        buildString(q_str,filter,QString(" AND "));
     }
 
     QString str;
@@ -165,13 +190,13 @@ void dbctx::buildInsertQuery(QString &q, const QStringList &columns, const QStri
     q_str.append(QString("%0 ").arg(table));
 
     q_str.append("( ");
-    build_string(q_str,columns,QString(","));
+    buildString(q_str,columns,QString(","));
     q_str.append(" ) ");
 
     q_str.append("VALUES ");
 
     q_str.append("( ");
-    build_string(q_str,values,QString(","));
+    buildString(q_str,values,QString(","));
     q_str.append(" ) ");
 
     QString str;
@@ -186,11 +211,11 @@ void dbctx::buildInsertQuery(QString &q, const QStringList &columns, const QStri
 
 
 
-void dbctx::refreshCache(QHash<int, Entity> cache, QList<Entity> &list)
+void dbctx::refreshCache(QHash<int, Entity *> cache, QList<Entity*> &list)
 {
     cache.clear();
     for (int i = 0 ; i < list.count(); i++){
-        cache[list[i].id()] = list[i];
+        cache[list[i]->id()] = list[i];
     }
 }
 

@@ -10,15 +10,6 @@ Fragment::~Fragment()
 
 }
 
-Section Fragment::section() const
-{
-    return m_section;
-}
-
-void Fragment::setSection(const Section &section)
-{
-    m_section = section;
-}
 double Fragment::tnorm() const
 {
     return m_tnorm;
@@ -36,6 +27,16 @@ double Fragment::area() const
 void Fragment::setArea(double area)
 {
     m_area = area;
+}
+
+Section *Fragment::section() const
+{
+    return m_section;
+}
+
+void Fragment::setSection(Section *section)
+{
+    m_section = section;
 }
 
 QString Fragment::SectionID = "sectionid";

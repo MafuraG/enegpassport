@@ -188,7 +188,7 @@ double EnergyPassportModel::udelnayatenlopostunleniesontse()
     double I_2 = 677;
     double I_3 = 911;
     double I_4 = 1285;
-    double 1_5 = 1465;
+    double I_5 = 1465;
     double I_6 = 1285;
     double I_7 = 911;
     double I_8 = 677;
