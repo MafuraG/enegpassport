@@ -87,6 +87,8 @@ public:
     bool removeRows(int position, int rows,
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;    
     Pakazatel* getIndicatorByName(const QString name);
+    void setIndicatorByName(const QString name, Pakazatel* p);
+
 private:
     void setupModelData(const QStringList &lines, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;

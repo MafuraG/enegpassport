@@ -216,6 +216,14 @@ Pakazatel* TreeModel::getIndicatorByName(const QString name)
 
 }
 
+void TreeModel::setIndicatorByName(const QString name, Pakazatel *p)
+{
+    if (cache.contains(name)){
+        TreeItem * item = cache.value(name);
+        item->setData(3,p->CalcValue());
+    }
+}
+
 int TreeModel::rowCount(const QModelIndex &parent) const
 {
     TreeItem *parentItem = getItem(parent);
