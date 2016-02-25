@@ -266,14 +266,14 @@ void Dbctx::initPakazatelModel()
     m_pakazatelModel->setTable(Pakazatel::EntityName);
 
     m_pakazatelModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    m_pakazatelModel->setRelation(0,QSqlRelation(Pakazatel::EntityName,Pakazatel::ID,Pakazatel::Name));
+    m_pakazatelModel->setRelation(6,QSqlRelation(Pakazatel::EntityName,Pakazatel::ID,Pakazatel::Name));
 
-    m_pakazatelModel->setHeaderData(0,Qt::Horizontal,Pakazatel::D_Name);
-    m_pakazatelModel->setHeaderData(1,Qt::Horizontal,Pakazatel::D_Unit);
-    m_pakazatelModel->setHeaderData(2,Qt::Horizontal,Pakazatel::D_NomValue);
-    m_pakazatelModel->setHeaderData(3,Qt::Horizontal,Pakazatel::D_CalcValue);
-    m_pakazatelModel->setHeaderData(4,Qt::Horizontal,Pakazatel::D_FactValue);
-    m_pakazatelModel->setHeaderData(5,Qt::Horizontal,Pakazatel::D_ParentID);
+    m_pakazatelModel->setHeaderData(1,Qt::Horizontal,Pakazatel::D_Name);
+    m_pakazatelModel->setHeaderData(2,Qt::Horizontal,Pakazatel::D_Unit);
+    m_pakazatelModel->setHeaderData(3,Qt::Horizontal,Pakazatel::D_NomValue);
+    m_pakazatelModel->setHeaderData(4,Qt::Horizontal,Pakazatel::D_CalcValue);
+    m_pakazatelModel->setHeaderData(5,Qt::Horizontal,Pakazatel::D_FactValue);
+    m_pakazatelModel->setHeaderData(6,Qt::Horizontal,Pakazatel::D_ParentID);
 }
 
 
@@ -288,12 +288,12 @@ void Dbctx::initFragmentModel()
     m_fragmentModel->setTable(Fragment::EntityName);
 
     m_fragmentModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    m_fragmentModel->setRelation(0,QSqlRelation(Section::EntityName,Section::ID,Section::Name));
+    m_fragmentModel->setRelation(1,QSqlRelation(Section::EntityName,Section::ID,Section::Name));
 
-    m_fragmentModel->setHeaderData(0,Qt::Horizontal,Fragment::D_SectionID);
-    m_fragmentModel->setHeaderData(1,Qt::Horizontal,Fragment::D_Tnorm);
-    m_fragmentModel->setHeaderData(2,Qt::Horizontal,Fragment::D_Area);
-    m_fragmentModel->setHeaderData(3,Qt::Horizontal,Fragment::D_Resistance);
+    m_fragmentModel->setHeaderData(1,Qt::Horizontal,Fragment::D_SectionID);
+    m_fragmentModel->setHeaderData(2,Qt::Horizontal,Fragment::D_Tnorm);
+    m_fragmentModel->setHeaderData(3,Qt::Horizontal,Fragment::D_Area);
+    m_fragmentModel->setHeaderData(4,Qt::Horizontal,Fragment::D_Resistance);
 
     m_fragmentModel->select();
 
