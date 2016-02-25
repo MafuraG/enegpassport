@@ -88,6 +88,7 @@ public:
                     const QModelIndex &parent = QModelIndex()) Q_DECL_OVERRIDE;    
     Pakazatel* getIndicatorByName(const QString name);
     void setIndicatorByName(const QString name, Pakazatel* p);
+    void getIndicators(QList<TreeItem*> &items);
 
 private:
     void setupModelData(const QStringList &lines, TreeItem *parent);
@@ -95,7 +96,7 @@ private:
     void refreshCache(TreeItem *item);
 
     TreeItem *rootItem;
-    QHash<QString, TreeItem *> cache; //usefull coz we will be doing a lot of lookups
+    QHash<QString, TreeItem *> m_cache; //usefull coz we will be doing a lot of lookups
 };
 
 #endif // TREEMODEL_H

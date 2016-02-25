@@ -14,20 +14,25 @@
 
 
 
-class dbctx
+class Dbctx
 {
 public:
-    dbctx();
-    dbctx(const QString &dbtype, const QString &dbname);
-    ~dbctx();
+    Dbctx();
+    Dbctx(const QString &dbtype, const QString &dbname);
+    ~Dbctx();
     void getSections(QList<Entity *> &sectionList, const QStringList filter);
     void getFragments(QList<Entity *> &fragmentList, const QStringList filter);
     void getPakazateli(QList<Entity *> &pakazatelList, const QStringList filter);
 
+    void insertPakazatel(const Pakazatel *p);
+
     Entity* getEntity(QHash<int, Entity *> cache, const int id);
 
-    QSqlRelationalTableModel *getFragmentModel() const;
-    void setFragmentModel(QSqlRelationalTableModel *fragmentModel);
+    QSqlRelationalTableModel *getFragmentModel();
+    void initFragmentModel();
+
+    QSqlRelationalTableModel *getPakazatelModel();
+    void initPakazatelModel();
 
 private:
     QSqlDatabase db;
@@ -44,7 +49,7 @@ private:
 
     void refreshCache(QHash<int,Entity*> cache, QList<Entity *> &list);
     QSqlRelationalTableModel *m_fragmentModel;
-
+    QSqlRelationalTableModel *m_pakazatelModel;
 
 };
 

@@ -2,8 +2,10 @@
 #define ENERGYPASSPORTMODEL_H
 
 #include "treemodel.h"
+#include "dbctx.h"
 
 #include <QString>
+#include <QList>
 
 
 
@@ -11,6 +13,7 @@ class EnergyPassportModel
 {
 public:
     EnergyPassportModel();
+    EnergyPassportModel(const QString dbname);
     ~EnergyPassportModel();
 	//Общая информация
 	QString data_zapolnenya  = "Дата заполнения (число, м-ц, год)";	
@@ -132,25 +135,32 @@ public:
     double kratnostvozdukhobmen();
 	//Удельная теплозащитная характеристика здания
     double udelnayateplozashita();
+    //Удельная теплозащитная характеристика здания РАСЧЕТНАЯ
+    double udelnayateplozashitaRaschet();
 	//Удельная вентиляционная характеристика здания
     double udelnayaventilyatsii();
 	//Удельная характеристика бытовых тепловыделений здания
     double udelnayatenlovyidelenie();
 	//Удельная характеристика теплопоступлений в здание от солнечной радиации
     double udelnayatenlopostunleniesontse();
-	
 
-    TreeModel *getModel() const;
-    void setModel(TreeModel *value);    
+    TreeModel *treeModel() ;
+    QSqlRelationalTableModel *pakazatelModel();
+    QSqlRelationalTableModel *fragmentModel();
 
 
-
-    double raschetGSOP();
 private:
-    TreeModel *model;
+    TreeModel *m_treeModel;
+
+    Dbctx *ctx;
     double paznostDavlenie(const double k, const double y_int, const double v, const double y_ext);
     double soprativlenieVozdukhProniknovenie(const double Gn, const double delta_P_x, const double delta_P);
     double kolichestvoinfiltrvozdukh(const double delta_P_okna, const double delta_P_dver, const double A_dv, const double R_ok, const double R_dv, const double A_ok);
+    double raschetGSOP();
+    double koeffOtlichieVnutrVneshTemp(const double tnorm);
+    double subCalcTeploZashita(const double tnorm, const double area, const double rprev);
+    double totalCalcTeploZashita(QList<Entity *> fragments);
+    double saveTreeModeltoDB();
 };
 
 #endif // ENERGYPASSPORTMODEL_H

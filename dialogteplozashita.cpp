@@ -22,7 +22,3 @@ void DialogTeploZashita::setModel(QSqlRelationalTableModel *model)
     ui->tableView->setModel(m_model);
 }
 
-QSqlRelationalTableModel *DialogTeploZashita::model() const
-{
-    return m_model;
-}

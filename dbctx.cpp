@@ -3,12 +3,12 @@
 #include <QSqlQuery>
 #include <QStringList>
 
-dbctx::dbctx()
+Dbctx::Dbctx()
 {
 
 }
 
-dbctx::dbctx(const QString &dbtype, const QString &dbname)
+Dbctx::Dbctx(const QString &dbtype, const QString &dbname)
 {
     db = QSqlDatabase::addDatabase(dbtype);
     db.setDatabaseName(dbname);
@@ -24,12 +24,12 @@ dbctx::dbctx(const QString &dbtype, const QString &dbname)
     }
 }
 
-dbctx::~dbctx()
+Dbctx::~Dbctx()
 {
-
+    db.close();
 }
 
-void dbctx::getSections(QList<Entity*> &sectionList,const QStringList filter)
+void Dbctx::getSections(QList<Entity*> &sectionList,const QStringList filter)
 {
     sectionList.clear();
     QStringList columns;
@@ -53,7 +53,7 @@ void dbctx::getSections(QList<Entity*> &sectionList,const QStringList filter)
     refreshCache(sectCache,sectionList);
 }
 
-void dbctx::getFragments(QList<Entity *> &fragmentList, const QStringList filter)
+void Dbctx::getFragments(QList<Entity *> &fragmentList, const QStringList filter)
 {
     fragmentList.clear();
     QStringList columns;
@@ -61,6 +61,7 @@ void dbctx::getFragments(QList<Entity *> &fragmentList, const QStringList filter
     columns.append(Fragment::Area);
     columns.append(Fragment::SectionID);
     columns.append(Fragment::Tnorm);
+    columns.append(Fragment::Resistance);
 
     QString q;
     Fragment *f ;
@@ -77,6 +78,7 @@ void dbctx::getFragments(QList<Entity *> &fragmentList, const QStringList filter
             f->setSection(s);
             f->setArea(query.value(Fragment::Area).toDouble());
             f->setTnorm(query.value(Fragment::Tnorm).toDouble());
+            f->setResistance(query.value(Fragment::Resistance).toDouble());
             fragmentList.append(f);
         }
     }
@@ -84,7 +86,7 @@ void dbctx::getFragments(QList<Entity *> &fragmentList, const QStringList filter
     refreshCache(fragCache,fragmentList);
 }
 
-void dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filter)
+void Dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filter)
 {
     pakazatelList.clear();
     QStringList columns;
@@ -112,9 +114,44 @@ void dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filt
     refreshCache(pakCache,pakazatelList);
 }
 
+void Dbctx::insertPakazatel(const Pakazatel *p)
+{
+    QStringList columns;
+
+    columns.append(Pakazatel::Name);
+    columns.append(Pakazatel::Unit);
+    columns.append(Pakazatel::NomValue);
+    columns.append(Pakazatel::CalcValue);
+    columns.append(Pakazatel::FactValue);
+    columns.append(Pakazatel::ParentID);
+
+    QStringList values;
+
+    values.append(QString("'%0'").arg(p->name()));
+    values.append(QString("'%0'").arg(p->unit()));
+    values.append(QString("%0").arg(p->nomValue()));
+    values.append(QString("%0").arg(p->calcValue()));
+    values.append(QString("%0").arg(p->factValue()));
+    values.append(QString("%0").arg(p->parent()->id()));
+
+    QString q;
+    buildInsertQuery(q,columns,Pakazatel::EntityName,values);
 
 
-Entity *dbctx::getEntity(QHash<int,Entity*> cache,const int id)
+    if (query.exec(q) == true)
+    {
+        //qDebug()<<"insert :"<<name<<" success!";
+        return ;
+    }
+    else
+    {
+        //qDebug()<<"FAIL: insert : "<<e_n.getEmp_id()<< " "<<e_n.getTel_num_id()<<" FAIL reason: "<<db.lastError()<<" Query : "<<q;;
+    }
+}
+
+
+
+Entity *Dbctx::getEntity(QHash<int,Entity*> cache,const int id)
 {
     if (cache.contains(id)){
         return cache.value(id);
@@ -122,7 +159,7 @@ Entity *dbctx::getEntity(QHash<int,Entity*> cache,const int id)
     return NULL;
 }
 
-void dbctx::buildSelectQuery(QString &q, const QStringList &columns, const QString &table, const QStringList &filter)
+void Dbctx::buildSelectQuery(QString &q, const QStringList &columns, const QString &table, const QStringList &filter)
 {
     QStringList q_str;
     q_str.append("SELECT ");
@@ -156,7 +193,7 @@ void dbctx::buildSelectQuery(QString &q, const QStringList &columns, const QStri
     q = str;
 }
 
-void dbctx::buildString(QStringList &result, const QStringList &fragments, const QString &separator)
+void Dbctx::buildString(QStringList &result, const QStringList &fragments, const QString &separator)
 {
     int i = 0;
     for(QString s:fragments)
@@ -173,13 +210,13 @@ void dbctx::buildString(QStringList &result, const QStringList &fragments, const
     }
 }
 
-void dbctx::buildFilter(QString &q, const QString &oper,const QStringList &params)
+void Dbctx::buildFilter(QString &q, const QString &oper,const QStringList &params)
 {
     if (params.size() != 2) return;
     q = QString("%0 %1 %2").arg(params[0],oper,params[1]);
 }
 
-void dbctx::buildInsertQuery(QString &q, const QStringList &columns, const QString &table, const QStringList &values)
+void Dbctx::buildInsertQuery(QString &q, const QStringList &columns, const QString &table, const QStringList &values)
 {
     QStringList q_str;
     //"insert into genres(name) values(?)"
@@ -211,34 +248,54 @@ void dbctx::buildInsertQuery(QString &q, const QStringList &columns, const QStri
 
 
 
-void dbctx::refreshCache(QHash<int, Entity *> cache, QList<Entity*> &list)
+void Dbctx::refreshCache(QHash<int, Entity *> cache, QList<Entity*> &list)
 {
     cache.clear();
     for (int i = 0 ; i < list.count(); i++){
         cache[list[i]->id()] = list[i];
     }
 }
+QSqlRelationalTableModel *Dbctx::getPakazatelModel()
+{
+    return m_pakazatelModel;
+}
 
-QSqlRelationalTableModel *dbctx::getFragmentModel() const
+void Dbctx::initPakazatelModel()
+{
+    m_pakazatelModel = new QSqlRelationalTableModel();
+    m_pakazatelModel->setTable(Pakazatel::EntityName);
+
+    m_pakazatelModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    m_pakazatelModel->setRelation(0,QSqlRelation(Pakazatel::EntityName,Pakazatel::ID,Pakazatel::Name));
+
+    m_pakazatelModel->setHeaderData(0,Qt::Horizontal,Pakazatel::D_Name);
+    m_pakazatelModel->setHeaderData(1,Qt::Horizontal,Pakazatel::D_Unit);
+    m_pakazatelModel->setHeaderData(2,Qt::Horizontal,Pakazatel::D_NomValue);
+    m_pakazatelModel->setHeaderData(3,Qt::Horizontal,Pakazatel::D_CalcValue);
+    m_pakazatelModel->setHeaderData(4,Qt::Horizontal,Pakazatel::D_FactValue);
+    m_pakazatelModel->setHeaderData(5,Qt::Horizontal,Pakazatel::D_ParentID);
+}
+
+
+QSqlRelationalTableModel *Dbctx::getFragmentModel()
 {
     return m_fragmentModel;
 }
 
-void dbctx::setFragmentModel(QSqlRelationalTableModel *fragmentModel)
+void Dbctx::initFragmentModel()
 {
-    m_fragmentModel = fragmentModel;
+    m_fragmentModel = new QSqlRelationalTableModel();
+    m_fragmentModel->setTable(Fragment::EntityName);
 
-    fragmentmodel = new QSqlRelationalTableModel();
-    fragmentmodel->setTable(Fragment::EntityName);
+    m_fragmentModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    m_fragmentModel->setRelation(0,QSqlRelation(Section::EntityName,Section::ID,Section::Name));
 
-    fragmentmodel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    fragmentmodel->setRelation(0,QSqlRelation(Section::EntityName,Section::ID,Section::Name));
+    m_fragmentModel->setHeaderData(0,Qt::Horizontal,Fragment::D_SectionID);
+    m_fragmentModel->setHeaderData(1,Qt::Horizontal,Fragment::D_Tnorm);
+    m_fragmentModel->setHeaderData(2,Qt::Horizontal,Fragment::D_Area);
+    m_fragmentModel->setHeaderData(3,Qt::Horizontal,Fragment::D_Resistance);
 
-    fragmentmodel->setHeaderData(0,Qt::Horizontal,QString("Наименование фрагмента"));
-    fragmentmodel->setHeaderData(1,Qt::Horizontal,QString("tпом"));
-    fragmentmodel->setHeaderData(2,Qt::Horizontal,QString("Aф,I, м2"));
-
-    fragmentmodel->select();
+    m_fragmentModel->select();
 
 }
 

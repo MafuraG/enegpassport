@@ -1,21 +1,43 @@
 #include "energypassportmodel.h"
+#include "treeitem.h"
+#include <QFile>
 
 EnergyPassportModel::EnergyPassportModel()
 {
 
 }
 
+EnergyPassportModel::EnergyPassportModel(const QString dbname)
+{
+    ctx = new Dbctx("QSQLITE",dbname);
+
+    QStringList headers;
+       headers << Pakazatel::D_Name
+               << Pakazatel::D_Unit
+               << Pakazatel::D_NomValue
+               << Pakazatel::D_CalcValue
+               << Pakazatel::D_FactValue;
+
+    QFile file(":/menu_structure.txt");
+    file.open(QIODevice::ReadOnly);
+    m_treeModel = new TreeModel(headers,file.readAll());
+    file.close();
+
+    ctx->initFragmentModel();
+    ctx->initPakazatelModel();
+}
+
 EnergyPassportModel::~EnergyPassportModel()
 {
-
+    delete ctx;
 }
 
 double EnergyPassportModel::kompaktnost()
 {
-    if (model == nullptr) return 0;
+    if (m_treeModel == nullptr) return 0;
 
-    Pakazatel *p_area = model->getIndicatorByName(area_boundary);
-    Pakazatel *p_heated_volume = model->getIndicatorByName(volume_heated_space);
+    Pakazatel *p_area = m_treeModel->getIndicatorByName(area_boundary);
+    Pakazatel *p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
 
     if (p_area != nullptr && p_heated_volume != nullptr && p_heated_volume->calcValue() != 0){
         return p_area->calcValue() / p_heated_volume->calcValue();
@@ -45,17 +67,17 @@ double EnergyPassportModel::kolichestvoinfiltrvozdukh(const double delta_P_dver,
 
 double EnergyPassportModel::kratnostvozdukhobmen()
 {
-    if (model == nullptr) return 0;
+    if (m_treeModel == nullptr) return 0;
 
-    Pakazatel * p_kol_kvartiryi = model->getIndicatorByName(kol_kvartir);
-    Pakazatel * p_area_living_space = model->getIndicatorByName(area_living_space);
-    Pakazatel * p_heated_volume = model->getIndicatorByName(volume_heated_space);
-    Pakazatel * p_volume_reduction = model->getIndicatorByName(coeff_volume_reduction);
-    Pakazatel * p_area_doors = model->getIndicatorByName(area_doors);
-    Pakazatel * p_area_windows = model->getIndicatorByName(area_windows_balcony);
-    Pakazatel * p_vysota_zdanya = model->getIndicatorByName(vysota_zdaniya);
-    Pakazatel * p_skopost_veter = model->getIndicatorByName(max_wind_velocity);
-    Pakazatel * p_coeff_rekuperator = model->getIndicatorByName(coeff_recuperation);
+    Pakazatel * p_kol_kvartiryi = m_treeModel->getIndicatorByName(kol_kvartir);
+    Pakazatel * p_area_living_space = m_treeModel->getIndicatorByName(area_living_space);
+    Pakazatel * p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
+    Pakazatel * p_volume_reduction = m_treeModel->getIndicatorByName(coeff_volume_reduction);
+    Pakazatel * p_area_doors = m_treeModel->getIndicatorByName(area_doors);
+    Pakazatel * p_area_windows = m_treeModel->getIndicatorByName(area_windows_balcony);
+    Pakazatel * p_vysota_zdanya = m_treeModel->getIndicatorByName(vysota_zdaniya);
+    Pakazatel * p_skopost_veter = m_treeModel->getIndicatorByName(max_wind_velocity);
+    Pakazatel * p_coeff_rekuperator = m_treeModel->getIndicatorByName(coeff_recuperation);
 
     double lvent1 = 30 * p_kol_kvartiryi->calcValue() ;
     double lvent2 = 0.35 * 3 * p_area_living_space->calcValue();
@@ -90,7 +112,7 @@ double EnergyPassportModel::kratnostvozdukhobmen()
 
     double n_v2 = (((lvent * n_vent)/168) + (G_inf * n_info)/(B_v * V_otop) );
 
-    double n_v3 = ((G_inf * n_info)/(168* rho_vozdukh)/(B_v * V_otop));
+    double n_v3 = ((G_inf * n_info)/(168 * rho_vozdukh)/(B_v * V_otop));
 
     double n = n_v1 + n_v2 + n_v3 ;
 
@@ -100,32 +122,57 @@ double EnergyPassportModel::kratnostvozdukhobmen()
 
 double EnergyPassportModel::udelnayateplozashita()
 {
+    Pakazatel * p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
+    double V_otop = p_heated_volume->calcValue();
+    QList<Entity *> frags;
+    QStringList filter;
+    ctx->getFragments(frags,filter);
+    double total = totalCalcTeploZashita(frags);
 
+    double res = (1/V_otop) * total;
 
+    return res;
+}
+
+double EnergyPassportModel::udelnayateplozashitaRaschet()
+{
+    Pakazatel * p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
+    double V_otop = p_heated_volume->calcValue();
+    double GSOP = raschetGSOP();
+
+    double res ;
+
+    if (V_otop > 960){
+        res = (0.16 + (10/sqrt(V_otop)))/((0.00013*GSOP) + 0.61);
+    }else{
+        res = ((4.74)/(((0.00013*GSOP) + 0.61))) * (1 /(pow(V_otop,1/3.0)));
+    }
+
+    return res;
 }
 
 double EnergyPassportModel::udelnayaventilyatsii()
 {
-    Pakazatel * p_coeff_rekuperator = model->getIndicatorByName(coeff_recuperation);
-    Pakazatel * p_volume_reduction = model->getIndicatorByName(coeff_volume_reduction);
+    Pakazatel * p_coeff_rekuperator = m_treeModel->getIndicatorByName(coeff_recuperation);
+    Pakazatel * p_volume_reduction = m_treeModel->getIndicatorByName(coeff_volume_reduction);
 
     double k_eff = p_coeff_rekuperator->calcValue();
     double B_v = p_volume_reduction->calcValue();
     double n = kratnostvozdukhobmen();
 
-    double K_vent = 0.28 *B_v * n * (1 - k_eff);
+    double K_vent = 0.28 * B_v * n * (1 - k_eff);
     return K_vent;
 }
 
 double EnergyPassportModel::udelnayatenlovyidelenie()
 {
-    if (model == nullptr) return 0;
+    if (m_treeModel == nullptr) return 0;
 
-    Pakazatel * p_bytovoi = model->getIndicatorByName(specific_Thermal_Emission);
-    Pakazatel * p_area_living_space = model->getIndicatorByName(area_living_space);
-    Pakazatel * p_heated_volume = model->getIndicatorByName(volume_heated_space);
-    Pakazatel * p_temp_ext = model->getIndicatorByName(temp_air_external);
-    Pakazatel * p_temp_int = model->getIndicatorByName(temp_air_internal);
+    Pakazatel * p_bytovoi = m_treeModel->getIndicatorByName(specific_Thermal_Emission);
+    Pakazatel * p_area_living_space = m_treeModel->getIndicatorByName(area_living_space);
+    Pakazatel * p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
+    Pakazatel * p_temp_ext = m_treeModel->getIndicatorByName(temp_air_external);
+    Pakazatel * p_temp_int = m_treeModel->getIndicatorByName(temp_air_internal);
 
 
     double q_byit = p_bytovoi->calcValue();
@@ -141,9 +188,9 @@ double EnergyPassportModel::udelnayatenlovyidelenie()
 
 double EnergyPassportModel::raschetGSOP()
 {
-    Pakazatel * p_temp_int = model->getIndicatorByName(temp_air_internal);
-    Pakazatel * p_temp_avg_ext = model->getIndicatorByName(heating_period_temp_avg);
-    Pakazatel * p_heating_period = model->getIndicatorByName(heating_period_days);
+    Pakazatel * p_temp_int = m_treeModel->getIndicatorByName(temp_air_internal);
+    Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByName(heating_period_temp_avg);
+    Pakazatel * p_heating_period = m_treeModel->getIndicatorByName(heating_period_days);
 
     double temp_int = p_temp_int->calcValue();
     double temp_ext_avg = p_temp_avg_ext->calcValue();
@@ -153,19 +200,72 @@ double EnergyPassportModel::raschetGSOP()
     return GSOP;
 }
 
+double EnergyPassportModel::koeffOtlichieVnutrVneshTemp(const double tnorm)
+{
+    Pakazatel * p_temp_int = m_treeModel->getIndicatorByName(temp_air_internal);
+    Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByName(heating_period_temp_avg);
+    Pakazatel * p_temp_ext = m_treeModel->getIndicatorByName(temp_air_external);
+
+    double temp_int = p_temp_int->calcValue();
+    double temp_ext_avg = p_temp_avg_ext->calcValue();
+    double temp_ext = p_temp_ext->calcValue();
+
+    double res = (tnorm - temp_ext_avg)/(temp_int - temp_ext);
+
+    return res;
+}
+
+double EnergyPassportModel::subCalcTeploZashita(const double tnorm,const double area, const double rprev)
+{
+    double n_ij = koeffOtlichieVnutrVneshTemp(tnorm);
+    double res = n_ij * (area/rprev);
+
+    return res;
+}
+
+double EnergyPassportModel::totalCalcTeploZashita(QList<Entity *> fragments)
+{
+    double res = 0.0,sub_res;
+    double tnorm,area,rprev;
+    Fragment *f;
+    for(int i=0;i < fragments.count() ; i++){
+        f = (Fragment*)fragments[i];
+        tnorm = f->tnorm();
+        area = f->area();
+        rprev = f->resistance();
+
+        sub_res = subCalcTeploZashita(tnorm,area,rprev);
+        res += sub_res;
+    }
+
+    return res;
+}
+
+double EnergyPassportModel::saveTreeModeltoDB()
+{
+    QList<TreeItem*> items;
+    m_treeModel->getIndicators(items);
+
+    for(int i = 0; i < items.count();i++){
+        Pakazatel *p = m_treeModel->getIndicatorByName(items[i]->data(0).toString());
+        ctx->insertPakazatel(p);
+    }
+}
+
+
 double EnergyPassportModel::udelnayatenlopostunleniesontse()
 {
-    if (model == nullptr) return 0;
+    if (m_treeModel == nullptr) return 0;
 
-    Pakazatel *p_area_ok1 = model->getIndicatorByName(area_facing_N);
-    Pakazatel *p_area_ok2 = model->getIndicatorByName(area_facing_NE);
-    Pakazatel *p_area_ok3 = model->getIndicatorByName(area_facing_E);
-    Pakazatel *p_area_ok4 = model->getIndicatorByName(area_facing_SE);
-    Pakazatel *p_area_ok5 = model->getIndicatorByName(area_facing_S);
-    Pakazatel *p_area_ok6 = model->getIndicatorByName(area_facing_SW);
-    Pakazatel *p_area_ok7 = model->getIndicatorByName(area_facing_W);
-    Pakazatel *p_area_ok8 = model->getIndicatorByName(area_facing_NW);
-    Pakazatel * p_heated_volume = model->getIndicatorByName(volume_heated_space);
+    Pakazatel *p_area_ok1 = m_treeModel->getIndicatorByName(area_facing_N);
+    Pakazatel *p_area_ok2 = m_treeModel->getIndicatorByName(area_facing_NE);
+    Pakazatel *p_area_ok3 = m_treeModel->getIndicatorByName(area_facing_E);
+    Pakazatel *p_area_ok4 = m_treeModel->getIndicatorByName(area_facing_SE);
+    Pakazatel *p_area_ok5 = m_treeModel->getIndicatorByName(area_facing_S);
+    Pakazatel *p_area_ok6 = m_treeModel->getIndicatorByName(area_facing_SW);
+    Pakazatel *p_area_ok7 = m_treeModel->getIndicatorByName(area_facing_W);
+    Pakazatel *p_area_ok8 = m_treeModel->getIndicatorByName(area_facing_NW);
+    Pakazatel * p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
 
 
     double t_1ok = 0.8;
@@ -200,15 +300,26 @@ double EnergyPassportModel::udelnayatenlopostunleniesontse()
     double K_rad = (11.6 * Q_rad)/(V_otop * GSOP);
     return K_rad;
 }
-TreeModel *EnergyPassportModel::getModel() const
+
+TreeModel *EnergyPassportModel::treeModel()
 {
-    return model;
+    return m_treeModel;
 }
 
-void EnergyPassportModel::setModel(TreeModel *value)
+QSqlRelationalTableModel *EnergyPassportModel::pakazatelModel()
 {
-    model = value;
+    return ctx->getPakazatelModel();
 }
+
+QSqlRelationalTableModel *EnergyPassportModel::fragmentModel()
+{
+    return ctx->getFragmentModel();
+}
+
+
+
+
+
 
 
 

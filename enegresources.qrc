@@ -1,6 +1,12 @@
 <RCC>
     <qresource prefix="/">
         <file>menu_structure.txt</file>
-        <file>enegdb.sqlite</file>
+    </qresource>
+    <qresource prefix="/icons">
+        <file>basicons/file-folder.png</file>
+        <file>basicons/new-document-button.png</file>
+        <file>basicons/save-icon.png</file>
+        <file>basicons/info-round-button.png</file>
+        <file>basicons/enter.png</file>
     </qresource>
 </RCC>

@@ -74,6 +74,14 @@ QString Pakazatel::CalcValue = "calcvalue";
 QString Pakazatel::FactValue = "factvalue";
 QString Pakazatel::ParentID = "parentid";
 
+QString Pakazatel::D_Name = "Показатель";
+QString Pakazatel::D_EntityName = "pakazatel";
+QString Pakazatel::D_Unit = "Обозначение показателя и единицы измерения";
+QString Pakazatel::D_NomValue = "Нормативное значение показателя";
+QString Pakazatel::D_CalcValue = "Расчетное (проектное) значение показателя";
+QString Pakazatel::D_FactValue = "Фактическое значение показателя";
+QString Pakazatel::D_ParentID = "Корень";
+
 
 
 

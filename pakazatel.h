@@ -39,6 +39,14 @@ public:
     static QString FactValue;
     static QString ParentID;
 
+    static QString D_Name;
+    static QString D_EntityName;
+    static QString D_Unit;
+    static QString D_NomValue;
+    static QString D_CalcValue;
+    static QString D_FactValue;
+    static QString D_ParentID;
+
 private :
 
     QString m_name;
