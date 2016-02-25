@@ -10,7 +10,7 @@ EnergyPassportModel::~EnergyPassportModel()
 
 }
 
-double EnergyPassportModel::kompactnost()
+double EnergyPassportModel::kompaktnost()
 {
     if (model == nullptr) return 0;
 

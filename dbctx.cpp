@@ -219,3 +219,26 @@ void dbctx::refreshCache(QHash<int, Entity *> cache, QList<Entity*> &list)
     }
 }
 
+QSqlRelationalTableModel *dbctx::getFragmentModel() const
+{
+    return m_fragmentModel;
+}
+
+void dbctx::setFragmentModel(QSqlRelationalTableModel *fragmentModel)
+{
+    m_fragmentModel = fragmentModel;
+
+    fragmentmodel = new QSqlRelationalTableModel();
+    fragmentmodel->setTable(Fragment::EntityName);
+
+    fragmentmodel->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    fragmentmodel->setRelation(0,QSqlRelation(Section::EntityName,Section::ID,Section::Name));
+
+    fragmentmodel->setHeaderData(0,Qt::Horizontal,QString("Наименование фрагмента"));
+    fragmentmodel->setHeaderData(1,Qt::Horizontal,QString("tпом"));
+    fragmentmodel->setHeaderData(2,Qt::Horizontal,QString("Aф,I, м2"));
+
+    fragmentmodel->select();
+
+}
+

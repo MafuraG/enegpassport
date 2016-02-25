@@ -10,6 +10,7 @@
 #include <QSqlQuery>
 #include <QString>
 #include <QDebug>
+#include <QSqlRelationalTableModel>
 
 
 
@@ -25,6 +26,9 @@ public:
 
     Entity* getEntity(QHash<int, Entity *> cache, const int id);
 
+    QSqlRelationalTableModel *getFragmentModel() const;
+    void setFragmentModel(QSqlRelationalTableModel *fragmentModel);
+
 private:
     QSqlDatabase db;
     QSqlQuery query;
@@ -39,6 +43,7 @@ private:
     QHash<int,Entity*> pakCache;
 
     void refreshCache(QHash<int,Entity*> cache, QList<Entity *> &list);
+    QSqlRelationalTableModel *m_fragmentModel;
 
 
 };

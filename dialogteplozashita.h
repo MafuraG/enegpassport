@@ -16,9 +16,11 @@ public:
     explicit DialogTeploZashita(QWidget *parent = 0);
     ~DialogTeploZashita();
 
+    void setModel(QSqlRelationalTableModel *model);
+
 private:
     Ui::DialogTeploZashita *ui;
-    QSqlRelationalTableModel *model;
+    QSqlRelationalTableModel *m_model;
 };
 
 #endif // DIALOGTEPLOZASHITA_H

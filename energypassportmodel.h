@@ -127,7 +127,7 @@ public:
 	QString norm_vozdukh_pronisaemost_okon = "нормируемая воздухопроницаемость окон";  //Таблица 11 СниП 23-02
 	//Calaculated indicators 
 	//Показатель компактности здания
-    double kompactnost ();
+    double kompaktnost ();
 	//Кратность воздухообмена здания за отопительный период при удельной норме воздухообмена
     double kratnostvozdukhobmen();
 	//Удельная теплозащитная характеристика здания
