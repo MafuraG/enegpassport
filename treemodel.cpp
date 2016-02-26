@@ -110,6 +110,29 @@ void TreeModel::refreshCache(TreeItem * item)
     }
 }
 
+void TreeModel::mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i)
+{
+    QVariant val;
+    val = tree->data(0);
+    i->setName(val.toString());
+    val = tree->data(1);
+    i->setUnit(val.toString());
+    val = tree->data(2);
+    i->setNomValue(val.toDouble());
+    val = tree->data(3);
+    i->setCalcValue(val.toDouble());
+    val = tree->data(4);
+    i->setFactValue(val.toDouble());
+
+    if (tree->parent() != nullptr){
+        Pakazatel *p = new Pakazatel();
+        i->setParent(p);
+        mapTreeItemPakazatel(tree->parent(),*p);
+    }
+    else
+        i->setParent(nullptr);
+}
+
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
                                int role) const
 {
@@ -203,12 +226,7 @@ Pakazatel* TreeModel::getIndicatorByName(const QString name)
         //tree item found in this treeitem
         TreeItem *tree = m_cache.value(name);
         Pakazatel *i = new Pakazatel();
-        QVariant val = tree->data(2);
-        i->setNomValue(val.toDouble());
-        val = tree->data(3);
-        i->setCalcValue(val.toDouble());
-        val = tree->data(4);
-        i->setFactValue(val.toDouble());
+        mapTreeItemPakazatel(tree,i);
         return i;
     }
 

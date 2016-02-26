@@ -4,6 +4,8 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QFileDialog>
+#include <typeinfo>
+#include <QDebug>
 
 #include <QFile>
 
@@ -25,10 +27,6 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //ui->treeView->setModel(model);
 
-
-//    for(int column = 0; column< model->columnCount(); ++column){
-//        ui->treeView->resizeColumnToContents(column);
-//    }
 }
 
 MainWindow::~MainWindow()
@@ -58,7 +56,13 @@ void MainWindow::on_action_2_triggered()
     ui->tableView->setModel(energyModel->pakazatelModel());
     ui->tableView_2->setModel(energyModel->fragmentModel());
 
+    resizeView(ui->treeView,typeid(ui->treeView).name(),energyModel->treeModel());
+    resizeView(ui->tableView,typeid(ui->tableView).name(),energyModel->pakazatelModel());
+    resizeView(ui->tableView_2,typeid(ui->tableView_2).name(),energyModel->fragmentModel());
+
 }
+
+
 
 void MainWindow::on_action_3_triggered()
 {
@@ -75,4 +79,19 @@ void MainWindow::on_action_3_triggered()
 void MainWindow::on_action_5_triggered()
 {
     //open fragments editor
+    //energyModel->saveTreeModeltoDB();
 }
+
+void MainWindow::resizeView(QAbstractItemView *view,const QString vtype, QAbstractItemModel *model)
+{
+    for(int i = 0; i < model->columnCount(); i++){
+//        qDebug()<< "type id view " << typeid(view).name();
+//        qDebug()<< "type id QTreeView " << typeid(QTreeView*).name();
+        if (vtype == typeid(QTreeView*).name())
+            ((QTreeView*)view)->resizeColumnToContents(i);
+        if (vtype == typeid(QTableView*).name())
+            ((QTableView*)view)->resizeColumnToContents(i);
+    }
+}
+
+

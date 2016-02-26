@@ -123,7 +123,7 @@ void Dbctx::insertPakazatel(const Pakazatel *p)
     columns.append(Pakazatel::NomValue);
     columns.append(Pakazatel::CalcValue);
     columns.append(Pakazatel::FactValue);
-    columns.append(Pakazatel::ParentID);
+    //columns.append(Pakazatel::ParentID);
 
     QStringList values;
 
@@ -132,7 +132,7 @@ void Dbctx::insertPakazatel(const Pakazatel *p)
     values.append(QString("%0").arg(p->nomValue()));
     values.append(QString("%0").arg(p->calcValue()));
     values.append(QString("%0").arg(p->factValue()));
-    values.append(QString("%0").arg(p->parent()->id()));
+    //values.append(QString("%0").arg(p->parent()->id()));
 
     QString q;
     buildInsertQuery(q,columns,Pakazatel::EntityName,values);
@@ -149,7 +149,17 @@ void Dbctx::insertPakazatel(const Pakazatel *p)
     }
 }
 
-
+Pakazatel *Dbctx::getPakazatelByName(const QString name)
+{
+    QHashIterator<int,Entity*> i(pakCache);
+    while (i.hasNext()){
+        i.next();
+        Pakazatel *p = i.value();
+        if (p->name() == name)
+            return *p;
+    }
+    return nullptr;
+}
 
 Entity *Dbctx::getEntity(QHash<int,Entity*> cache,const int id)
 {
@@ -256,7 +266,7 @@ void Dbctx::refreshCache(QHash<int, Entity *> cache, QList<Entity*> &list)
     }
 }
 QSqlRelationalTableModel *Dbctx::getPakazatelModel()
-{
+{    
     return m_pakazatelModel;
 }
 
@@ -274,6 +284,8 @@ void Dbctx::initPakazatelModel()
     m_pakazatelModel->setHeaderData(4,Qt::Horizontal,Pakazatel::D_CalcValue);
     m_pakazatelModel->setHeaderData(5,Qt::Horizontal,Pakazatel::D_FactValue);
     m_pakazatelModel->setHeaderData(6,Qt::Horizontal,Pakazatel::D_ParentID);
+
+    m_pakazatelModel->select();
 }
 
 

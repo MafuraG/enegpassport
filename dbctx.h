@@ -25,8 +25,8 @@ public:
     void getPakazateli(QList<Entity *> &pakazatelList, const QStringList filter);
 
     void insertPakazatel(const Pakazatel *p);
+    Pakazatel *getPakazatelByName(const QString name);
 
-    Entity* getEntity(QHash<int, Entity *> cache, const int id);
 
     QSqlRelationalTableModel *getFragmentModel();
     void initFragmentModel();
@@ -42,6 +42,8 @@ private:
     void buildString(QStringList &result, const QStringList &fragments, const QString &separator);
     void buildFilter(QString &q,  const QString &oper, const QStringList &params);
     void buildInsertQuery(QString &q, const QStringList &columns, const QString &table, const QStringList &values);
+
+    Entity* getEntity(QHash<int, Entity *> cache, const int id);
 
     QHash<int,Entity*> sectCache;
     QHash<int,Entity*> fragCache;

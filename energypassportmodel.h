@@ -148,6 +148,8 @@ public:
     QSqlRelationalTableModel *pakazatelModel();
     QSqlRelationalTableModel *fragmentModel();
 
+    double saveTreeModeltoDB();
+
 
 private:
     TreeModel *m_treeModel;
@@ -160,7 +162,7 @@ private:
     double koeffOtlichieVnutrVneshTemp(const double tnorm);
     double subCalcTeploZashita(const double tnorm, const double area, const double rprev);
     double totalCalcTeploZashita(QList<Entity *> fragments);
-    double saveTreeModeltoDB();
+
 };
 
 #endif // ENERGYPASSPORTMODEL_H

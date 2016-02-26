@@ -95,6 +95,8 @@ private:
     TreeItem *getItem(const QModelIndex &index) const;
     void refreshCache(TreeItem *item);
 
+    void mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i);
+
     TreeItem *rootItem;
     QHash<QString, TreeItem *> m_cache; //usefull coz we will be doing a lot of lookups
 };

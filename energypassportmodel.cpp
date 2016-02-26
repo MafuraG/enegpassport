@@ -246,10 +246,20 @@ double EnergyPassportModel::saveTreeModeltoDB()
     QList<TreeItem*> items;
     m_treeModel->getIndicators(items);
 
-    for(int i = 0; i < items.count();i++){
-        Pakazatel *p = m_treeModel->getIndicatorByName(items[i]->data(0).toString());
-        ctx->insertPakazatel(p);
+    QList<Entity*> entities;
+    QStringList filter;
+    QHash<QString,Entity*> cache;
+    ctx->getPakazateli(entities, filter);
+    for(int i = 0 ; i < entities.count(); i++){
+        Pakazatel *p = (Pakazatel*)entities[i];
+        cache[QString(p->name() + p->id())] = p;
     }
+
+    for(int i = 0; i < items.count();i++){
+        Pakazatel *p = ctx->getPakazatelByName(items[i]->data(0).toString());
+
+    }
+
 }
 
 

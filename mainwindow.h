@@ -4,6 +4,8 @@
 #include "energypassportmodel.h"
 #include "treemodel.h"
 
+#include <QAbstractItemView>
+#include <QAbstractItemModel>
 #include <QMainWindow>
 
 namespace Ui {
@@ -26,6 +28,9 @@ private slots:
     void on_action_3_triggered();
 
     void on_action_5_triggered();
+
+    void resizeView(QAbstractItemView *view, const QString vtype, QAbstractItemModel *model);
+
 
 private:
     Ui::MainWindow *ui;    
