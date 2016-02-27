@@ -2,6 +2,7 @@
 #include "treeitem.h"
 #include <QFile>
 
+
 EnergyPassportModel::EnergyPassportModel()
 {
 
@@ -18,10 +19,13 @@ EnergyPassportModel::EnergyPassportModel(const QString dbname)
                << Pakazatel::D_CalcValue
                << Pakazatel::D_FactValue;
 
-    QFile file(":/menu_structure.txt");
-    file.open(QIODevice::ReadOnly);
-    m_treeModel = new TreeModel(headers,file.readAll());
-    file.close();
+    //QFile file(":/menu_structure.txt");
+    //file.open(QIODevice::ReadOnly);
+    QList<Entity *> plist;
+    QStringList filter;
+    ctx->getPakazateli(plist,filter);
+    m_treeModel = new TreeModel(headers,plist);
+    //file.close();
 
     ctx->initFragmentModel();
     ctx->initPakazatelModel();
@@ -246,18 +250,25 @@ double EnergyPassportModel::saveTreeModeltoDB()
     QList<TreeItem*> items;
     m_treeModel->getIndicators(items);
 
-    QList<Entity*> entities;
-    QStringList filter;
-    QHash<QString,Entity*> cache;
-    ctx->getPakazateli(entities, filter);
-    for(int i = 0 ; i < entities.count(); i++){
-        Pakazatel *p = (Pakazatel*)entities[i];
-        cache[QString(p->name() + p->id())] = p;
-    }
+//    QList<Entity*> entities;
+//    QStringList filter;
+//    QHash<QString,Entity*> cache;
+//    ctx->getPakazateli(entities, filter);
+//    for(int i = 0 ; i < entities.count(); i++){
+//        Pakazatel *p = (Pakazatel*)entities[i];
+//        cache[QString(p->name() + p->id())] = p;
+//    }
 
     for(int i = 0; i < items.count();i++){
-        Pakazatel *p = ctx->getPakazatelByName(items[i]->data(0).toString());
+        Pakazatel *c = ctx->getPakazatelByName(items[i]->data(0).toString());
+        TreeItem *pItem = items[i]->parent();
 
+        if (pItem == nullptr) continue;
+
+        Pakazatel *p = ctx->getPakazatelByName(pItem->data(0).toString());
+        c->setParent(p);
+
+        ctx->insertPakazatel(c);
     }
 
 }

@@ -35,7 +35,7 @@ private slots:
 private:
     Ui::MainWindow *ui;    
 
-    EnergyPassportModel *energyModel ;
+    EnergyPassportModel *energyModel = nullptr ;
     QString dbname ;
 };
 

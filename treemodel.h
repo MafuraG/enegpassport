@@ -49,6 +49,9 @@
 #include <QModelIndex>
 #include <QVariant>
 #include <QHash>
+#include <QMultiHash>
+#include "entity.h"
+#include <QList>
 
 class TreeItem;
 
@@ -57,7 +60,7 @@ class TreeModel : public QAbstractItemModel
     Q_OBJECT
 
 public:
-    TreeModel(const QStringList &headers, const QString &data,
+    TreeModel(const QStringList &headers, const QList<Entity *> &data,
               QObject *parent = 0);
     ~TreeModel();
 
@@ -91,11 +94,14 @@ public:
     void getIndicators(QList<TreeItem*> &items);
 
 private:
-    void setupModelData(const QStringList &lines, TreeItem *parent);
+    void setupModelData(const QList<Entity*> data, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;
     void refreshCache(TreeItem *item);
 
     void mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i);
+    void mapPakazatelTreeItem(TreeItem *tree, Pakazatel *i);
+
+    void mapChildren(QMultiHash<int, Entity *> dict, TreeItem * parent, Pakazatel *p);
 
     TreeItem *rootItem;
     QHash<QString, TreeItem *> m_cache; //usefull coz we will be doing a lot of lookups

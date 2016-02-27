@@ -21,11 +21,24 @@ MainWindow::MainWindow(QWidget *parent) :
         this->close();
     }
 
-    energyModel = nullptr;
+    //open model database
+    //dbname = QFileDialog::getOpenFileName(this,"Выбор файла");
+    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+//    if  (energyModel != nullptr){
+//        //save current energy model then close db
+//        delete energyModel;
+//        energyModel = nullptr;
+//    }
 
-    //eneryModel = new EnergyPassportModel("");
+    energyModel = new EnergyPassportModel(dbname);
 
-    //ui->treeView->setModel(model);
+    ui->treeView->setModel(energyModel->treeModel());
+    ui->tableView->setModel(energyModel->pakazatelModel());
+    ui->tableView_2->setModel(energyModel->fragmentModel());
+
+    resizeView(ui->treeView,typeid(ui->treeView).name(),energyModel->treeModel());
+    resizeView(ui->tableView,typeid(ui->tableView).name(),energyModel->pakazatelModel());
+    resizeView(ui->tableView_2,typeid(ui->tableView_2).name(),energyModel->fragmentModel());
 
 }
 
@@ -42,23 +55,6 @@ void MainWindow::on_action_triggered()
 
 void MainWindow::on_action_2_triggered()
 {
-    //open model database
-    dbname = QFileDialog::getOpenFileName(this,"Выбор файла");
-    if  (energyModel != nullptr){
-        //save current energy model then close db
-        delete energyModel;
-        energyModel = nullptr;
-    }
-
-    energyModel = new EnergyPassportModel(dbname);
-
-    ui->treeView->setModel(energyModel->treeModel());
-    ui->tableView->setModel(energyModel->pakazatelModel());
-    ui->tableView_2->setModel(energyModel->fragmentModel());
-
-    resizeView(ui->treeView,typeid(ui->treeView).name(),energyModel->treeModel());
-    resizeView(ui->tableView,typeid(ui->tableView).name(),energyModel->pakazatelModel());
-    resizeView(ui->tableView_2,typeid(ui->tableView_2).name(),energyModel->fragmentModel());
 
 }
 

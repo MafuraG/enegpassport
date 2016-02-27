@@ -43,7 +43,7 @@
 #include "treeitem.h"
 #include "treemodel.h"
 
-TreeModel::TreeModel(const QStringList &headers, const QString &data, QObject *parent)
+TreeModel::TreeModel(const QStringList &headers, const QList<Entity*> &data, QObject *parent)
     : QAbstractItemModel(parent)
 {
     QVector<QVariant> rootData;
@@ -51,7 +51,7 @@ TreeModel::TreeModel(const QStringList &headers, const QString &data, QObject *p
         rootData << header;
 
     rootItem = new TreeItem(rootData);
-    setupModelData(data.split(QString("\n")), rootItem);
+    setupModelData(data, rootItem);
 }
 
 TreeModel::~TreeModel()
@@ -127,10 +127,36 @@ void TreeModel::mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i)
     if (tree->parent() != nullptr){
         Pakazatel *p = new Pakazatel();
         i->setParent(p);
-        mapTreeItemPakazatel(tree->parent(),*p);
+        mapTreeItemPakazatel(tree->parent(),p);
     }
     else
         i->setParent(nullptr);
+}
+
+void TreeModel::mapPakazatelTreeItem(TreeItem *tree, Pakazatel *i)
+{
+    tree->setData(0,i->name());
+    tree->setData(1,i->unit());
+    tree->setData(2,i->nomValue());
+    tree->setData(3,i->calcValue());
+    tree->setData(4,i->factValue());
+
+}
+
+void TreeModel::mapChildren(QMultiHash<int, Entity *> dict, TreeItem *parent, Pakazatel *p)
+{
+    QList<Entity*> children = dict.values(p->id());
+    for (int i = 0; i < children.count();i++){
+        Pakazatel* c = (Pakazatel*) children[i];
+        parent->insertChildren(parent->childCount(),1,rootItem->columnCount());
+        int r = parent->childCount() - 1;
+        TreeItem *childItem = parent->child(r);
+        mapPakazatelTreeItem(childItem,c);
+
+        if (dict.contains(c->id())){
+            mapChildren(dict,childItem,c);
+        }
+    }
 }
 
 QVariant TreeModel::headerData(int section, Qt::Orientation orientation,
@@ -285,62 +311,36 @@ bool TreeModel::setHeaderData(int section, Qt::Orientation orientation,
     return result;
 }
 
-void TreeModel::setupModelData(const QStringList &lines, TreeItem *parent)
+void TreeModel::setupModelData(const QList<Entity*> data, TreeItem *parent)
 {
-    QList<TreeItem*> parents;
-    QList<int> indentations;
-    parents << parent;
-    indentations << 0;
-    int columns_max = 5;
+    QMultiHash<int,Entity*> parentChildren;
 
-    int number = 0;
-
-    while (number < lines.count()) {
-        int position = 0;
-        while (position < lines[number].length()) {
-            if (lines[number].mid(position, 1) != " ")
-                break;
-            ++position;
-        }
-
-        QString lineData = lines[number].mid(position).trimmed();
-
-        if (!lineData.isEmpty()) {
-            // Read the column data from the rest of the line.
-            QStringList columnStrings = lineData.split("\t", QString::SkipEmptyParts);
-            //Padding
-            if (columnStrings.count() < columns_max ){
-                for(int column = columnStrings.count();column < columns_max  ; column ++){
-                    columnStrings.append("--");
-                }
-            }
-            QVector<QVariant> columnData;
-            for (int column = 0; column < columnStrings.count(); ++column)
-                columnData << columnStrings[column];
-
-            if (position > indentations.last()) {
-                // The last child of the current parent is now the new parent
-                // unless the current parent has no children.
-
-                if (parents.last()->childCount() > 0) {
-                    parents << parents.last()->child(parents.last()->childCount()-1);
-                    indentations << position;
-                }
-            } else {
-                while (position < indentations.last() && parents.count() > 0) {
-                    parents.pop_back();
-                    indentations.pop_back();
-                }
+    //Create a multi hash of key  and children
+    for (int i = 0 ; i < data.count(); i++){
+        Pakazatel* p = (Pakazatel*)data[i];
+        //search for children
+        for (int j= 0; j < data.count(); j++){
+            Pakazatel * c = (Pakazatel*) data[j];
+            if (c->parent() != nullptr && p->id() == c->parent()->id())
+            {
+               parentChildren.insert(p->id(),c);
             }
 
-            // Append a new item to the current parent's list of children.
-            TreeItem *parent = parents.last();
-            parent->insertChildren(parent->childCount(), 1, rootItem->columnCount());
-            for (int column = 0; column < columnData.size(); ++column)
-                parent->child(parent->childCount() - 1)->setData(column, columnData[column]);
         }
+    }
 
-        ++number;
+    //find roots
+
+    for (int i = 0 ; i < data.count(); i++){
+        Pakazatel* p = (Pakazatel*)data[i];
+        if (p->parent() == nullptr){            
+            QVector<QVariant> d(rootItem->columnCount());            
+            parent->insertChildren(parent->childCount(),1,rootItem->columnCount());
+            TreeItem *t = parent->child(parent->childCount() - 1) ;
+            mapPakazatelTreeItem(t,p);
+
+            mapChildren(parentChildren,t,p);
+        }
     }
 
     refreshCache(rootItem);

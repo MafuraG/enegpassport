@@ -44,12 +44,13 @@ private:
     void buildInsertQuery(QString &q, const QStringList &columns, const QString &table, const QStringList &values);
 
     Entity* getEntity(QHash<int, Entity *> cache, const int id);
+    void loadCache();
 
     QHash<int,Entity*> sectCache;
     QHash<int,Entity*> fragCache;
     QHash<int,Entity*> pakCache;
 
-    void refreshCache(QHash<int,Entity*> cache, QList<Entity *> &list);
+    void refreshCache(QHash<int, Entity *> &cache, QList<Entity *> &list);
     QSqlRelationalTableModel *m_fragmentModel;
     QSqlRelationalTableModel *m_pakazatelModel;
 

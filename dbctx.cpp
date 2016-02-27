@@ -2,6 +2,8 @@
 
 #include <QSqlQuery>
 #include <QStringList>
+#include <QDebug>
+#include <QSqlDatabase>
 
 Dbctx::Dbctx()
 {
@@ -17,6 +19,8 @@ Dbctx::Dbctx(const QString &dbtype, const QString &dbname)
     {
         QSqlQuery temp1;
         query = temp1;
+
+        loadCache();
     }
     else
     {
@@ -102,50 +106,69 @@ void Dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filt
     if (query.exec(q)){
         while (query.next()) {
             p = new Pakazatel();
-            p->setId(query.value(Pakazatel::ID).toInt());
-            int p_id = query.value(Pakazatel::ParentID).toInt();
-            parent = getEntity(pakCache,p_id);
-            p->setParent((Pakazatel*)parent);
+            QVariant val;
+            val = query.value(Pakazatel::ID);
+            if (!val.isNull()){
+                p->setId(query.value(Pakazatel::ID).toInt());
+                int p_id = query.value(Pakazatel::ParentID).toInt();
+                parent = new Pakazatel();
+                parent->setId(p_id);
+                p->setParent((Pakazatel*)parent);
+            }else{
+                p->setParent(NULL);
+            }
             p->setName(query.value(Pakazatel::Name).toString());
             p->setUnit(query.value(Pakazatel::Unit).toString());
             pakazatelList.append(p);
         }
     }
     refreshCache(pakCache,pakazatelList);
+
+    //fill parents of pakazatel
+    for (int i = 0 ; i < pakazatelList.count(); i++){
+        //qDebug()<<i;
+        Pakazatel *c = (Pakazatel*)pakazatelList[i];
+        if (c->parent() != nullptr){
+            Pakazatel *p = (Pakazatel*)getEntity(pakCache,c->parent()->id());
+            c->setParent(p);
+        }
+    }
 }
 
 void Dbctx::insertPakazatel(const Pakazatel *p)
 {
     QStringList columns;
 
+    columns.append(Pakazatel::ID);
     columns.append(Pakazatel::Name);
     columns.append(Pakazatel::Unit);
     columns.append(Pakazatel::NomValue);
     columns.append(Pakazatel::CalcValue);
     columns.append(Pakazatel::FactValue);
-    //columns.append(Pakazatel::ParentID);
+    columns.append(Pakazatel::ParentID);
 
     QStringList values;
 
+    values.append(QString("%0").arg(p->id()));
     values.append(QString("'%0'").arg(p->name()));
     values.append(QString("'%0'").arg(p->unit()));
     values.append(QString("%0").arg(p->nomValue()));
     values.append(QString("%0").arg(p->calcValue()));
     values.append(QString("%0").arg(p->factValue()));
-    //values.append(QString("%0").arg(p->parent()->id()));
+    values.append(QString("%0").arg(p->parent()->id()));
 
     QString q;
     buildInsertQuery(q,columns,Pakazatel::EntityName,values);
 
-
+    qDebug()<<q;
     if (query.exec(q) == true)
     {
-        //qDebug()<<"insert :"<<name<<" success!";
+        qDebug()<<"insert :"<<p->name()<<" success!";
         return ;
     }
     else
     {
-        //qDebug()<<"FAIL: insert : "<<e_n.getEmp_id()<< " "<<e_n.getTel_num_id()<<" FAIL reason: "<<db.lastError()<<" Query : "<<q;;
+        qDebug()<<"FAIL: insert : "<<p->name()<<" Query : "<<q;
     }
 }
 
@@ -154,9 +177,9 @@ Pakazatel *Dbctx::getPakazatelByName(const QString name)
     QHashIterator<int,Entity*> i(pakCache);
     while (i.hasNext()){
         i.next();
-        Pakazatel *p = i.value();
+        Pakazatel *p = (Pakazatel*)i.value();
         if (p->name() == name)
-            return *p;
+            return p;
     }
     return nullptr;
 }
@@ -167,6 +190,15 @@ Entity *Dbctx::getEntity(QHash<int,Entity*> cache,const int id)
         return cache.value(id);
     }
     return NULL;
+}
+
+void Dbctx::loadCache()
+{
+    QList<Entity*> list;
+    QStringList f;
+    getFragments(list,f);
+    getSections(list,f);
+    getPakazateli(list,f);
 }
 
 void Dbctx::buildSelectQuery(QString &q, const QStringList &columns, const QString &table, const QStringList &filter)
@@ -233,7 +265,7 @@ void Dbctx::buildInsertQuery(QString &q, const QStringList &columns, const QStri
 
     if (columns.size() != values.size()) return;
 
-    q_str.append("INSERT  INTO ");
+    q_str.append("INSERT OR REPLACE  INTO ");
     q_str.append(QString("%0 ").arg(table));
 
     q_str.append("( ");
@@ -258,7 +290,7 @@ void Dbctx::buildInsertQuery(QString &q, const QStringList &columns, const QStri
 
 
 
-void Dbctx::refreshCache(QHash<int, Entity *> cache, QList<Entity*> &list)
+void Dbctx::refreshCache(QHash<int, Entity *> &cache, QList<Entity*> &list)
 {
     cache.clear();
     for (int i = 0 ; i < list.count(); i++){

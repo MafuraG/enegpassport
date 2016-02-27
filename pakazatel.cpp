@@ -2,7 +2,12 @@
 
 Pakazatel::Pakazatel()
 {
-
+    setId(-1);
+    m_name = "";
+    m_parent = nullptr;
+    m_calcValue = 0.0;
+    m_nomValue = 0.0;
+    m_factValue = 0.0;
 }
 
 Pakazatel::~Pakazatel()
