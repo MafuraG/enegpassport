@@ -98,6 +98,7 @@ void Dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filt
     columns.append(Pakazatel::Name);
     columns.append(Pakazatel::Unit);
     columns.append(Pakazatel::ParentID);
+    columns.append(Pakazatel::Calculated);
 
     QString q;
     Pakazatel *p;
@@ -119,6 +120,7 @@ void Dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filt
             }
             p->setName(query.value(Pakazatel::Name).toString());
             p->setUnit(query.value(Pakazatel::Unit).toString());
+            p->setCalculated(query.value(Pakazatel::Calculated).toBool());
             pakazatelList.append(p);
         }
     }
@@ -146,6 +148,8 @@ void Dbctx::insertPakazatel(const Pakazatel *p)
     columns.append(Pakazatel::CalcValue);
     columns.append(Pakazatel::FactValue);
     columns.append(Pakazatel::ParentID);
+    columns.append(Pakazatel::Calculated);
+
 
     QStringList values;
 
@@ -156,6 +160,7 @@ void Dbctx::insertPakazatel(const Pakazatel *p)
     values.append(QString("%0").arg(p->calcValue()));
     values.append(QString("%0").arg(p->factValue()));
     values.append(QString("%0").arg(p->parent()->id()));
+    values.append(QString("%0").arg(p->calculated()));
 
     QString q;
     buildInsertQuery(q,columns,Pakazatel::EntityName,values);
@@ -317,7 +322,8 @@ void Dbctx::initPakazatelModel()
     m_pakazatelModel->setHeaderData(5,Qt::Horizontal,Pakazatel::D_FactValue);
     m_pakazatelModel->setHeaderData(6,Qt::Horizontal,Pakazatel::D_ParentID);
 
-    m_pakazatelModel->select();
+    m_pakazatelModel->select();    
+
 }
 
 

@@ -32,6 +32,8 @@ private slots:
     void resizeView(QAbstractItemView *view, const QString vtype, QAbstractItemModel *model);
 
 
+    void on_action_6_triggered();
+
 private:
     Ui::MainWindow *ui;    
 

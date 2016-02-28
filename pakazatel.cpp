@@ -70,6 +70,16 @@ void Pakazatel::setName(const QString &name)
     m_name = name;
 }
 
+bool Pakazatel::calculated() const
+{
+    return m_calculated;
+}
+
+void Pakazatel::setCalculated(bool calculated)
+{
+    m_calculated = calculated;
+}
+
 
 QString Pakazatel::Name = "name";
 QString Pakazatel::EntityName = "pakazatel";
@@ -78,6 +88,7 @@ QString Pakazatel::NomValue = "normvalue";
 QString Pakazatel::CalcValue = "calcvalue";
 QString Pakazatel::FactValue = "factvalue";
 QString Pakazatel::ParentID = "parentid";
+QString Pakazatel::Calculated = "calculated";
 
 QString Pakazatel::D_Name = "Показатель";
 QString Pakazatel::D_EntityName = "pakazatel";
@@ -86,6 +97,7 @@ QString Pakazatel::D_NomValue = "Нормативное значение пок�
 QString Pakazatel::D_CalcValue = "Расчетное (проектное) значение показателя";
 QString Pakazatel::D_FactValue = "Фактическое значение показателя";
 QString Pakazatel::D_ParentID = "Корень";
+QString Pakazatel::D_Calculated = "Расчетный";
 
 
 

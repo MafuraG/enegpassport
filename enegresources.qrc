@@ -9,5 +9,6 @@
         <file>basicons/save-icon.png</file>
         <file>basicons/info-round-button.png</file>
         <file>basicons/enter.png</file>
+        <file>basicons/calculator-with-six-buttons.png</file>
     </qresource>
 </RCC>

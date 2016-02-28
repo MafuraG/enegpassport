@@ -23,8 +23,7 @@ SOURCES += main.cpp\
     dbctx.cpp \
     fragment.cpp \
     section.cpp \
-    entity.cpp \
-    dialogteplozashita.cpp
+    entity.cpp
 
 HEADERS  += mainwindow.h \
     treeitem.h \
@@ -34,11 +33,9 @@ HEADERS  += mainwindow.h \
     dbctx.h \
     fragment.h \
     section.h \
-    entity.h \
-    dialogteplozashita.h
+    entity.h
 
-FORMS    += mainwindow.ui \
-    dialogteplozashita.ui
+FORMS    += mainwindow.ui
 
 RESOURCES += \
     enegresources.qrc

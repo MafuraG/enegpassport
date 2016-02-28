@@ -30,6 +30,9 @@ public:
     QString name() const;
     void setName(const QString &name);
 
+    bool calculated() const;
+    void setCalculated(bool calculated);
+
 
     static QString Name;
     static QString EntityName;
@@ -38,6 +41,7 @@ public:
     static QString CalcValue;
     static QString FactValue;
     static QString ParentID;
+    static QString Calculated;
 
     static QString D_Name;
     static QString D_EntityName;
@@ -46,6 +50,8 @@ public:
     static QString D_CalcValue;
     static QString D_FactValue;
     static QString D_ParentID;
+    static QString D_Calculated;
+
 
 private :
 
@@ -54,6 +60,7 @@ private :
     double m_nomValue;
     double m_calcValue;
     double m_factValue;
+    bool m_calculated;
 
     Pakazatel *m_parent;
 };

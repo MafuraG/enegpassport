@@ -91,6 +91,8 @@
     <addaction name="action_2"/>
     <addaction name="action_6"/>
     <addaction name="separator"/>
+    <addaction name="action_4"/>
+    <addaction name="separator"/>
     <addaction name="action_3"/>
    </widget>
    <widget class="QMenu" name="menu_2">
@@ -116,6 +118,7 @@
    <addaction name="action_2"/>
    <addaction name="action_6"/>
    <addaction name="separator"/>
+   <addaction name="action_4"/>
    <addaction name="action_5"/>
   </widget>
   <action name="action">
@@ -161,6 +164,15 @@
    </property>
    <property name="text">
     <string>Сохранить</string>
+   </property>
+  </action>
+  <action name="action_4">
+   <property name="icon">
+    <iconset resource="enegresources.qrc">
+     <normaloff>:/icons/basicons/calculator-with-six-buttons.png</normaloff>:/icons/basicons/calculator-with-six-buttons.png</iconset>
+   </property>
+   <property name="text">
+    <string>Расчет показателей</string>
    </property>
   </action>
  </widget>

@@ -129,7 +129,8 @@ public:
 	QString norm_vozdukh_pronisaemost_dver = "нормируемая воздухопроницаемость дверей";
 	QString norm_vozdukh_pronisaemost_okon = "нормируемая воздухопроницаемость окон";  //Таблица 11 СниП 23-02
 	//Calaculated indicators 
-	//Показатель компактности здания
+
+    //Показатель компактности здания
     double kompaktnost ();
 	//Кратность воздухообмена здания за отопительный период при удельной норме воздухообмена
     double kratnostvozdukhobmen();
@@ -140,15 +141,38 @@ public:
 	//Удельная вентиляционная характеристика здания
     double udelnayaventilyatsii();
 	//Удельная характеристика бытовых тепловыделений здания
-    double udelnayatenlovyidelenie();
+    double udelnayabwitavayatenlovyidelenie();
 	//Удельная характеристика теплопоступлений в здание от солнечной радиации
     double udelnayatenlopostunleniesontse();
+
+    //Coefficients
+    //Коэффициенты
+
+    //Коэффициент, учитывающий снижение использования теплопоступлений в период превышения их над теплопотерями
+    double koeffsnijenieteplopastuplenia();
+
+    //Комплексные показатели расхода тепловой энергии
+
+    //Расчетный удельный расход тепловой энергии на отопление здания
+    double udelniraskhodteplovoienergii();
+
+    //Энергетические нагрузки здания
+    //Удельный расход тепловой энергии на отопление зданий за отопительный период
+    double udelniiraskhodnaotopperiod();
+    //Расход тепловой энергии на отопление зданий за отопительный период
+    double raskhodnaotopperiod();
+    //Общие теплопотери здания за отопительный период
+    double obshieteplopoteriizaperiod();
+
+
 
     TreeModel *treeModel() ;
     QSqlRelationalTableModel *pakazatelModel();
     QSqlRelationalTableModel *fragmentModel();
 
     double saveTreeModeltoDB();
+    double saveModelDatatoFile(const QString fname);
+    double loadModelDataFromFile(const QString fname);
 
 
 private:

@@ -122,7 +122,10 @@ void TreeModel::mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i)
     val = tree->data(3);
     i->setCalcValue(val.toDouble());
     val = tree->data(4);
-    i->setFactValue(val.toDouble());
+    i->setFactValue(val.toDouble());    
+    val = tree->data(5);
+    i->setCalculated(val.toBool());
+
 
     if (tree->parent() != nullptr){
         Pakazatel *p = new Pakazatel();
@@ -140,6 +143,7 @@ void TreeModel::mapPakazatelTreeItem(TreeItem *tree, Pakazatel *i)
     tree->setData(2,i->nomValue());
     tree->setData(3,i->calcValue());
     tree->setData(4,i->factValue());
+    tree->setData(5,i->calculated());
 
 }
 
@@ -265,6 +269,7 @@ void TreeModel::setIndicatorByName(const QString name, Pakazatel *p)
     if (m_cache.contains(name)){
         TreeItem * item = m_cache.value(name);
         item->setData(3,p->calcValue());
+        item->setData(5,p->calculated());
     }
 }
 

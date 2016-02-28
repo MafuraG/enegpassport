@@ -1,6 +1,7 @@
 #include "energypassportmodel.h"
 #include "treeitem.h"
 #include <QFile>
+#include <QTextStream>
 
 
 EnergyPassportModel::EnergyPassportModel()
@@ -17,7 +18,8 @@ EnergyPassportModel::EnergyPassportModel(const QString dbname)
                << Pakazatel::D_Unit
                << Pakazatel::D_NomValue
                << Pakazatel::D_CalcValue
-               << Pakazatel::D_FactValue;
+               << Pakazatel::D_FactValue
+               << Pakazatel::D_Calculated;
 
     //QFile file(":/menu_structure.txt");
     //file.open(QIODevice::ReadOnly);
@@ -168,7 +170,7 @@ double EnergyPassportModel::udelnayaventilyatsii()
     return K_vent;
 }
 
-double EnergyPassportModel::udelnayatenlovyidelenie()
+double EnergyPassportModel::udelnayabwitavayatenlovyidelenie()
 {
     if (m_treeModel == nullptr) return 0;
 
@@ -273,6 +275,48 @@ double EnergyPassportModel::saveTreeModeltoDB()
 
 }
 
+double EnergyPassportModel::saveModelDatatoFile(const QString fname)
+{
+    QList<TreeItem*> list;
+    m_treeModel->getIndicators(list);
+
+    QFile file(fname);
+    if (file.open(QIODevice::ReadWrite)){
+        QTextStream out(&file);
+
+        for (int i = 0 ; i < list.count(); i++){
+            TreeItem *t = list[i];
+            if (t != nullptr){
+                out << t->data(0).toString() <<";"<<t->data(3).toString()<<"\n";
+            }
+        }
+    }
+}
+
+double EnergyPassportModel::loadModelDataFromFile(const QString fname)
+{
+    QList<TreeItem*> list;
+    m_treeModel->getIndicators(list);
+
+    QFile file(fname);
+    if (file.open(QIODevice::ReadWrite)){
+        QTextStream in(&file);
+        QString line;
+        while (in.readLineInto(&line)){
+            QStringList parts = line.split(QString(";"));
+            if (parts.count() > 1){
+                Pakazatel p;
+                QString calcval = parts[1];
+                QString name = parts[0];
+                p.setCalcValue(calcval.toDouble());
+                p.setName(name);
+
+                m_treeModel->setIndicatorByName(name,&p);
+            }
+        }
+    }
+}
+
 
 double EnergyPassportModel::udelnayatenlopostunleniesontse()
 {
@@ -320,6 +364,78 @@ double EnergyPassportModel::udelnayatenlopostunleniesontse()
     double GSOP = raschetGSOP();
     double K_rad = (11.6 * Q_rad)/(V_otop * GSOP);
     return K_rad;
+}
+
+double EnergyPassportModel::koeffsnijenieteplopastuplenia()
+{
+    //ОКРУГЛ(0,7+0,000025*('Эн паспорт 1'!E31-1000);2)
+    double GSOP = raschetGSOP();
+    double res = (0.7 + (0.000025 * (GSOP - 1000)));
+    return res;
+}
+
+double EnergyPassportModel::udelniraskhodteplovoienergii()
+{
+    Pakazatel *p_thermal_loss_reduction = m_treeModel->getIndicatorByName("coeff_reduction");
+    Pakazatel *p_extra_loss = m_treeModel->getIndicatorByName("coeff_additional");
+    Pakazatel *p_auto_regulation = m_treeModel->getIndicatorByName("coeff_auto_reg");
+
+    double K_ob = udelnayateplozashita();
+    double K_vent = udelnayaventilyatsii();
+    double K_bwit = udelnayabwitavayatenlovyidelenie();
+    double K_rad = udelnayatenlopostunleniesontse();
+    double n = koeffsnijenieteplopastuplenia();
+    double Z = p_auto_regulation->calcValue();
+    double X = p_thermal_loss_reduction->calcValue();
+    double bh = p_extra_loss->calcValue();
+
+    //qрот=[Kоб + Квент - (Кбыт + Крад) * n * z] * (1 - x) * bh
+    double q_rot = (K_ob + K_vent - ((K_bwit + K_rad) * n * Z)) * ((1-X) * bh);
+
+    return q_rot;
+
+}
+
+double EnergyPassportModel::udelniiraskhodnaotopperiod()
+{
+    //q=Qгодот/Аот
+
+    Pakazatel * p_area_all_floors = m_treeModel->getIndicatorByName(area_all_floors);
+
+    double A_ot =  p_area_all_floors->calcValue();
+    double q_godrot = raskhodnaotopperiod();
+    double q = q_godrot / A_ot ;
+
+    return q ;
+}
+
+double EnergyPassportModel::raskhodnaotopperiod()
+{
+    //Qгодот = 0,024*ГСОП*Vот*qрот
+    Pakazatel * p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
+
+    double GSOP = raschetGSOP();
+    double V_otop = p_heated_volume->calcValue();
+    double q_rot = udelniraskhodteplovoienergii();
+
+    double Q_godot = 0.024 * GSOP * V_otop * q_rot ;
+
+}
+
+double EnergyPassportModel::obshieteplopoteriizaperiod()
+{
+    //Qгодобщ = 0,024*ГСОП*Vот*(Коб+Квент)
+    Pakazatel * p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
+
+    double GSOP = raschetGSOP();
+    double V_otop = p_heated_volume->calcValue();
+    double K_ob = udelnayateplozashita();
+    double K_vent = udelnayaventilyatsii();
+
+    double Q_god_obsh = 0.024 * GSOP * V_otop * (K_ob + K_vent);
+
+    return Q_god_obsh;
+
 }
 
 TreeModel *EnergyPassportModel::treeModel()

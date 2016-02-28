@@ -40,6 +40,9 @@ MainWindow::MainWindow(QWidget *parent) :
     resizeView(ui->tableView,typeid(ui->tableView).name(),energyModel->pakazatelModel());
     resizeView(ui->tableView_2,typeid(ui->tableView_2).name(),energyModel->fragmentModel());
 
+    ui->tableView->setColumnHidden(0,true);
+    ui->tableView_2->setColumnHidden(0,true);
+
 }
 
 MainWindow::~MainWindow()
@@ -55,10 +58,18 @@ void MainWindow::on_action_triggered()
 
 void MainWindow::on_action_2_triggered()
 {
-
+    //load Passport data
+    QString selectedFilter;
+    QString fileName = QFileDialog::getOpenFileName(this,
+                                tr("Загрузка данных"),
+                                QDir::currentPath(),
+                                tr("CSV Files (*.csv)"),
+                                &selectedFilter
+                                );
+    if (!fileName.isEmpty()){
+        energyModel->loadModelDataFromFile(fileName);
+    }
 }
-
-
 
 void MainWindow::on_action_3_triggered()
 {
@@ -74,8 +85,7 @@ void MainWindow::on_action_3_triggered()
 
 void MainWindow::on_action_5_triggered()
 {
-    //open fragments editor
-    //energyModel->saveTreeModeltoDB();
+
 }
 
 void MainWindow::resizeView(QAbstractItemView *view,const QString vtype, QAbstractItemModel *model)
@@ -91,3 +101,18 @@ void MainWindow::resizeView(QAbstractItemView *view,const QString vtype, QAbstra
 }
 
 
+
+void MainWindow::on_action_6_triggered()
+{
+    //Save model data to file
+    QString selectedFilter;
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                tr("Сохранить Энергетический паспорт"),
+                                QDir::currentPath(),
+                                tr("CSV Files (*.csv)"),
+                                &selectedFilter);
+    if (!fileName.isEmpty()){
+        energyModel->saveModelDatatoFile(fileName);
+    }
+
+}
