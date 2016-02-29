@@ -76,17 +76,17 @@ public:
     //Thermal Technical indicators
     QString thermal_indicators = "Теплотехнические показатели";
     QString thermal_R_boundary = "Приведенное сопротивление теплопередаче наружных ограждений,   в том числе:";
-    QString thermal_R_facade_keramzitbeton = "навесной фасадной системы с основанием из керамзитобетона";
-    QString thermal_R_facade_beton = "навесной фасадной системы с основанием из железобетона";
-    QString thermal_R_wall_keramzit = "трехслойной стены по кладке из керамзитобетона";
-    QString thermal_R_wall_beton = "трехслойной стены по монолитному железобетону";
-    QString thermal_R_windows_balcony = "окон и балконных дверей";
-    QString thermal_R_lifts = "окон лестнично-лифтовых узлов";
-    QString thermal_R_doors = "входных дверей";
-    QString thermal_R_roof = "покрытий (совмещенных)";
-    QString thermal_R_roof_used = "эксплуатируемой кровли";
-    QString thermal_R_texpodpoli = "перекрытий над техническими подпольями";
-    QString thermal_R_proezd ="перекрытий над проездами и под эркерами";
+    QString thermal_R_facade_keramzitbeton = "навесной фасадной системы с основанием из керамзитобетона-R";
+    QString thermal_R_facade_beton = "навесной фасадной системы с основанием из железобетона-R";
+    QString thermal_R_wall_keramzit = "трехслойной стены по кладке из керамзитобетона-R";
+    QString thermal_R_wall_beton = "трехслойной стены по монолитному железобетону-R";
+    QString thermal_R_windows_balcony = "окон и балконных дверей-R";
+    QString thermal_R_lifts = "окон лестнично-лифтовых узлов-R";
+    QString thermal_R_doors = "входных дверей-R";
+    QString thermal_R_roof = "покрытий (совмещенных)-R";
+    QString thermal_R_roof_used = "эксплуатируемой кровли-R";
+    QString thermal_R_texpodpoli = "перекрытий над техническими подпольями-R";
+    QString thermal_R_proezd ="перекрытий над проездами и под эркерами-R";
 
     //other indicators
     QString other_indicators = "Показатели вспомагательные";

@@ -22,8 +22,9 @@ MainWindow::MainWindow(QWidget *parent) :
     }
 
     //open model database
-    //dbname = QFileDialog::getOpenFileName(this,"Выбор файла");
-    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+    //STRICTLY for testing on Production I will use current directory with exe
+    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
+    //dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
 //    if  (energyModel != nullptr){
 //        //save current energy model then close db
 //        delete energyModel;
@@ -41,8 +42,11 @@ MainWindow::MainWindow(QWidget *parent) :
     resizeView(ui->tableView_2,typeid(ui->tableView_2).name(),energyModel->fragmentModel());
 
     ui->tableView->setColumnHidden(0,true);
-    ui->tableView_2->setColumnHidden(0,true);
+    ui->tableView->setColumnHidden(3,true);
+    ui->tableView->setColumnHidden(4,true);
+    ui->tableView->setColumnHidden(5,true);
 
+    ui->tableView_2->setColumnHidden(0,true);    
 }
 
 MainWindow::~MainWindow()
@@ -68,6 +72,7 @@ void MainWindow::on_action_2_triggered()
                                 );
     if (!fileName.isEmpty()){
         energyModel->loadModelDataFromFile(fileName);
+        ui->statusBar->showMessage(tr("Загрузка завершена."),3000);
     }
 }
 
@@ -113,6 +118,7 @@ void MainWindow::on_action_6_triggered()
                                 &selectedFilter);
     if (!fileName.isEmpty()){
         energyModel->saveModelDatatoFile(fileName);
+        ui->statusBar->showMessage(tr("Файл сохранен."),3000);
     }
 
 }

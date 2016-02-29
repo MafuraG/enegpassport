@@ -2,6 +2,7 @@
 #include "treeitem.h"
 #include <QFile>
 #include <QTextStream>
+#include <QLocale>
 
 
 EnergyPassportModel::EnergyPassportModel()
@@ -84,6 +85,7 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     Pakazatel * p_vysota_zdanya = m_treeModel->getIndicatorByName(vysota_zdaniya);
     Pakazatel * p_skopost_veter = m_treeModel->getIndicatorByName(max_wind_velocity);
     Pakazatel * p_coeff_rekuperator = m_treeModel->getIndicatorByName(coeff_recuperation);
+    Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByName(heating_period_temp_avg);
 
     double lvent1 = 30 * p_kol_kvartiryi->calcValue() ;
     double lvent2 = 0.35 * 3 * p_area_living_space->calcValue();
@@ -99,7 +101,8 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     double Gn_dv = 7.00;
     double n_vent = 60; // TODO get from model or constant?
     double n_info = 168;
-    double rho_vozdukh = 353/(273 + 0.0);
+    double temp_ext_avg = p_temp_avg_ext->calcValue();
+    double rho_vozdukh = 353/(273 + temp_ext_avg);
     double k_eff = p_coeff_rekuperator->calcValue();
 
     double delta_P_okna = paznostDavlenie(0.28, y_int, v, y_ext);
@@ -279,15 +282,24 @@ double EnergyPassportModel::saveModelDatatoFile(const QString fname)
 {
     QList<TreeItem*> list;
     m_treeModel->getIndicators(list);
+    QLocale russian(QLocale::Russian);
 
     QFile file(fname);
     if (file.open(QIODevice::ReadWrite)){
         QTextStream out(&file);
-
+        out<<Pakazatel::D_Name <<";"<<Pakazatel::D_CalcValue<<";"<<Pakazatel::D_ParentID<<"\n";
         for (int i = 0 ; i < list.count(); i++){
             TreeItem *t = list[i];
-            if (t != nullptr){
-                out << t->data(0).toString() <<";"<<t->data(3).toString()<<"\n";
+            //t not null(exists) and is a leaf on tree (no child elements)
+            if (t != nullptr && t->childCount() == 0 ){
+                //find out if leaf is calculated
+                QVariant val = t->data(5);
+                if (val.toBool() == false){
+                    QString p = "--";
+                    QVariant cal = t->data(3) ;
+                    if (t->parent() != nullptr) p = t->parent()->data(0).toString();
+                    out << t->data(0).toString() <<";"<<russian.toString(cal.toDouble())<<";"<<p<<"\n";
+                }
             }
         }
     }
@@ -297,19 +309,28 @@ double EnergyPassportModel::loadModelDataFromFile(const QString fname)
 {
     QList<TreeItem*> list;
     m_treeModel->getIndicators(list);
+    //RegEx to check if string is composed of digits
+    QLocale russian(QLocale::Russian);
 
     QFile file(fname);
-    if (file.open(QIODevice::ReadWrite)){
+    if (file.open(QIODevice::ReadOnly)){
         QTextStream in(&file);
         QString line;
-        while (in.readLineInto(&line)){
+        while (!in.atEnd()){
+            line = in.readLine();
             QStringList parts = line.split(QString(";"));
             if (parts.count() > 1){
                 Pakazatel p;
                 QString calcval = parts[1];
                 QString name = parts[0];
-                p.setCalcValue(calcval.toDouble());
-                p.setName(name);
+                bool isnum;
+                double dcalcval = russian.toDouble(calcval,&isnum);
+                if (isnum){
+                    p.setCalcValue(dcalcval);
+                    p.setName(name);
+                    p.setCalculated(false);
+                }
+                else continue;
 
                 m_treeModel->setIndicatorByName(name,&p);
             }

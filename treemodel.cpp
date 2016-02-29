@@ -42,6 +42,7 @@
 
 #include "treeitem.h"
 #include "treemodel.h"
+#include "QDebug";
 
 TreeModel::TreeModel(const QStringList &headers, const QList<Entity*> &data, QObject *parent)
     : QAbstractItemModel(parent)
@@ -275,9 +276,10 @@ void TreeModel::setIndicatorByName(const QString name, Pakazatel *p)
 
 void TreeModel::getIndicators(QList<TreeItem *> &items)
 {
+    qDebug()<< "In getIndicators"<<"\n";
     items.clear();
     foreach(TreeItem* item, m_cache){
-        items.append(item);
+        items.append(item);        
     }
 }
 
