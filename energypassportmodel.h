@@ -165,14 +165,17 @@ public:
     double obshieteplopoteriizaperiod();
 
 
+    void raschetPakazateli();
+
+
 
     TreeModel *treeModel() ;
     QSqlRelationalTableModel *pakazatelModel();
     QSqlRelationalTableModel *fragmentModel();
 
-    double saveTreeModeltoDB();
-    double saveModelDatatoFile(const QString fname);
-    double loadModelDataFromFile(const QString fname);
+    void saveTreeModeltoDB();
+    void saveModelDatatoFile(const QString fname);
+    void loadModelDataFromFile(const QString fname);
 
 
 private:

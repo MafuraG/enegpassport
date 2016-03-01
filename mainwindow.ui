@@ -87,7 +87,6 @@
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="action"/>
     <addaction name="action_2"/>
     <addaction name="action_6"/>
     <addaction name="separator"/>
@@ -95,14 +94,7 @@
     <addaction name="separator"/>
     <addaction name="action_3"/>
    </widget>
-   <widget class="QMenu" name="menu_2">
-    <property name="title">
-     <string>Справочник</string>
-    </property>
-    <addaction name="action_5"/>
-   </widget>
    <addaction name="menu"/>
-   <addaction name="menu_2"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -114,22 +106,11 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
-   <addaction name="action"/>
    <addaction name="action_2"/>
    <addaction name="action_6"/>
    <addaction name="separator"/>
    <addaction name="action_4"/>
-   <addaction name="action_5"/>
   </widget>
-  <action name="action">
-   <property name="icon">
-    <iconset resource="enegresources.qrc">
-     <normaloff>:/icons/basicons/new-document-button.png</normaloff>:/icons/basicons/new-document-button.png</iconset>
-   </property>
-   <property name="text">
-    <string>Создать</string>
-   </property>
-  </action>
   <action name="action_2">
    <property name="icon">
     <iconset resource="enegresources.qrc">
@@ -146,15 +127,6 @@
    </property>
    <property name="text">
     <string>Выход</string>
-   </property>
-  </action>
-  <action name="action_5">
-   <property name="icon">
-    <iconset resource="enegresources.qrc">
-     <normaloff>:/icons/basicons/info-round-button.png</normaloff>:/icons/basicons/info-round-button.png</iconset>
-   </property>
-   <property name="text">
-    <string>Фрагменты</string>
    </property>
   </action>
   <action name="action_6">

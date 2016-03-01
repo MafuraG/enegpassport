@@ -42,7 +42,7 @@
 
 #include "treeitem.h"
 #include "treemodel.h"
-#include "QDebug";
+#include "QDebug"
 
 TreeModel::TreeModel(const QStringList &headers, const QList<Entity*> &data, QObject *parent)
     : QAbstractItemModel(parent)

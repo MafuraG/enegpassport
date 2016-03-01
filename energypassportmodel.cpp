@@ -68,7 +68,8 @@ double EnergyPassportModel::paznostDavlenie(const double k, const double y_int, 
 double EnergyPassportModel::kolichestvoinfiltrvozdukh(const double delta_P_dver, const double A_ok, const double R_dv, const double A_dv,
                                                       const double R_ok, const double delta_P_okna)
 {
-    double G_inf = (((A_ok/R_ok) * (pow((delta_P_okna/10.0),2/3.0))) + A_dv/R_dv) *(pow((delta_P_dver/10), 1/2.0));
+    //Gинф = (Aок / Rок) · (DPок / 10)2/3 + Aдв / Rдв) · (DPдв / 10)1/2
+    double G_inf = ( A_ok / R_ok )* (pow((delta_P_okna/10.0),0.666666667) + (A_dv/R_dv)) * sqrt(delta_P_dver/10);
     return G_inf;
 }
 
@@ -82,7 +83,7 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     Pakazatel * p_volume_reduction = m_treeModel->getIndicatorByName(coeff_volume_reduction);
     Pakazatel * p_area_doors = m_treeModel->getIndicatorByName(area_doors);
     Pakazatel * p_area_windows = m_treeModel->getIndicatorByName(area_windows_balcony);
-    Pakazatel * p_vysota_zdanya = m_treeModel->getIndicatorByName(vysota_zdaniya);
+    //Pakazatel * p_vysota_zdanya = m_treeModel->getIndicatorByName(vysota_zdaniya);
     Pakazatel * p_skopost_veter = m_treeModel->getIndicatorByName(max_wind_velocity);
     Pakazatel * p_coeff_rekuperator = m_treeModel->getIndicatorByName(coeff_recuperation);
     Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByName(heating_period_temp_avg);
@@ -103,7 +104,7 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     double n_info = 168;
     double temp_ext_avg = p_temp_avg_ext->calcValue();
     double rho_vozdukh = 353/(273 + temp_ext_avg);
-    double k_eff = p_coeff_rekuperator->calcValue();
+    //double k_eff = p_coeff_rekuperator->calcValue();
 
     double delta_P_okna = paznostDavlenie(0.28, y_int, v, y_ext);
     double delta_P_dver = paznostDavlenie(0.55, y_int, v, y_ext);
@@ -112,16 +113,16 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     double A_ok = p_area_windows->calcValue();
     double A_dv = p_area_doors->calcValue();
     double G_inf = kolichestvoinfiltrvozdukh(delta_P_dver, A_ok, R_dv, A_dv, R_ok, delta_P_okna);
-    double lpritok = 3 * p_area_living_space->calcValue();
+    //double lpritok = 3 * p_area_living_space->calcValue();
 
 
     double B_v = p_volume_reduction->calcValue();
     double V_otop = p_heated_volume->calcValue();
     double n_v1 = lvent/ (B_v * V_otop );
 
-    double n_v2 = (((lvent * n_vent)/168) + (G_inf * n_info)/(B_v * V_otop) );
+    double n_v2 = (((lvent * n_vent)/168) + (G_inf *0.8* n_info)/(168 * rho_vozdukh))/(B_v * V_otop) ;
 
-    double n_v3 = ((G_inf * n_info)/(168 * rho_vozdukh)/(B_v * V_otop));
+    double n_v3 = ((G_inf * n_info)/(168 * rho_vozdukh))/(B_v * V_otop);
 
     double n = n_v1 + n_v2 + n_v3 ;
 
@@ -177,18 +178,19 @@ double EnergyPassportModel::udelnayabwitavayatenlovyidelenie()
 {
     if (m_treeModel == nullptr) return 0;
 
-    Pakazatel * p_bytovoi = m_treeModel->getIndicatorByName(specific_Thermal_Emission);
+    Pakazatel * p_bytovoi = m_treeModel->getIndicatorByName(thermal_E_building);
     Pakazatel * p_area_living_space = m_treeModel->getIndicatorByName(area_living_space);
     Pakazatel * p_heated_volume = m_treeModel->getIndicatorByName(volume_heated_space);
-    Pakazatel * p_temp_ext = m_treeModel->getIndicatorByName(temp_air_external);
+    //Pakazatel * p_temp_ext = m_treeModel->getIndicatorByName(temp_air_external);
     Pakazatel * p_temp_int = m_treeModel->getIndicatorByName(temp_air_internal);
+    Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByName(heating_period_temp_avg);
 
 
     double q_byit = p_bytovoi->calcValue();
     double a_jiloi = p_area_living_space->calcValue();
     double V_otop = p_heated_volume->calcValue();
     double t_int = p_temp_int->calcValue();
-    double t_ext = p_temp_ext->calcValue();
+    double t_ext = p_temp_avg_ext->calcValue();
 
     double K_byit = (q_byit * a_jiloi)/(V_otop * (t_int - t_ext));
 
@@ -219,7 +221,7 @@ double EnergyPassportModel::koeffOtlichieVnutrVneshTemp(const double tnorm)
     double temp_ext_avg = p_temp_avg_ext->calcValue();
     double temp_ext = p_temp_ext->calcValue();
 
-    double res = (tnorm - temp_ext_avg)/(temp_int - temp_ext);
+    double res = (tnorm - temp_ext_avg)/(temp_int - temp_ext_avg);
 
     return res;
 }
@@ -250,7 +252,7 @@ double EnergyPassportModel::totalCalcTeploZashita(QList<Entity *> fragments)
     return res;
 }
 
-double EnergyPassportModel::saveTreeModeltoDB()
+void EnergyPassportModel::saveTreeModeltoDB()
 {
     QList<TreeItem*> items;
     m_treeModel->getIndicators(items);
@@ -278,7 +280,7 @@ double EnergyPassportModel::saveTreeModeltoDB()
 
 }
 
-double EnergyPassportModel::saveModelDatatoFile(const QString fname)
+void EnergyPassportModel::saveModelDatatoFile(const QString fname)
 {
     QList<TreeItem*> list;
     m_treeModel->getIndicators(list);
@@ -291,7 +293,7 @@ double EnergyPassportModel::saveModelDatatoFile(const QString fname)
         for (int i = 0 ; i < list.count(); i++){
             TreeItem *t = list[i];
             //t not null(exists) and is a leaf on tree (no child elements)
-            if (t != nullptr && t->childCount() == 0 ){
+            if (t != nullptr){
                 //find out if leaf is calculated
                 QVariant val = t->data(5);
                 if (val.toBool() == false){
@@ -305,7 +307,7 @@ double EnergyPassportModel::saveModelDatatoFile(const QString fname)
     }
 }
 
-double EnergyPassportModel::loadModelDataFromFile(const QString fname)
+void EnergyPassportModel::loadModelDataFromFile(const QString fname)
 {
     QList<TreeItem*> list;
     m_treeModel->getIndicators(list);
@@ -356,8 +358,8 @@ double EnergyPassportModel::udelnayatenlopostunleniesontse()
 
     double t_1ok = 0.8;
     double t_2ok = 0.74;
-    double t_1fon = 0;
-    double t_2fon = 0;
+    //double t_1fon = 0;
+    //double t_2fon = 0;
     double A_ok1 = p_area_ok1->calcValue();
     double A_ok2 = p_area_ok2->calcValue();
     double A_ok3 = p_area_ok3->calcValue();
@@ -397,21 +399,21 @@ double EnergyPassportModel::koeffsnijenieteplopastuplenia()
 
 double EnergyPassportModel::udelniraskhodteplovoienergii()
 {
-    Pakazatel *p_thermal_loss_reduction = m_treeModel->getIndicatorByName("coeff_reduction");
-    Pakazatel *p_extra_loss = m_treeModel->getIndicatorByName("coeff_additional");
-    Pakazatel *p_auto_regulation = m_treeModel->getIndicatorByName("coeff_auto_reg");
+    Pakazatel *p_thermal_loss_reduction = m_treeModel->getIndicatorByName(coeff_reduction);
+    Pakazatel *p_extra_loss = m_treeModel->getIndicatorByName(coeff_additional);
+    Pakazatel *p_regulation = m_treeModel->getIndicatorByName(coeff_reduction);
 
     double K_ob = udelnayateplozashita();
     double K_vent = udelnayaventilyatsii();
     double K_bwit = udelnayabwitavayatenlovyidelenie();
     double K_rad = udelnayatenlopostunleniesontse();
     double n = koeffsnijenieteplopastuplenia();
-    double Z = p_auto_regulation->calcValue();
+    double Z = p_regulation->calcValue();
     double X = p_thermal_loss_reduction->calcValue();
     double bh = p_extra_loss->calcValue();
 
     //qрот=[Kоб + Квент - (Кбыт + Крад) * n * z] * (1 - x) * bh
-    double q_rot = (K_ob + K_vent - ((K_bwit + K_rad) * n * Z)) * ((1-X) * bh);
+    double q_rot = (K_ob + K_vent - ((K_bwit + K_rad) * n * Z)) * ((1 - X) * bh);
 
     return q_rot;
 
@@ -441,6 +443,8 @@ double EnergyPassportModel::raskhodnaotopperiod()
 
     double Q_godot = 0.024 * GSOP * V_otop * q_rot ;
 
+    return Q_godot;
+
 }
 
 double EnergyPassportModel::obshieteplopoteriizaperiod()
@@ -456,6 +460,76 @@ double EnergyPassportModel::obshieteplopoteriizaperiod()
     double Q_god_obsh = 0.024 * GSOP * V_otop * (K_ob + K_vent);
 
     return Q_god_obsh;
+
+}
+
+void EnergyPassportModel::raschetPakazateli()
+{
+    //TO coeff osteklenie not known
+    //Add it after asking
+    Pakazatel p;
+    p.setCalculated(true);
+
+    //GSOP
+    p.setName(heating_period_degree_days);
+    p.setCalcValue(raschetGSOP());
+    m_treeModel->setIndicatorByName(heating_period_degree_days,&p);
+
+
+    //koeff kompaknost
+    p.setName(coeff_compactness);
+    p.setCalcValue(kompaktnost());
+    m_treeModel->setIndicatorByName(coeff_compactness,&p);
+
+    //kratnoist vozdukhoobmen
+    p.setName(ventilation_cycle);
+    p.setCalcValue(kratnostvozdukhobmen());
+    m_treeModel->setIndicatorByName(ventilation_cycle,&p);
+
+    //udelnaya teplozashita
+    p.setName(specific_Thermal_Protection);
+    p.setCalcValue(udelnayateplozashita());
+    m_treeModel->setIndicatorByName(specific_Thermal_Protection,&p);
+
+    //udelnaya ventilyatsionaya charactistics
+    p.setName(specific_Ventilation_Characteristics);
+    p.setCalcValue(udelnayaventilyatsii());
+    m_treeModel->setIndicatorByName(specific_Ventilation_Characteristics,&p);
+
+    //udelnaya bwitovaya teplovidelenie
+    p.setName(specific_Thermal_Emission);
+    p.setCalcValue(udelnayabwitavayatenlovyidelenie());
+    m_treeModel->setIndicatorByName(specific_Thermal_Emission,&p);
+
+    //udelnaya teplopactuplenie
+    p.setName(specific_Solar_Reception);
+    p.setCalcValue(udelnayatenlopostunleniesontse());
+    m_treeModel->setIndicatorByName(specific_Solar_Reception,&p);
+
+    //coeff snijenie isplolzovanie teplopotreblenie
+    p.setName(coeff_volume_reduction);
+    p.setCalcValue(koeffsnijenieteplopastuplenia());
+    m_treeModel->setIndicatorByName(coeff_volume_reduction,&p);
+
+    //raschet udelnii raskhod thermal energy
+    p.setName(thermal_usage_calc);
+    p.setCalcValue(udelnayateplozashitaRaschet());
+    m_treeModel->setIndicatorByName(thermal_usage_calc,&p);
+
+    //udelnii raskhod thermal energy for period
+    p.setName(thermal_usage_spec_heating_season);
+    p.setCalcValue(udelniraskhodteplovoienergii());
+    m_treeModel->setIndicatorByName(thermal_usage_spec_heating_season,&p);
+
+    //raskhod teplovoi energii za otopitel'nii period
+    p.setName(thermal_usage_calc_heating_season);
+    p.setCalcValue(raskhodnaotopperiod());
+    m_treeModel->setIndicatorByName(thermal_usage_calc_heating_season,&p);
+
+    //obshie teplopayrtiya zdaniya
+    p.setName(thermal_wastage_heating_season);
+    p.setCalcValue(obshieteplopoteriizaperiod());
+    m_treeModel->setIndicatorByName(thermal_wastage_heating_season,&p);
 
 }
 

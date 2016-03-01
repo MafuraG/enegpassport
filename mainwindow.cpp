@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //open model database
     //STRICTLY for testing on Production I will use current directory with exe
-    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
-    //dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+    //dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
+    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
 //    if  (energyModel != nullptr){
 //        //save current energy model then close db
 //        delete energyModel;
@@ -121,4 +121,10 @@ void MainWindow::on_action_6_triggered()
         ui->statusBar->showMessage(tr("Файл сохранен."),3000);
     }
 
+}
+
+void MainWindow::on_action_4_triggered()
+{
+    energyModel->raschetPakazateli();
+    ui->statusBar->showMessage(tr("Расчеты завершины."),3000);
 }
