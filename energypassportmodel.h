@@ -190,6 +190,7 @@ private:
     double subCalcTeploZashita(const double tnorm, const double area, const double rprev);
     double totalCalcTeploZashita(QList<Entity *> fragments);
 
+    double round(double n, unsigned d);
 };
 
 #endif // ENERGYPASSPORTMODEL_H

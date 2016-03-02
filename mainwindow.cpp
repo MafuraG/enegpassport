@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //open model database
     //STRICTLY for testing on Production I will use current directory with exe
-    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
-//    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+//    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
+    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
 //    if  (energyModel != nullptr){
 //        //save current energy model then close db
 //        delete energyModel;
@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->tableView->setModel(energyModel->pakazatelModel());
     ui->tableView_2->setModel(energyModel->fragmentModel());
 
-//    resizeView(ui->treeView,typeid(ui->treeView).name(),energyModel->treeModel());
+    resizeView(ui->treeView,typeid(ui->treeView).name(),energyModel->treeModel());
 //    resizeView(ui->tableView,typeid(ui->tableView).name(),energyModel->pakazatelModel());
     resizeView(ui->tableView_2,typeid(ui->tableView_2).name(),energyModel->fragmentModel());
 

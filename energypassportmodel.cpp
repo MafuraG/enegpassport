@@ -121,7 +121,6 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     double n_v1 = lvent/ (B_v * V_otop );
 
     double n_v2 = (((lvent * n_vent)/168) + (G_inf *0.8* n_info)/(168 * rho_vozdukh))/(B_v * V_otop) ;
-
     double n_v3 = ((G_inf * n_info)/(168 * rho_vozdukh))/(B_v * V_otop);
 
     double n = n_v1 + n_v2 + n_v3 ;
@@ -197,6 +196,10 @@ double EnergyPassportModel::udelnayabwitavayatenlovyidelenie()
     return K_byit;
 }
 
+inline double EnergyPassportModel::round(double n , unsigned d){
+    return floor( n * pow(10.  ,d) + 0.5) / pow(10.,d);
+}
+
 double EnergyPassportModel::raschetGSOP()
 {
     Pakazatel * p_temp_int = m_treeModel->getIndicatorByName(temp_air_internal);
@@ -208,7 +211,7 @@ double EnergyPassportModel::raschetGSOP()
     double otop_period = p_heating_period->calcValue();
     double GSOP = (temp_int - temp_ext_avg)* otop_period;
 
-    return GSOP;
+    return round(GSOP,0);
 }
 
 double EnergyPassportModel::koeffOtlichieVnutrVneshTemp(const double tnorm)
@@ -441,7 +444,7 @@ double EnergyPassportModel::raskhodnaotopperiod()
     double V_otop = p_heated_volume->calcValue();
     double q_rot = udelniraskhodteplovoienergii();
 
-    double Q_godot = 0.024 * GSOP * V_otop * q_rot ;
+    double Q_godot = (0.024 * GSOP * V_otop * q_rot)/10 ;
 
     return Q_godot;
 
@@ -457,7 +460,7 @@ double EnergyPassportModel::obshieteplopoteriizaperiod()
     double K_ob = udelnayateplozashita();
     double K_vent = udelnayaventilyatsii();
 
-    double Q_god_obsh = 0.024 * GSOP * V_otop * (K_ob + K_vent);
+    double Q_god_obsh = (0.024 * GSOP * V_otop * (K_ob + K_vent))/10;
 
     return Q_god_obsh;
 
@@ -513,12 +516,12 @@ void EnergyPassportModel::raschetPakazateli()
 
     //raschet udelnii raskhod thermal energy
     p.setName(thermal_usage_calc);
-    p.setCalcValue(udelnayateplozashitaRaschet());
+    p.setCalcValue(udelniraskhodteplovoienergii());
     m_treeModel->setIndicatorByName(thermal_usage_calc,&p);
 
     //udelnii raskhod thermal energy for period
     p.setName(thermal_usage_spec_heating_season);
-    p.setCalcValue(udelniraskhodteplovoienergii());
+    p.setCalcValue(udelniiraskhodnaotopperiod());
     m_treeModel->setIndicatorByName(thermal_usage_spec_heating_season,&p);
 
     //raskhod teplovoi energii za otopitel'nii period

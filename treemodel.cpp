@@ -271,13 +271,13 @@ void TreeModel::setIndicatorByName(const QString name, Pakazatel *p)
 {
     if (m_cache.contains(name)){
         TreeItem * item = m_cache.value(name);
-        QLocale russian(QLocale::Russian);
+//        QLocale russian(QLocale::Russian);
 
-        if (hasFraction(p->calcValue())){
-            item->setData(3,russian.toString(p->calcValue(),'f',3));
-        }else
-            item->setData(3,p->calcValue());
-
+//        if (hasFraction(p->calcValue())){
+//            item->setData(3,russian.toString(p->calcValue(),'f',3));
+//        }else
+//            item->setData(3,p->calcValue());
+        item->setData(3,p->calcValue());
         item->setData(5,p->calculated());
     }
 }
