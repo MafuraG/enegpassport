@@ -300,7 +300,7 @@ void EnergyPassportModel::saveModelDatatoFile(const QString fname)
                     QString p = "--";
                     QVariant cal = t->data(3) ;
                     if (t->parent() != nullptr) p = t->parent()->data(0).toString();
-                    out << t->data(0).toString() <<";"<<russian.toString(cal.toDouble())<<";"<<p<<"\n";
+                    out << t->data(0).toString() <<";"<<russian.toString(cal.toDouble())<<";"<<p<<"\n";                    
                 }
             }
         }

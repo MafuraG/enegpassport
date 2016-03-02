@@ -105,6 +105,7 @@ private:
 
     TreeItem *rootItem;
     QHash<QString, TreeItem *> m_cache; //usefull coz we will be doing a lot of lookups
+    bool hasFraction(double number);
 };
 
 #endif // TREEMODEL_H

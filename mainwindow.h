@@ -20,24 +20,19 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
-private slots:
-    void on_action_triggered();
+private slots:    
 
     void on_action_2_triggered();
 
     void on_action_3_triggered();
-
-    void on_action_5_triggered();
-
-    void resizeView(QAbstractItemView *view, const QString vtype, QAbstractItemModel *model);
-
 
     void on_action_6_triggered();
 
     void on_action_4_triggered();
 
 private:
-    Ui::MainWindow *ui;    
+    Ui::MainWindow *ui;
+    void resizeView(QAbstractItemView *view, const QString vtype, QAbstractItemModel *model);
 
     EnergyPassportModel *energyModel = nullptr ;
     QString dbname ;
