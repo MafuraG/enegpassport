@@ -69,7 +69,7 @@ double EnergyPassportModel::kolichestvoinfiltrvozdukh(const double delta_P_dver,
                                                       const double R_ok, const double delta_P_okna)
 {
     //Gинф = (Aок / Rок) · (DPок / 10)2/3 + Aдв / Rдв) · (DPдв / 10)1/2
-    double G_inf = ( A_ok / R_ok )* (pow((delta_P_okna/10.0),0.666666667) + (A_dv/R_dv)) * sqrt(delta_P_dver/10);
+    double G_inf = ( A_ok / R_ok )* (pow((delta_P_okna/10.0),0.666666667)) + (A_dv/R_dv) * sqrt(delta_P_dver/10);
     return G_inf;
 }
 
