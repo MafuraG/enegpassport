@@ -46,7 +46,13 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->tableView->setColumnHidden(4,true);
 //    ui->tableView->setColumnHidden(5,true);
 
-    ui->tableView_2->setColumnHidden(0,true);    
+    ui->tableView_2->setColumnHidden(0,true);
+
+    //Hide some columns in tree view
+    ui->treeView->setColumnHidden(4,true);
+    ui->treeView->setColumnHidden(5,true);
+    ui->treeView->setColumnHidden(6,true);
+
 }
 
 MainWindow::~MainWindow()

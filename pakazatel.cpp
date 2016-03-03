@@ -79,6 +79,16 @@ void Pakazatel::setCalculated(bool calculated)
 {
     m_calculated = calculated;
 }
+unsigned int Pakazatel::numeration() const
+{
+    return m_numeration;
+}
+
+void Pakazatel::setNumeration(unsigned int numeration)
+{
+    m_numeration = numeration;
+}
+
 
 
 QString Pakazatel::Name = "name";
@@ -89,6 +99,7 @@ QString Pakazatel::CalcValue = "calcvalue";
 QString Pakazatel::FactValue = "factvalue";
 QString Pakazatel::ParentID = "parentid";
 QString Pakazatel::Calculated = "calculated";
+QString Pakazatel::Numeration = "numeration";
 
 QString Pakazatel::D_Name = "Показатель";
 QString Pakazatel::D_EntityName = "pakazatel";
@@ -98,7 +109,7 @@ QString Pakazatel::D_CalcValue = "Расчетное (проектное) зна
 QString Pakazatel::D_FactValue = "Фактическое значение показателя";
 QString Pakazatel::D_ParentID = "Корень";
 QString Pakazatel::D_Calculated = "Расчетный";
-
+QString Pakazatel::D_Numeration = "Номер п/п";
 
 
 

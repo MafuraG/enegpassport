@@ -99,6 +99,7 @@ void Dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filt
     columns.append(Pakazatel::Unit);
     columns.append(Pakazatel::ParentID);
     columns.append(Pakazatel::Calculated);
+    columns.append(Pakazatel::Numeration);
 
     QString q;
     Pakazatel *p;
@@ -121,6 +122,7 @@ void Dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filt
             p->setName(query.value(Pakazatel::Name).toString());
             p->setUnit(query.value(Pakazatel::Unit).toString());
             p->setCalculated(query.value(Pakazatel::Calculated).toBool());
+            p->setNumeration(query.value(Pakazatel::Numeration).toUInt());
             pakazatelList.append(p);
         }
     }

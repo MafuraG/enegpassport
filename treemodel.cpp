@@ -45,6 +45,7 @@
 #include "QDebug"
 #include <cmath>
 #include <QLocale>
+#include <algorithm>
 
 TreeModel::TreeModel(const QStringList &headers, const QList<Entity*> &data, QObject *parent)
     : QAbstractItemModel(parent)
@@ -84,8 +85,8 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
-    //column 0 and 1 are not editable
-    if (index.column() == 0 || index.column() == 1)
+    //column 0 not editable
+    if (index.column() == 0 )
         return QAbstractItemModel::flags(index);
     return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
@@ -128,6 +129,8 @@ void TreeModel::mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i)
     i->setFactValue(val.toDouble());    
     val = tree->data(5);
     i->setCalculated(val.toBool());
+    val = tree->data(6);
+    i->setNumeration(val.toUInt());
 
 
     if (tree->parent() != nullptr){
@@ -147,10 +150,11 @@ void TreeModel::mapPakazatelTreeItem(TreeItem *tree, Pakazatel *i)
     tree->setData(3,i->calcValue());
     tree->setData(4,i->factValue());
     tree->setData(5,i->calculated());
+    tree->setData(6,i->numeration());
 
 }
 
-void TreeModel::mapChildren(QMultiHash<int, Entity *> dict, TreeItem *parent, Pakazatel *p)
+void TreeModel::mapChildren(QMultiHash<int, Entity *> &dict, TreeItem *parent, Pakazatel *p)
 {
     QList<Entity*> children = dict.values(p->id());
     for (int i = 0; i < children.count();i++){
@@ -290,12 +294,35 @@ bool TreeModel::hasFraction(double number){
     return true;
 }
 
+bool TreeModel::compareTreeItems(const TreeItem *t1, const TreeItem *t2)
+{
+    if (t1 == nullptr || t2 == nullptr) return false;
+    unsigned int val1 = t1->data(6).toUInt();
+    unsigned int val2 = t2->data(6).toUInt();
+
+    return val1 < val2 ;
+
+}
+
 void TreeModel::getIndicators(QList<TreeItem *> &items)
 {
     qDebug()<< "In getIndicators"<<"\n";
     items.clear();
     foreach(TreeItem* item, m_cache){
-        items.append(item);        
+        items.append(item);
+    }
+}
+
+void TreeModel::sortTree(TreeItem *t)
+{
+    if (t != nullptr){
+        if (t->childCount() != 0)
+        {
+            std::sort(t->childBegin(),t->childEnd(),compareTreeItems);
+            for(int i = 0 ; i < t->childCount(); i++){
+                sortTree(t->child(i));
+            }
+        }
     }
 }
 
@@ -367,4 +394,5 @@ void TreeModel::setupModelData(const QList<Entity*> data, TreeItem *parent)
     }
 
     refreshCache(rootItem);
+    sortTree(rootItem);
 }

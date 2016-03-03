@@ -60,7 +60,7 @@ TreeItem::~TreeItem()
 }
 
 TreeItem *TreeItem::child(int number)
-{
+{    
     return childItems.value(number);
 }
 

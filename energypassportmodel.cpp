@@ -20,7 +20,8 @@ EnergyPassportModel::EnergyPassportModel(const QString dbname)
                << Pakazatel::D_NomValue
                << Pakazatel::D_CalcValue
                << Pakazatel::D_FactValue
-               << Pakazatel::D_Calculated;
+               << Pakazatel::D_Calculated
+               << Pakazatel::D_Numeration;
 
     //QFile file(":/menu_structure.txt");
     //file.open(QIODevice::ReadOnly);
