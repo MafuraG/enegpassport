@@ -26,6 +26,7 @@ public:
 
     void insertPakazatel(const Pakazatel *p);
     Pakazatel *getPakazatelByName(const QString name);
+    Pakazatel *getPakazatelByID(const unsigned int id);
 
 
     QSqlRelationalTableModel *getFragmentModel();

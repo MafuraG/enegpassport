@@ -145,6 +145,8 @@ bool TreeItem::removeColumns(int position, int columns)
     return true;
 }
 
+
+
 bool TreeItem::setData(int column, const QVariant &value)
 {
     if (column < 0 || column >= itemData.size())

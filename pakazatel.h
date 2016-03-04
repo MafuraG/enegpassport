@@ -36,7 +36,6 @@ public:
     unsigned int numeration() const;
     void setNumeration(unsigned int numeration);
 
-
     static QString Name;
     static QString EntityName;
     static QString Unit;

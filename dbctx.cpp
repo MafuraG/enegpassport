@@ -191,6 +191,18 @@ Pakazatel *Dbctx::getPakazatelByName(const QString name)
     return nullptr;
 }
 
+Pakazatel *Dbctx::getPakazatelByID(const unsigned int id)
+{
+    QHashIterator<int,Entity*> i(pakCache);
+    while (i.hasNext()){
+        i.next();
+        Pakazatel *p = (Pakazatel*)i.value();
+        if (p->id() == id)
+            return p;
+    }
+    return nullptr;
+}
+
 Entity *Dbctx::getEntity(QHash<int,Entity*> cache,const int id)
 {
     if (cache.contains(id)){
