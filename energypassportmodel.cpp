@@ -263,18 +263,13 @@ void EnergyPassportModel::saveTreeModeltoDB()
     QList<TreeItem*> items;    
     m_treeModel->getIndicators(items);
 
+    ctx->startTransaction();
     for(int i = 0; i < items.count();i++){
-        Pakazatel *c = ctx->getPakazatelByID(items[i]->data(7).toInt());
-        TreeItem *pItem = items[i]->parent();
-
-        if (pItem == nullptr) continue;
-
-        Pakazatel *p = ctx->getPakazatelByID(pItem->data(7).toInt());
-        c->setParent(p);
-
+        Pakazatel *c = m_treeModel->getIndicatorByID(items[i]->data(7).toInt());
+        if (c == nullptr) continue;
         ctx->insertPakazatel(c);
     }
-
+    ctx->endTransaction();
 }
 
 void EnergyPassportModel::saveModelDatatoFile(const QString fname)

@@ -34,6 +34,8 @@ public:
 
     QSqlRelationalTableModel *getPakazatelModel();
     void initPakazatelModel();
+    void startTransaction();
+    void endTransaction();
 
 private:
     QSqlDatabase db;
@@ -54,6 +56,7 @@ private:
     void refreshCache(QHash<int, Entity *> &cache, QList<Entity *> &list);
     QSqlRelationalTableModel *m_fragmentModel;
     QSqlRelationalTableModel *m_pakazatelModel;
+
 
 };
 

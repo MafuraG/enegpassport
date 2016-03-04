@@ -287,11 +287,12 @@ Pakazatel* TreeModel::getIndicatorByName(const QString name)
 
 Pakazatel* TreeModel::getIndicatorByID(const unsigned id)
 {
-
+    //qDebug()<<"get indicator called id = "<<id;
     TreeItem *t = searchTree(rootItem,7,id);
     if (t != nullptr){
         Pakazatel *p = new Pakazatel();
         mapTreeItemPakazatel(t,p);
+        //qDebug()<<"id = "<<id;
         return p;
     }
     return nullptr;

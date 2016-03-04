@@ -169,10 +169,10 @@ void Dbctx::insertPakazatel(const Pakazatel *p)
     QString q;
     buildInsertQuery(q,columns,Pakazatel::EntityName,values);
 
-    if (p->id() == 53) qDebug()<<q<<"\n";
+    //if (p->id() == 53) qDebug()<<q<<"\n";
     if (query.exec(q) == true)
     {
-        if (p->id() == 53) qDebug()<<"insert :"<<p->name()<<" success!";
+        //if (p->id() == 53) qDebug()<<"insert :"<<p->name()<<" success!";
         return ;
     }
     else
@@ -317,6 +317,16 @@ void Dbctx::refreshCache(QHash<int, Entity *> &cache, QList<Entity*> &list)
     for (int i = 0 ; i < list.count(); i++){
         cache[list[i]->id()] = list[i];
     }
+}
+
+void Dbctx::startTransaction()
+{
+    db.transaction();
+}
+
+void Dbctx::endTransaction()
+{
+    db.commit();
 }
 QSqlRelationalTableModel *Dbctx::getPakazatelModel()
 {    
