@@ -149,8 +149,9 @@ void Dbctx::insertPakazatel(const Pakazatel *p)
     columns.append(Pakazatel::NomValue);
     columns.append(Pakazatel::CalcValue);
     columns.append(Pakazatel::FactValue);
-    columns.append(Pakazatel::ParentID);
+    if (p->parent() != nullptr ) columns.append(Pakazatel::ParentID);
     columns.append(Pakazatel::Calculated);
+    columns.append(Pakazatel::Numeration);
 
 
     QStringList values;
@@ -161,21 +162,22 @@ void Dbctx::insertPakazatel(const Pakazatel *p)
     values.append(QString("%0").arg(p->nomValue()));
     values.append(QString("%0").arg(p->calcValue()));
     values.append(QString("%0").arg(p->factValue()));
-    values.append(QString("%0").arg(p->parent()->id()));
+    if (p->parent() != nullptr ) values.append(QString("%0").arg(p->parent()->id()));
     values.append(QString("%0").arg(p->calculated()));
+    values.append(QString("%0").arg(p->numeration()));
 
     QString q;
     buildInsertQuery(q,columns,Pakazatel::EntityName,values);
 
-    qDebug()<<q;
+    if (p->id() == 53) qDebug()<<q<<"\n";
     if (query.exec(q) == true)
     {
-        qDebug()<<"insert :"<<p->name()<<" success!";
+        if (p->id() == 53) qDebug()<<"insert :"<<p->name()<<" success!";
         return ;
     }
     else
     {
-        qDebug()<<"FAIL: insert : "<<p->name()<<" Query : "<<q;
+        //qDebug()<<"FAIL: insert : "<<p->name()<<" Query : "<<q;
     }
 }
 
