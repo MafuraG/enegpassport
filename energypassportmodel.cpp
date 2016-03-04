@@ -272,17 +272,17 @@ void EnergyPassportModel::saveTreeModeltoDB()
 //        cache[QString(p->name() + p->id())] = p;
 //    }
 
-//    for(int i = 0; i < items.count();i++){
-//        Pakazatel *c = ctx->getPakazatelByName(items[i]->data(0).toString());
-//        TreeItem *pItem = items[i]->parent();
+    for(int i = 0; i < items.count();i++){
+        Pakazatel *c = ctx->getPakazatelByID(items[i]->data(7).toInt());
+        TreeItem *pItem = items[i]->parent();
 
-//        if (pItem == nullptr) continue;
+        if (pItem == nullptr) continue;
 
-//        Pakazatel *p = ctx->getPakazatelByName(pItem->data(0).toString());
-//        c->setParent(p);
+        Pakazatel *p = ctx->getPakazatelByID(pItem->data(7).toInt());
+        c->setParent(p);
 
-//        ctx->insertPakazatel(c);
-//    }
+        ctx->insertPakazatel(c);
+    }
 
 }
 

@@ -129,3 +129,10 @@ void MainWindow::on_action_4_triggered()
     energyModel->raschetPakazateli();
     ui->statusBar->showMessage(tr("Расчеты завершины."),3000);
 }
+
+void MainWindow::on_action_triggered()
+{
+    //save heirachy to database
+    energyModel->saveTreeModeltoDB();
+    ui->statusBar->showMessage(tr("Структура показателей сохранена."),3000);
+}
