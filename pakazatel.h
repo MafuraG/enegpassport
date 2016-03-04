@@ -33,6 +33,8 @@ public:
     bool calculated() const;
     void setCalculated(bool calculated);
 
+    unsigned int numeration() const;
+    void setNumeration(unsigned int numeration);
 
     static QString Name;
     static QString EntityName;
@@ -42,6 +44,7 @@ public:
     static QString FactValue;
     static QString ParentID;
     static QString Calculated;
+    static QString Numeration;
 
     static QString D_Name;
     static QString D_EntityName;
@@ -51,6 +54,9 @@ public:
     static QString D_FactValue;
     static QString D_ParentID;
     static QString D_Calculated;
+    static QString D_Numeration;
+
+
 
 
 private :
@@ -61,6 +67,7 @@ private :
     double m_calcValue;
     double m_factValue;
     bool m_calculated;
+    unsigned int m_numeration;
 
     Pakazatel *m_parent;
 };

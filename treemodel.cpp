@@ -45,6 +45,7 @@
 #include "QDebug"
 #include <cmath>
 #include <QLocale>
+#include <algorithm>
 
 TreeModel::TreeModel(const QStringList &headers, const QList<Entity*> &data, QObject *parent)
     : QAbstractItemModel(parent)
@@ -84,8 +85,8 @@ Qt::ItemFlags TreeModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid())
         return 0;
-    //column 0 and 1 are not editable
-    if (index.column() == 0 || index.column() == 1)
+    //column 0 not editable
+    if (index.column() == 0 )
         return QAbstractItemModel::flags(index);
     return Qt::ItemIsEditable | QAbstractItemModel::flags(index);
 }
@@ -104,13 +105,28 @@ void TreeModel::refreshCache(TreeItem * item)
 {
     if (item != nullptr){
         QString key = item->data(0).toString();
-        m_cache[key] = item;
+        m_cache_name[key] = item;
         if (item->childCount() > 0 ){
             for (int i = 0 ; i < item->childCount(); i++){
                 refreshCache(item->child(i));
             }
         }
     }
+}
+
+TreeItem *TreeModel::searchTree(TreeItem *tree, const unsigned int col, QVariant item){
+    if (tree != nullptr || col >= tree->columnCount()){
+        if (item == tree->data(col)) return tree;
+        else{
+            TreeItem *t = nullptr;
+            for(int i = 0; i < tree->childCount();i++){
+                t =  searchTree(tree->child(i),col,item);
+                if (t != nullptr) return t;
+            }
+        }
+
+    }else
+        return nullptr;
 }
 
 void TreeModel::mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i)
@@ -128,6 +144,10 @@ void TreeModel::mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i)
     i->setFactValue(val.toDouble());    
     val = tree->data(5);
     i->setCalculated(val.toBool());
+    val = tree->data(6);
+    i->setNumeration(val.toUInt());
+    val = tree->data(7);
+    i->setId(val.toInt());
 
 
     if (tree->parent() != nullptr){
@@ -147,10 +167,12 @@ void TreeModel::mapPakazatelTreeItem(TreeItem *tree, Pakazatel *i)
     tree->setData(3,i->calcValue());
     tree->setData(4,i->factValue());
     tree->setData(5,i->calculated());
+    tree->setData(6,i->numeration());
+    tree->setData(7,i->id());
 
 }
 
-void TreeModel::mapChildren(QMultiHash<int, Entity *> dict, TreeItem *parent, Pakazatel *p)
+void TreeModel::mapChildren(QMultiHash<int, Entity *> &dict, TreeItem *parent, Pakazatel *p)
 {
     QList<Entity*> children = dict.values(p->id());
     for (int i = 0; i < children.count();i++){
@@ -254,32 +276,51 @@ bool TreeModel::removeRows(int position, int rows, const QModelIndex &parent)
 
 Pakazatel* TreeModel::getIndicatorByName(const QString name)
 {
-
-    if (m_cache.contains(name)){
-        //tree item found in this treeitem
-        TreeItem *tree = m_cache.value(name);
-        Pakazatel *i = new Pakazatel();
-        mapTreeItemPakazatel(tree,i);
-        return i;
+    TreeItem *t = searchTree(rootItem,0,name);
+    if (t != nullptr){
+        Pakazatel *p = new Pakazatel();
+        mapTreeItemPakazatel(t,p);
+        return p;
     }
 
+}
+
+Pakazatel* TreeModel::getIndicatorByID(const unsigned id)
+{
+
+    TreeItem *t = searchTree(rootItem,7,id);
+    if (t != nullptr){
+        Pakazatel *p = new Pakazatel();
+        mapTreeItemPakazatel(t,p);
+        return p;
+    }
     return nullptr;
 
 }
 
 void TreeModel::setIndicatorByName(const QString name, Pakazatel *p)
 {
-    if (m_cache.contains(name)){
-        TreeItem * item = m_cache.value(name);
-//        QLocale russian(QLocale::Russian);
+    if (m_cache_name.contains(name)){
+        TreeItem * item = m_cache_name.value(name);
 
-//        if (hasFraction(p->calcValue())){
-//            item->setData(3,russian.toString(p->calcValue(),'f',3));
-//        }else
-//            item->setData(3,p->calcValue());
         item->setData(3,p->calcValue());
         item->setData(5,p->calculated());
     }
+}
+
+void TreeModel::setIndicatorByID(Pakazatel *p)
+{
+    TreeItem * item = searchTree(rootItem,7,p->id());
+    if (item != nullptr){
+        item->setData(3,p->calcValue());
+        item->setData(5,p->calculated());
+    }
+}
+
+void TreeModel::getIndicators(QList<TreeItem *> &items)
+{
+    items.clear();
+    getIndicators(items,rootItem);
 }
 
 bool TreeModel::hasFraction(double number){
@@ -290,12 +331,38 @@ bool TreeModel::hasFraction(double number){
     return true;
 }
 
-void TreeModel::getIndicators(QList<TreeItem *> &items)
+bool TreeModel::compareTreeItems(const TreeItem *t1, const TreeItem *t2)
 {
-    qDebug()<< "In getIndicators"<<"\n";
-    items.clear();
-    foreach(TreeItem* item, m_cache){
-        items.append(item);        
+    if (t1 == nullptr || t2 == nullptr) return false;
+    unsigned int val1 = t1->data(6).toUInt();
+    unsigned int val2 = t2->data(6).toUInt();
+
+    return val1 < val2 ;
+
+}
+
+void TreeModel::getIndicators(QList<TreeItem *> &items, TreeItem *tree)
+{
+    //qDebug()<< "In getIndicators"<<"\n";
+    //items.clear();
+    if (tree != nullptr){
+        items.append(tree);
+        for(int i = 0; i < tree->childCount(); i++){
+            getIndicators(items,tree->child(i));
+        }
+    }
+}
+
+void TreeModel::sortTree(TreeItem *t)
+{
+    if (t != nullptr){
+        if (t->childCount() != 0)
+        {
+            std::sort(t->childBegin(),t->childEnd(),compareTreeItems);
+            for(int i = 0 ; i < t->childCount(); i++){
+                sortTree(t->child(i));
+            }
+        }
     }
 }
 
@@ -367,4 +434,5 @@ void TreeModel::setupModelData(const QList<Entity*> data, TreeItem *parent)
     }
 
     refreshCache(rootItem);
+    sortTree(rootItem);
 }

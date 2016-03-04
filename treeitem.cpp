@@ -60,7 +60,7 @@ TreeItem::~TreeItem()
 }
 
 TreeItem *TreeItem::child(int number)
-{
+{    
     return childItems.value(number);
 }
 
@@ -144,6 +144,8 @@ bool TreeItem::removeColumns(int position, int columns)
 
     return true;
 }
+
+
 
 bool TreeItem::setData(int column, const QVariant &value)
 {

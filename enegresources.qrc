@@ -10,5 +10,6 @@
         <file>basicons/info-round-button.png</file>
         <file>basicons/enter.png</file>
         <file>basicons/calculator-with-six-buttons.png</file>
+        <file>basicons/book-with-bookmark.png</file>
     </qresource>
 </RCC>

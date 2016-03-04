@@ -92,20 +92,27 @@ public:
     Pakazatel* getIndicatorByName(const QString name);
     void setIndicatorByName(const QString name, Pakazatel* p);
     void getIndicators(QList<TreeItem*> &items);
+    Pakazatel *getIndicatorByID(const unsigned id);
+    void setIndicatorByID(Pakazatel *p);
 
 private:
     void setupModelData(const QList<Entity*> data, TreeItem *parent);
     TreeItem *getItem(const QModelIndex &index) const;
     void refreshCache(TreeItem *item);
+    void sortTree(TreeItem *t);
 
     void mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i);
     void mapPakazatelTreeItem(TreeItem *tree, Pakazatel *i);
 
-    void mapChildren(QMultiHash<int, Entity *> dict, TreeItem * parent, Pakazatel *p);
+    void mapChildren(QMultiHash<int, Entity *> &dict, TreeItem * parent, Pakazatel *p);
 
     TreeItem *rootItem;
-    QHash<QString, TreeItem *> m_cache; //usefull coz we will be doing a lot of lookups
+    QHash<QString, TreeItem *> m_cache_name; //usefull coz we will be doing a lot of lookups
+    QHash<unsigned int, TreeItem *> m_cache_id;
     bool hasFraction(double number);
+    static bool compareTreeItems(const TreeItem *t1, const TreeItem *t2);
+    TreeItem *searchTree(TreeItem *tree, const unsigned int col, QVariant item);
+    void getIndicators(QList<TreeItem*> &items, TreeItem *tree);
 };
 
 #endif // TREEMODEL_H

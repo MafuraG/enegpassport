@@ -62,7 +62,8 @@ public:
     bool removeColumns(int position, int columns);
     int childNumber() const;
     bool setData(int column, const QVariant &value);
-
+    QList<TreeItem*>::Iterator childBegin()  { return childItems.begin();  }
+    QList<TreeItem*>::Iterator childEnd()  { return childItems.end();}   
 private:
     QList<TreeItem*> childItems;
     QVector<QVariant> itemData;

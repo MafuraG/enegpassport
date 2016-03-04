@@ -46,7 +46,14 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->tableView->setColumnHidden(4,true);
 //    ui->tableView->setColumnHidden(5,true);
 
-    ui->tableView_2->setColumnHidden(0,true);    
+    ui->tableView_2->setColumnHidden(0,true);
+
+    //Hide some columns in tree view
+    ui->treeView->setColumnHidden(4,true);
+    ui->treeView->setColumnHidden(5,true);
+    ui->treeView->setColumnHidden(6,true);
+    ui->treeView->setColumnHidden(7,true);
+
 }
 
 MainWindow::~MainWindow()
@@ -121,4 +128,11 @@ void MainWindow::on_action_4_triggered()
 {
     energyModel->raschetPakazateli();
     ui->statusBar->showMessage(tr("Расчеты завершины."),3000);
+}
+
+void MainWindow::on_action_triggered()
+{
+    //save heirachy to database
+    energyModel->saveTreeModeltoDB();
+    ui->statusBar->showMessage(tr("Структура показателей сохранена."),3000);
 }

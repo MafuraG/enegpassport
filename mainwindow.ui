@@ -83,6 +83,7 @@
     <addaction name="action_4"/>
     <addaction name="separator"/>
     <addaction name="action_3"/>
+    <addaction name="separator"/>
    </widget>
    <addaction name="menu"/>
   </widget>
@@ -100,6 +101,8 @@
    <addaction name="action_6"/>
    <addaction name="separator"/>
    <addaction name="action_4"/>
+   <addaction name="separator"/>
+   <addaction name="action"/>
   </widget>
   <action name="action_2">
    <property name="icon">
@@ -135,6 +138,15 @@
    </property>
    <property name="text">
     <string>Расчет показателей</string>
+   </property>
+  </action>
+  <action name="action">
+   <property name="icon">
+    <iconset resource="enegresources.qrc">
+     <normaloff>:/icons/basicons/book-with-bookmark.png</normaloff>:/icons/basicons/book-with-bookmark.png</iconset>
+   </property>
+   <property name="text">
+    <string>Сохранить структуру показателей</string>
    </property>
   </action>
  </widget>

@@ -13,8 +13,8 @@ public:
 
     static QString ID;
 
-    int id() const;
-    void setId(int id);
+    unsigned int id() const;
+    void setId(unsigned int id);
 
 private :
     int m_id;

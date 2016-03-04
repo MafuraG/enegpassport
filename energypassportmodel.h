@@ -16,119 +16,133 @@ public:
     EnergyPassportModel(const QString dbname);
     ~EnergyPassportModel();
 	//Общая информация
-	QString data_zapolnenya  = "Дата заполнения (число, м-ц, год)";	
-    QString address_zdaniya = "Адрес здания";
-	QString razrabochik = "Разработчик проекта";
-	QString addr_tel_razrabotchika = "Адрес и телефон разработчика";
-	QString shriff_proekta = "Шифр проекта";	
-	QString naznacheniye_zdaniya = "Назначение здания, серия";
-	QString etaj_kol_sektsii = "Этажность, количество секций";
-	QString kol_kvartir = "Количество квартир";
-	QString kol_zhitelej = "Расчетное количество жителей или служащих";	
-	QString razmeshhenie_zastrojke = "Размещение в застройке";
-	QString konstruktivnoe_reshenie = "Конструктивное решение";
-    QString vysota_zdaniya = "высота здания";
-    QString max_wind_velocity = "максимальная скорость  ветра за январь";
+    unsigned int data_zapolnenya  = 21 ;//"Дата заполнения (число, м-ц, год)";
+    unsigned int address_zdaniya = 48 ;//"Адрес здания";
+    unsigned int razrabochik = 53; //"Разработчик проекта";
+    unsigned int addr_tel_razrabotchika = 82; //"Адрес и телефон разработчика";
+    unsigned int shriff_proekta = 7; //"Шифр проекта";
+    unsigned int naznacheniye_zdaniya = 74; //"Назначение здания, серия";
+    unsigned int etaj_kol_sektsii = 25; //"Этажность, количество секций";
+    unsigned int kol_kvartir = 46; //"Количество квартир";
+    unsigned int kol_zhitelej = 52; //"Расчетное количество жителей или служащих";
+    unsigned int razmeshhenie_zastrojke = 36;//"Размещение в застройке";
+    unsigned int konstruktivnoe_reshenie = 6;//"Конструктивное решение";
 
 
 	//Energy passport of building
-    QString energy_passport_building = "ЭНЕРГЕТИЧЕСКИЙ ПАСПОРТ ЗДАНИЯ";
-    //conditions for calculations
-    QString calc_conditions = "Расчетные условия";
-    QString temp_air_internal  = "Расчетная температура внутреннего воздуха";
-    QString temp_air_external = "Расчетная температура наружного воздуха";
-    QString temp_artic = "Расчетная температура теплого чердака";
-    QString heating_period_days = "Продолжительность отопительного периода";
-    QString heating_period_temp_avg = "Средняя температура наружного воздуха за отопительный период";
-    QString heating_period_degree_days = "Градусо-сутки отопительного периода";
+    //unsigned int energy_passport_building = "ЭНЕРГЕТИЧЕСКИЙ ПАСПОРТ ЗДАНИЯ";
 
-    //Geometric and Heating variables
-    QString geometric_thermal_indicators = "Геометрические и теплоэнергетические показатели";
-    QString area_all_floors = "Сумма площадей этажей здания";
-    QString area_living_space = "Площадь жилых помещений";
-    QString area_common_space = "Расчетная площадь (общественных зданий)";
-    QString volume_heated_space = "Отапливаемый объем здания";
-    QString coeff_glass_facade= "Коэффициент остекленности фасада здания";
-    QString coeff_compactness = "Показатель компактности здания";
-    QString area_boundary = "Общая площадь наружных ограждающих конструкций здания";
-    QString area_facade = "фасадов";
-    QString area_facade_keramzit = "навесной фасадной системы с основанием из керамзитобетона";
-    QString area_facade_beton = "навесной фасадной системы с основанием из железобетона";
-    QString area_wall_keramzitbeton = "трехслойной стены по кладке из керамзитобетона";
-    QString area_wall_monolith_beton = "трехслойной стены по монолитному железобетону";
-    QString area_doors = "входных дверей";
-    QString area_pokrity = "покрытий (совмещенных)";
-    QString area_roof = "эксплуатируемой кровли";
-    QString area_texpodpoli = "перекрытий над техподпольями";
-    QString area_proezd = "перекрытий над проездами и под эркерами";
-    QString area_windows_balcony = "окон и балконных дверей";
-    QString area_lift = "окон лестнично-лифтовых узлов";
-    QString area_facing_All = "окон по сторонам света";
-    QString area_facing_N = "С";
-    QString area_facing_NE = "СВ";
-    QString area_facing_E = "В";
-    QString area_facing_SE = "ЮВ";
-    QString area_facing_S = "Ю";
-    QString area_facing_SW = "ЮЗ";
-    QString area_facing_W = "З";
-    QString area_facing_NW = "СЗ";
+    //Расчетные условия conditions for calculations
+    //unsigned int calc_conditions = "Расчетные условия";
+    unsigned int temp_air_internal  = 58;//"Расчетная температура внутреннего воздуха";
+    unsigned int temp_air_external = 12;//"Расчетная температура наружного воздуха";
+    unsigned int temp_artic = 8; //"Расчетная температура теплого чердака";
+    unsigned int heating_period_days = 26; //"Продолжительность отопительного периода";
+    unsigned int heating_period_temp_avg = 78;//"Средняя температура наружного воздуха за отопительный период";
+    unsigned int heating_period_degree_days = 4;// "Градусо-сутки отопительного периода";
+    unsigned int temp_tekh_podpolya = 66;//Расчетная температура техподполья
 
-    //Thermal Technical indicators
-    QString thermal_indicators = "Теплотехнические показатели";
-    QString thermal_R_boundary = "Приведенное сопротивление теплопередаче наружных ограждений,   в том числе:";
-    QString thermal_R_facade_keramzitbeton = "навесной фасадной системы с основанием из керамзитобетона-R";
-    QString thermal_R_facade_beton = "навесной фасадной системы с основанием из железобетона-R";
-    QString thermal_R_wall_keramzit = "трехслойной стены по кладке из керамзитобетона-R";
-    QString thermal_R_wall_beton = "трехслойной стены по монолитному железобетону-R";
-    QString thermal_R_windows_balcony = "окон и балконных дверей-R";
-    QString thermal_R_lifts = "окон лестнично-лифтовых узлов-R";
-    QString thermal_R_doors = "входных дверей-R";
-    QString thermal_R_roof = "покрытий (совмещенных)-R";
-    QString thermal_R_roof_used = "эксплуатируемой кровли-R";
-    QString thermal_R_texpodpoli = "перекрытий над техническими подпольями-R";
-    QString thermal_R_proezd ="перекрытий над проездами и под эркерами-R";
+    //Геометрические и теплоэнергетические показатели Geometric and Heating variables
+    //unsigned int geometric_thermal_indicators = "Геометрические и теплоэнергетические показатели";
+    unsigned int area_all_floors = 45; //"Сумма площадей этажей здания";
+    unsigned int area_living_space = 1;//"Площадь жилых помещений";
+    unsigned int area_common_space = 62;//"Расчетная площадь (общественных зданий)";
+    unsigned int volume_heated_space = 59;//"Отапливаемый объем здания";
+    unsigned int coeff_glass_facade= 28;//"Коэффициент остекленности фасада здания";
+    unsigned int coeff_compactness = 49;//"Показатель компактности здания";
+    unsigned int area_boundary = 37; //"Общая площадь наружных ограждающих конструкций здания";
+    unsigned int area_facade = 75;//"фасадов";
+    unsigned int area_facade_keramzit = 86;//"навесной фасадной системы с основанием из керамзитобетона";
+    unsigned int area_facade_beton = 87;//"навесной фасадной системы с основанием из железобетона";
+    unsigned int area_wall_keramzitbeton = 88;//"трехслойной стены по кладке из керамзитобетона";
+    unsigned int area_wall_monolith_beton = 89;//"трехслойной стены по монолитному железобетону";
+    unsigned int area_doors = 90;//"входных дверей";
+    unsigned int area_pokrity = 91;//"покрытий (совмещенных)";
+    unsigned int area_roof = 92;//"эксплуатируемой кровли";
+    unsigned int area_texpodpoli = 67;//"перекрытий над техподпольями";
+    unsigned int area_proezd = 94;//"перекрытий над проездами и под эркерами";
+    unsigned int area_windows_balcony = 95;//"окон и балконных дверей";
+    unsigned int area_lift = 96; //"окон лестнично-лифтовых узлов";
+    unsigned int area_facing_All = 32;//"окон по сторонам света";
+    unsigned int area_facing_N = 30;//"С";
+    unsigned int area_facing_NE = 55;//"СВ";
+    unsigned int area_facing_E = 19;//"В";
+    unsigned int area_facing_SE = 65;//"ЮВ";
+    unsigned int area_facing_S = 39;//"Ю";
+    unsigned int area_facing_SW = 70;//"ЮЗ";
+    unsigned int area_facing_W = 24;//"З";
+    unsigned int area_facing_NW = 61;//"СЗ";
 
-    //other indicators
-    QString other_indicators = "Показатели вспомагательные";
-    QString thermal_C_coeff = "Приведенный трмнсмиссионный коэфициент теплопередачи здания"; //thermal conductence
-    QString ventilation_cycle = "Кратность воздухообмена здания за отопительный период при удельной норме воздухообмена";
-    QString thermal_E_building ="Удельные бытовые тепловыделения в здании"; //thermal emissions
-    QString tariff_heating = "Тарифная цена тепловой энергии для проектируемого здания";
+    //Теплотехнические показатели Thermal Technical indicators
+    //unsigned int thermal_indicators = "Теплотехнические показатели";
+    unsigned int thermal_R_boundary = 11;//"Приведенное сопротивление теплопередаче наружных ограждений,   в том числе:";
+    unsigned int thermal_R_facade_keramzitbeton = 29; //"навесной фасадной системы с основанием из керамзитобетона-R";
+    unsigned int thermal_R_facade_beton = 22;//"навесной фасадной системы с основанием из железобетона-R";
+    unsigned int thermal_R_wall_keramzit = 3;//"трехслойной стены по кладке из керамзитобетона-R";
+    unsigned int thermal_R_wall_beton = 10;//"трехслойной стены по монолитному железобетону-R";
+    unsigned int thermal_R_windows_balcony = 71;//"окон и балконных дверей";
+    unsigned int thermal_R_lifts = 27;//"окон лестнично-лифтовых узлов";
+    unsigned int thermal_R_doors =77; //входных дверей и ворот (раздельно) ;
+    unsigned int thermal_R_roof = 31;//"покрытий (совмещенных";
+    unsigned int thermal_R_roof_used = 51;//"эксплуатируемой кровли";
+    unsigned int thermal_R_texpodpoli = 12 ;//"перекрытий над техническими подпольями";
+    unsigned int thermal_R_proezd = 57;//"перекрытий над проездами и под эркерами";
+    unsigned int thermal_R_walls = 114; //стен (раздельно по типу конструкции)
+    unsigned int thermal_R_vitradjei = 115; //витражей
+    unsigned int thermal_R_fonarei = 116; //фонарей
+    unsigned int thermal_R_balkony_dverei = 117;//балконных дверей наружных переходов
+    unsigned int thermal_R_cherdok_perekrity = 118;//чердачных перекрытий
+    unsigned int thermal_R_cherdok_perekrity_teplyi = 119;//перекрытий "теплых" чердаков (эквивалентное)
+    unsigned int thermal_R_sten_zemly = 120; //стен в земле и пола по грунту (раздельно)
+
+    //Показатели вспомагательные other indicators
+    //unsigned int other_indicators = "Показатели вспомагательные";
+    unsigned int thermal_C_coeff = 44; //Приведенный трансмиссионный коэфициент теплопередачи здания
+    unsigned int ventilation_cycle = 56; //"Кратность воздухообмена здания за отопительный период при удельной норме воздухообмена";
+    unsigned int thermal_E_building = 50;//"Удельные бытовые тепловыделения в здании"; //thermal emissions
+    unsigned int tariff_heating = 35; //"Тарифная цена тепловой энергии для проектируемого здания";
 
 
-    //specific indicators
-    QString specific_indicators = "Удельные характеристики";
-    QString specific_Thermal_Protection = "Удельная теплозащитная характеристика здания";
-    QString specific_Ventilation_Characteristics = "Удельная вентиляционная характеристика здания";
-    QString specific_Thermal_Emission = "Удельная характеристика бытовых тепловыделений здания";
-    QString specific_Solar_Reception = "Удельная характеристика теплопоступлений в здание от солнечной радиации";
+    //Удельные характеристики specific indicators
+    //unsigned int specific_indicators = "Удельные характеристики";
+    unsigned int specific_Thermal_Protection = 34; //"Удельная теплозащитная характеристика здания";
+    unsigned int specific_Ventilation_Characteristics = 60;//"Удельная вентиляционная характеристика здания";
+    unsigned int specific_Thermal_Emission = 43;//"Удельная характеристика бытовых тепловыделений здания";
+    unsigned int specific_Solar_Reception = 69;//"Удельная характеристика теплопоступлений в здание от солнечной радиации";
 
-    //coefficients
-    QString coefficients = "Коэффициенты";
-    QString coeff_auto_reg = "Коэффициент эффективности авторегулирования";
-    QString coeff_reduction = "Коэффициент, учитывающий снижение теплопотребления жилых зданий при наличии поквартирного учета тепловой энергии на отопление";
-    QString coeff_recuperation = "Коэффициент эффективности рекуператора";
-    //QString coeff_effectiveness = "Коэффициент эффективности рекуператора";
-    QString coeff_additional = "Коэффициент учета дополнительного теплопотребления";
-	QString coeff_volume_reduction = "коэффициент снижения объема воздуха в здании, учитывающий наличие внутренних ограждающих конструкций";
+    //Коэффициенты coefficients
+    //unsigned int coefficients = "Коэффициенты";
+    unsigned int coeff_auto_reg = 18;//"Коэффициент эффективности авторегулирования";
+    unsigned int coeff_reduction = 2;//"Коэффициент, учитывающий снижение теплопотребления жилых зданий при наличии поквартирного учета тепловой энергии на отопление";
+    unsigned int coeff_recuperation = 76;//"Коэффициент эффективности рекуператора";
+    unsigned int coeff_additional = 42;//"Коэффициент учета дополнительного теплопотребления";
+    unsigned int coeff_snijenie_teplopostuplenie = 83;//"Коэффициент, учитывающий снижение использования теплопоступлений в период превышения их над теплопотерями";
 
-    //complex indicators
-    QString complex_indicators = "Комплексные показатели расхода тепловой энергии";
-    QString thermal_usage_calc = "Расчетный удельный расход тепловой энергии на отопление здания";
-    QString thermal_usage_norminal ="Нормируемый удельный расход тепловой энергии на отопление здания";
-    QString thermal_usage_class = "Класс энергетической эффективности";
+    //Комплексные показатели расхода тепловой энергии complex indicators
+    //unsigned int complex_indicators = "Комплексные показатели расхода тепловой энергии";
+    unsigned int thermal_usage_calc = 20;//"Расчетный удельный расход тепловой энергии на отопление здания";
+    unsigned int thermal_usage_norminal = 16; //"Нормируемый удельный расход тепловой энергии на отопление здания";
+    unsigned int thermal_usage_class = 63;//"Класс энергетической эффективности";
 
-    //Thermal load of building
-    QString thermal_usage_building = "Энергетические нагрузки здания";
-    QString thermal_usage_spec_heating_season = "Удельный расход тепловой энергии на отопление зданий за отопительный период";
-    QString thermal_usage_calc_heating_season = "Расход тепловой энергии на отопление зданий за отопительный период";
-    QString thermal_wastage_heating_season = "Общие теплопотери здания за отопительный период";
+    //Энергетические нагрузки здания Thermal load of building
+    //unsigned int thermal_usage_building = "Энергетические нагрузки здания";
+    unsigned int thermal_usage_spec_heating_season = 81;//"Удельный расход тепловой энергии на отопление зданий за отопительный период";
+    unsigned int thermal_usage_calc_heating_season = 41;//"Расход тепловой энергии на отопление зданий за отопительный период";
+    unsigned int thermal_wastage_heating_season = 14;//"Общие теплопотери здания за отопительный период";
 
-    //Other indicators not directly mentioned but used
-    QString  n_chisov_ventilyatsi = "число часов работы вентиляции в течение недели, равное для рассматриваемого здания";
-	QString norm_vozdukh_pronisaemost_dver = "нормируемая воздухопроницаемость дверей";
-	QString norm_vozdukh_pronisaemost_okon = "нормируемая воздухопроницаемость окон";  //Таблица 11 СниП 23-02
-	//Calaculated indicators 
+    //Дополнительные показатели Other indicators not directly mentioned but used
+    unsigned int  n_chisov_ventilyatsi = 0; //"число часов работы вентиляции в течение недели, равное для рассматриваемого здания";
+    unsigned int norm_vozdukh_pronisaemost_dver = 84; //"нормируемая воздухопроницаемость дверей";
+    unsigned int norm_vozdukh_pronisaemost_okon = 38; //"нормируемая воздухопроницаемость окон";  //Таблица 11 СниП 23-02
+    unsigned int vysota_zdaniya = 33; //"высота здания";
+    unsigned int max_wind_velocity = 40;//"максимальная скорость  ветра за январь";
+    unsigned int sontse_vert_rad_avg = 98; //средняя за отопительный период величина солнечной радиации на вертикальные поверхности при действительных условиях облачности, ориентированная по  фасадам здания
+    unsigned int coeff_volume_reduction = 17;//"коэффициент снижения объема воздуха в здании, учитывающий наличие внутренних ограждающих конструкций";
+    unsigned int sontse_hor_rad_avg = 107; //средняя за отопительный период величина солнечной радиации на горизонтальную поверхность при действительных условиях облачности
+    unsigned int coeff_proniknovenie_sontse = 108; //коэффициенты относительного проникания солнечной радиации для светопропускающих заполнений соответственно окон и зенитных фонарей, принимаемые по паспортным данным соответствующих светопропускающих изделий; при отсутствии данных следует принимать по своду правил; мансардные окна с углом наклона заполнений к горизонту 45° и более следует считать как вертикальные окна, с углом наклона менее 45° - как зенитные фонари;
+    unsigned int coeff_zatenenie = 111; //коэффициенты, учитывающие затенение светового проема соответственно окон и зенитных фонарей непрозрачными элементами заполнения, принимаемые по проектным данным; при отсутствии данных следует принимать по своду правил;
+
+    //Calaculated indicators
 
     //Показатель компактности здания
     double kompaktnost ();

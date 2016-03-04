@@ -9,12 +9,12 @@ Entity::~Entity()
 {
 
 }
-int Entity::id() const
+unsigned int Entity::id() const
 {
     return m_id;
 }
 
-void Entity::setId(int id)
+void Entity::setId(unsigned int id)
 {
     m_id = id;
 }
