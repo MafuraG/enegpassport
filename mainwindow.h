@@ -39,7 +39,7 @@ private:
     EnergyPassportModel *energyModel = nullptr ;
     QString dbname ;
 
-    static QString TVStyleSheet;
+    void loadStyleSheet(const QString &sheetName);
 };
 
 #endif // MAINWINDOW_H

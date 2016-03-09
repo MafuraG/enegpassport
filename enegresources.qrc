@@ -1,7 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>menu_structure.txt</file>
-        <file>enegdb.sqlite</file>
     </qresource>
     <qresource prefix="/icons">
         <file>basicons/file-folder.png</file>
@@ -11,5 +10,8 @@
         <file>basicons/enter.png</file>
         <file>basicons/calculator-with-six-buttons.png</file>
         <file>basicons/book-with-bookmark.png</file>
+    </qresource>
+    <qresource prefix="/qss">
+        <file>custom.qss</file>
     </qresource>
 </RCC>

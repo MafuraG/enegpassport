@@ -73,6 +73,15 @@ QVariant TreeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
+    if (role == Qt::ForegroundRole){
+        TreeItem *item = getItem(index);
+        if ( index.column() == 3 && item->data(5).toBool() == false)
+        {
+            return QVariant( QColor( Qt::red ) );
+        }
+        return QVariant( QColor( Qt::black ) );
+    }
+
     if (role != Qt::DisplayRole && role != Qt::EditRole)
         return QVariant();
 
@@ -125,8 +134,8 @@ TreeItem *TreeModel::searchTree(TreeItem *tree, const unsigned int col, QVariant
             }
         }
 
-    }else
-        return nullptr;
+    }
+    return nullptr;
 }
 
 void TreeModel::mapTreeItemPakazatel(TreeItem *tree, Pakazatel *i)

@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //open model database
     //STRICTLY for testing on Production I will use current directory with exe
-    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
-//    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+//    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
+    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
 //    if  (energyModel != nullptr){
 //        //save current energy model then close db
 //        delete energyModel;
@@ -53,7 +53,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->treeView->setColumnHidden(5,true);
     ui->treeView->setColumnHidden(6,true);
     ui->treeView->setColumnHidden(7,true);
-    ui->treeView->setStyleSheet(TVStyleSheet);
+
+    //loadStyleSheet("custom");
 
 }
 
@@ -138,7 +139,11 @@ void MainWindow::on_action_triggered()
     ui->statusBar->showMessage(tr("Структура показателей сохранена."),3000);
 }
 
-QString MainWindow::TVStyleSheet = "QTreeView::{ " +
-                                   "    alternate-background-color:#f6fafb" +
-                                   "    background: #e8f4fc" +
-                                   "}";
+void MainWindow::loadStyleSheet(const QString &sheetName)
+{
+    QFile file(":/qss/" + sheetName.toLower() + ".qss");
+    file.open(QFile::ReadOnly);
+    QString styleSheet = QString::fromLatin1(file.readAll());
+
+    qApp->setStyleSheet(styleSheet);
+}
