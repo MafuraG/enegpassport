@@ -106,6 +106,7 @@
    <addaction name="action_4"/>
    <addaction name="separator"/>
    <addaction name="action"/>
+   <addaction name="action_5"/>
   </widget>
   <action name="action_2">
    <property name="icon">
@@ -150,6 +151,21 @@
    </property>
    <property name="text">
     <string>Сохранить структуру показателей</string>
+   </property>
+  </action>
+  <action name="action_5">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="icon">
+    <iconset resource="enegresources.qrc">
+     <normaloff>:/icons/basicons/black-wrench.png</normaloff>:/icons/basicons/black-wrench.png</iconset>
+   </property>
+   <property name="text">
+    <string>Настройка</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Настройка структуры &lt;span style=&quot; font-weight:600;&quot;&gt;показателей&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //open model database
     //STRICTLY for testing on Production I will use current directory with exe
-//    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
-    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
+//    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
 //    if  (energyModel != nullptr){
 //        //save current energy model then close db
 //        delete energyModel;
@@ -48,14 +48,28 @@ MainWindow::MainWindow(QWidget *parent) :
 
     ui->tableView_2->setColumnHidden(0,true);
 
-    //Hide some columns in tree view
-    ui->treeView->setColumnHidden(4,true);
-    ui->treeView->setColumnHidden(5,true);
-    ui->treeView->setColumnHidden(6,true);
-    ui->treeView->setColumnHidden(7,true);
+    SwitchToFullTree(false);
 
     //loadStyleSheet("custom");
 
+}
+
+void MainWindow::SwitchToFullTree(const bool on){
+    if (on){
+        //show all columns
+        ui->treeView->setColumnHidden(4,false);
+        ui->treeView->setColumnHidden(5,false);
+        ui->treeView->setColumnHidden(6,false);
+        ui->treeView->setColumnHidden(7,false);
+
+    }else
+    {
+        //Hide some columns in tree view
+        ui->treeView->setColumnHidden(4,true);
+        ui->treeView->setColumnHidden(5,true);
+        ui->treeView->setColumnHidden(6,true);
+        ui->treeView->setColumnHidden(7,true);
+    }
 }
 
 MainWindow::~MainWindow()
@@ -146,4 +160,9 @@ void MainWindow::loadStyleSheet(const QString &sheetName)
     QString styleSheet = QString::fromLatin1(file.readAll());
 
     qApp->setStyleSheet(styleSheet);
+}
+
+void MainWindow::on_action_5_triggered(bool checked)
+{
+    SwitchToFullTree(checked);
 }

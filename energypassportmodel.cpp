@@ -50,7 +50,9 @@ double EnergyPassportModel::kompaktnost()
     Pakazatel *p_heated_volume = m_treeModel->getIndicatorByID(volume_heated_space);
 
     if (p_area != nullptr && p_heated_volume != nullptr && p_heated_volume->calcValue() != 0){
-        return p_area->calcValue() / p_heated_volume->calcValue();
+        double area = p_area->calcValue(); delete p_area;
+        double volume = p_heated_volume->calcValue(); delete p_heated_volume;
+        return area / volume;
     }
     return 0;
 }
@@ -128,6 +130,17 @@ double EnergyPassportModel::kratnostvozdukhobmen()
 
     double n = n_v1 + n_v2 + n_v3 ;
 
+    delete p_kol_kvartiryi ;
+    delete p_area_living_space ;
+    delete p_heated_volume ;
+    delete p_volume_reduction ;
+    delete p_area_doors ;
+    delete p_area_windows;
+    //Pakazatel * p_vysota_zdanya = m_treeModel->getIndicatorByID(vysota_zdaniya);
+    delete p_skopost_veter ;
+    delete p_coeff_rekuperator ;
+    delete p_temp_avg_ext ;
+
     return n;
 
 }
@@ -142,6 +155,7 @@ double EnergyPassportModel::udelnayateplozashita()
     double total = totalCalcTeploZashita(frags);
 
     double res = (1/V_otop) * total;
+    delete p_heated_volume;
 
     return res;
 }
@@ -160,6 +174,7 @@ double EnergyPassportModel::udelnayateplozashitaRaschet()
         res = ((4.74)/(((0.00013*GSOP) + 0.61))) * (1 /(pow(V_otop,1/3.0)));
     }
 
+    delete p_heated_volume;
     return res;
 }
 
@@ -173,6 +188,9 @@ double EnergyPassportModel::udelnayaventilyatsii()
     double n = kratnostvozdukhobmen();
 
     double K_vent = 0.28 * B_v * n * (1 - k_eff);
+
+    delete p_coeff_rekuperator;
+    delete p_volume_reduction;
     return K_vent;
 }
 
@@ -196,6 +214,12 @@ double EnergyPassportModel::udelnayabwitavayatenlovyidelenie()
 
     double K_byit = (q_byit * a_jiloi)/(V_otop * (t_int - t_ext));
 
+    delete p_bytovoi;
+    delete p_area_living_space;
+    delete p_heated_volume;
+    delete p_temp_int;
+    delete p_temp_avg_ext;
+
     return K_byit;
 }
 
@@ -214,6 +238,10 @@ double EnergyPassportModel::raschetGSOP()
     double otop_period = p_heating_period->calcValue();
     double GSOP = (temp_int - temp_ext_avg)* otop_period;
 
+    delete p_temp_avg_ext;
+    delete p_temp_int;
+    delete p_heating_period;
+
     return round(GSOP,0);
 }
 
@@ -221,13 +249,16 @@ double EnergyPassportModel::koeffOtlichieVnutrVneshTemp(const double tnorm)
 {
     Pakazatel * p_temp_int = m_treeModel->getIndicatorByID(temp_air_internal);
     Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByID(heating_period_temp_avg);
-    Pakazatel * p_temp_ext = m_treeModel->getIndicatorByID(temp_air_external);
+    //Pakazatel * p_temp_ext = m_treeModel->getIndicatorByID(temp_air_external);
 
     double temp_int = p_temp_int->calcValue();
     double temp_ext_avg = p_temp_avg_ext->calcValue();
-    double temp_ext = p_temp_ext->calcValue();
+    //double temp_ext = p_temp_ext->calcValue();
 
     double res = (tnorm - temp_ext_avg)/(temp_int - temp_ext_avg);
+    delete p_temp_avg_ext;
+    delete p_temp_int;
+    //delete p_temp_ext;
 
     return res;
 }
@@ -268,6 +299,7 @@ void EnergyPassportModel::saveTreeModeltoDB()
         Pakazatel *c = m_treeModel->getIndicatorByID(items[i]->data(7).toInt());
         if (c == nullptr) continue;
         ctx->insertPakazatel(c);
+        delete c;
     }
     ctx->endTransaction();
 }
@@ -344,10 +376,19 @@ double EnergyPassportModel::udelnayatenlopostunleniesontse()
     Pakazatel *p_area_ok7 = m_treeModel->getIndicatorByID(area_facing_W);
     Pakazatel *p_area_ok8 = m_treeModel->getIndicatorByID(area_facing_NW);
     Pakazatel * p_heated_volume = m_treeModel->getIndicatorByID(volume_heated_space);
+    Pakazatel *p_I1 = m_treeModel->getIndicatorByID(sontse_vert_rad_avg_N);
+    Pakazatel *p_I2 = m_treeModel->getIndicatorByID(sontse_vert_rad_avg_NE);
+    Pakazatel *p_I3 = m_treeModel->getIndicatorByID(sontse_vert_rad_avg_E);
+    Pakazatel *p_I4 = m_treeModel->getIndicatorByID(sontse_vert_rad_avg_SE);
+    Pakazatel *p_I5 = m_treeModel->getIndicatorByID(sontse_vert_rad_avg_S);
+    Pakazatel *p_I6 = m_treeModel->getIndicatorByID(sontse_vert_rad_avg_SW);
+    Pakazatel *p_I7 = m_treeModel->getIndicatorByID(sontse_vert_rad_avg_W);
+    Pakazatel *p_I8 = m_treeModel->getIndicatorByID(sontse_vert_rad_avg_NW);
+    Pakazatel *p_t_1ok = m_treeModel->getIndicatorByID(coeff_proniknovenie_sontse_okno);
+    Pakazatel *p_t_2ok = m_treeModel->getIndicatorByID(coeff_zatenenie_okno);
 
-
-    double t_1ok = 0.8;
-    double t_2ok = 0.74;
+    double t_1ok = p_t_1ok->calcValue();
+    double t_2ok = p_t_2ok->calcValue();
     //double t_1fon = 0;
     //double t_2fon = 0;
     double A_ok1 = p_area_ok1->calcValue();
@@ -362,20 +403,41 @@ double EnergyPassportModel::udelnayatenlopostunleniesontse()
 
 
 
-    double I_1 = 612;
-    double I_2 = 677;
-    double I_3 = 911;
-    double I_4 = 1285;
-    double I_5 = 1465;
-    double I_6 = 1285;
-    double I_7 = 911;
-    double I_8 = 677;
+    double I_1 = p_I1->calcValue();
+    double I_2 = p_I2->calcValue();
+    double I_3 = p_I3->calcValue();
+    double I_4 = p_I4->calcValue();
+    double I_5 = p_I5->calcValue();
+    double I_6 = p_I6->calcValue();
+    double I_7 = p_I7->calcValue();
+    double I_8 = p_I8->calcValue();
 
     double Q_rad = t_1ok * t_2ok * (A_ok1 * I_1 + A_ok2 * I_2 + A_ok3 * I_3 + A_ok4* I_4 +
                                   A_ok5 * I_5 + A_ok6 * I_6 + A_ok7 * I_7 + A_ok8* I_8) ;
     //+ t_1fon * t_2fon *A_fon*I_gor
     double GSOP = raschetGSOP();
     double K_rad = (11.6 * Q_rad)/(V_otop * GSOP);
+
+    delete p_area_ok1 ;
+    delete p_area_ok2 ;
+    delete p_area_ok3 ;
+    delete p_area_ok4 ;
+    delete p_area_ok5 ;
+    delete p_area_ok6 ;
+    delete p_area_ok7 ;
+    delete p_area_ok8 ;
+    delete  p_heated_volume ;
+    delete p_I1 ;
+    delete p_I2 ;
+    delete p_I3 ;
+    delete p_I4 ;
+    delete p_I5 ;
+    delete p_I6 ;
+    delete p_I7 ;
+    delete p_I8 ;
+    delete p_t_1ok ;
+    delete p_t_2ok ;
+
     return K_rad;
 }
 

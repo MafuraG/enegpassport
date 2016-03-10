@@ -32,6 +32,8 @@ private slots:
 
     void on_action_triggered();
 
+    void on_action_5_triggered(bool checked);
+
 private:
     Ui::MainWindow *ui;
     void resizeView(QAbstractItemView *view, const QString vtype, QAbstractItemModel *model);
@@ -40,6 +42,7 @@ private:
     QString dbname ;
 
     void loadStyleSheet(const QString &sheetName);
+    void SwitchToFullTree(const bool on);
 };
 
 #endif // MAINWINDOW_H
