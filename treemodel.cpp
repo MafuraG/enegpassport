@@ -323,7 +323,7 @@ void TreeModel::setIndicatorByID(Pakazatel *p)
     TreeItem * item = searchTree(rootItem,7,p->id());
     if (item != nullptr){
         item->setData(3,p->calcValue());
-        item->setData(5,p->calculated());
+        //item->setData(5,p->calculated());
     }
 }
 

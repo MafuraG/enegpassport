@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     dbctx.cpp \
     fragment.cpp \
     section.cpp \
-    entity.cpp
+    entity.cpp \
+    t1t2dialog.cpp
 
 HEADERS  += mainwindow.h \
     treeitem.h \
@@ -33,9 +34,11 @@ HEADERS  += mainwindow.h \
     dbctx.h \
     fragment.h \
     section.h \
-    entity.h
+    entity.h \
+    t1t2dialog.h
 
-FORMS    += mainwindow.ui
+FORMS    += mainwindow.ui \
+    t1t2dialog.ui
 
 RESOURCES += \
     enegresources.qrc

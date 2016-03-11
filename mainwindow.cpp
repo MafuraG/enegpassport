@@ -1,5 +1,6 @@
 #include "energypassportmodel.h"
 #include "mainwindow.h"
+#include "treeitem.h"
 #include "treemodel.h"
 #include "ui_mainwindow.h"
 #include <QMessageBox>
@@ -14,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+    t1t2_dialog = new T1T2Dialog();
 
     if (!QSqlDatabase::drivers().contains("QSQLITE"))
     {
@@ -37,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->tableView->setModel(energyModel->pakazatelModel());
     ui->tableView_2->setModel(energyModel->fragmentModel());
 
-    resizeView(ui->treeView,typeid(ui->treeView).name(),energyModel->treeModel());
+    //resizeView(ui->treeView,typeid(ui->treeView).name(),energyModel->treeModel());
 //    resizeView(ui->tableView,typeid(ui->tableView).name(),energyModel->pakazatelModel());
     resizeView(ui->tableView_2,typeid(ui->tableView_2).name(),energyModel->fragmentModel());
 
@@ -55,6 +58,11 @@ MainWindow::MainWindow(QWidget *parent) :
 }
 
 void MainWindow::SwitchToFullTree(const bool on){
+    QTreeView *tv = ui->treeView;
+    tv->setColumnWidth(0, 500);
+    tv->setColumnWidth(1, 200);
+    tv->setColumnWidth(2, 150);
+    tv->setColumnWidth(3, 150);
     if (on){
         //show all columns
         ui->treeView->setColumnHidden(4,false);
@@ -76,6 +84,7 @@ MainWindow::~MainWindow()
 {
     delete ui;
     delete energyModel;
+    delete t1t2_dialog;
 }
 
 
@@ -165,4 +174,28 @@ void MainWindow::loadStyleSheet(const QString &sheetName)
 void MainWindow::on_action_5_triggered(bool checked)
 {
     SwitchToFullTree(checked);
+}
+
+//void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)
+//{
+//    if (index.isValid()) {
+//        TreeItem *item = static_cast<TreeItem*>(index.internalPointer());
+//        TreeItem *p_item = item->parent();
+//        if (item){
+//            unsigned int id = item->data(7).toUInt();
+//            unsigned int p_id = 0;
+//            if (p_item != nullptr) p_id = p_item->data(7).toUInt();
+
+//            if (p_id == 103 || id == 103 ||
+//                    p_id == 106 || id == 106){
+
+//            }
+
+//        }
+//    }
+//}
+
+void MainWindow::on_action_open_lookup_triggered()
+{
+    t1t2_dialog->show();
 }

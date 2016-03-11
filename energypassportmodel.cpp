@@ -352,7 +352,7 @@ void EnergyPassportModel::loadModelDataFromFile(const QString fname)
                 double dcalcval = russian.toDouble(calcval,&isnum);
                 if (isnum){
                     p.setCalcValue(dcalcval);
-                    p.setCalculated(false);
+                    //p.setCalculated(false);
                     p.setId(id.toInt());
                     m_treeModel->setIndicatorByID(&p);
                 }
@@ -559,7 +559,7 @@ void EnergyPassportModel::raschetPakazateli()
     m_treeModel->setIndicatorByID(&p);
 
     //coeff snijenie isplolzovanie teplopotreblenie
-    p.setId(coeff_volume_reduction);
+    p.setId(coeff_reduction);
     p.setCalcValue(koeffsnijenieteplopastuplenia());
     m_treeModel->setIndicatorByID(&p);
 
@@ -578,7 +578,7 @@ void EnergyPassportModel::raschetPakazateli()
     p.setCalcValue(raskhodnaotopperiod());
     m_treeModel->setIndicatorByID(&p);
 
-    //obshie teplopayrtiya zdaniya
+    //obshie teplopaterya zdaniya
     p.setId(thermal_wastage_heating_season);
     p.setCalcValue(obshieteplopoteriizaperiod());
     m_treeModel->setIndicatorByID(&p);
