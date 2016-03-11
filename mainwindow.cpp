@@ -9,6 +9,7 @@
 #include <QDebug>
 
 #include <QFile>
+#include <xlsxdocument.h>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -174,6 +175,10 @@ void MainWindow::loadStyleSheet(const QString &sheetName)
 void MainWindow::on_action_5_triggered(bool checked)
 {
     SwitchToFullTree(checked);
+
+    QXlsx::Document doc(":/EnergTemplate.xlsx");
+
+    qDebug()<<doc.sheetNames()<<endl;
 }
 
 //void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)

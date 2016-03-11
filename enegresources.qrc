@@ -1,5 +1,4 @@
 <RCC>
-    <qresource prefix="/"/>
     <qresource prefix="/icons">
         <file>basicons/file-folder.png</file>
         <file>basicons/new-document-button.png</file>
@@ -10,8 +9,20 @@
         <file>basicons/book-with-bookmark.png</file>
         <file>basicons/black-wrench.png</file>
         <file>basicons/document-with-folded-corner.png</file>
+        <file>basicons/up-arrow-upload-button.png</file>
     </qresource>
     <qresource prefix="/qss">
         <file>custom.qss</file>
+    </qresource>
+    <qresource prefix="/clipimage">
+        <file>clipimage/clip_colorschememapping.xml</file>
+        <file>clipimage/clip_image001.png</file>
+        <file>clipimage/clip_image002.png</file>
+        <file>clipimage/clip_image003.png</file>
+        <file>clipimage/clip_image004.png</file>
+        <file>clipimage/clip_themedata.thmx</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>EnergTemplate.xlsx</file>
     </qresource>
 </RCC>

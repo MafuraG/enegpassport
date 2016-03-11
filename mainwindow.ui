@@ -17,6 +17,9 @@
    <layout class="QHBoxLayout" name="horizontalLayout">
     <item>
      <widget class="QTabWidget" name="tabWidget">
+      <property name="styleSheet">
+       <string notr="true">font: 75 10pt &quot;MS Shell Dlg 2&quot;;</string>
+      </property>
       <property name="currentIndex">
        <number>0</number>
       </property>
@@ -105,6 +108,7 @@
    <addaction name="action_6"/>
    <addaction name="separator"/>
    <addaction name="action_4"/>
+   <addaction name="action_export_calculation"/>
    <addaction name="separator"/>
    <addaction name="action"/>
    <addaction name="action_5"/>
@@ -181,6 +185,18 @@
    </property>
    <property name="toolTip">
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:12pt; font-weight:600;&quot;&gt;Значения коэффициентов затенения светового проема &lt;/span&gt;&lt;img src=&quot;file:///C:\Users\mafurag\AppData\Local\Temp\msohtmlclip1\01\clip_image001.gif&quot; width=&quot;32&quot; height=&quot;24&quot;/&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:12pt; font-weight:600;&quot;&gt;t&lt;/span&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:12pt; font-weight:600; vertical-align:sub;&quot;&gt;F&lt;/span&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:12pt; font-weight:600;&quot;&gt; и &lt;/span&gt;&lt;img src=&quot;file:///C:\Users\mafurag\AppData\Local\Temp\msohtmlclip1\01\clip_image002.gif&quot; width=&quot;40&quot; height=&quot;25&quot;/&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:12pt; font-weight:600;&quot;&gt; и относительного проникания солнечной радиации &lt;/span&gt;&lt;img src=&quot;file:///C:\Users\mafurag\AppData\Local\Temp\msohtmlclip1\01\clip_image003.gif&quot; width=&quot;31&quot; height=&quot;24&quot;/&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:12pt; font-weight:600;&quot;&gt; и &lt;/span&gt;&lt;img src=&quot;file:///C:\Users\mafurag\AppData\Local\Temp\msohtmlclip1\01\clip_image004.gif&quot; width=&quot;39&quot; height=&quot;25&quot;/&gt;&lt;span style=&quot; font-family:'Times New Roman,serif'; font-size:12pt; font-weight:600;&quot;&gt; соответственно окон и зенитных фонарей&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
+  <action name="action_export_calculation">
+   <property name="icon">
+    <iconset resource="enegresources.qrc">
+     <normaloff>:/icons/basicons/up-arrow-upload-button.png</normaloff>:/icons/basicons/up-arrow-upload-button.png</iconset>
+   </property>
+   <property name="text">
+    <string>Экспорт расчета</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Экспорт&lt;/span&gt; в &lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Excel&lt;/span&gt; расчётов с промежуточными результатами&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
  </widget>

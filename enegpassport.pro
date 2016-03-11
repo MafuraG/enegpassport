@@ -44,3 +44,5 @@ RESOURCES += \
     enegresources.qrc
 
 DISTFILES +=
+
+include(3rdparty/xlsx/qtxlsx.pri)

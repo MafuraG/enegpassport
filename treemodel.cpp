@@ -302,7 +302,7 @@ Pakazatel* TreeModel::getIndicatorByID(const unsigned id)
         Pakazatel *p = new Pakazatel();
         mapTreeItemPakazatel(t,p);
         //qDebug()<<"id = "<<id;
-        return p;s
+        return p;
     }
     return nullptr;
 
@@ -312,7 +312,6 @@ void TreeModel::setIndicatorByName(const QString name, Pakazatel *p)
 {
     if (m_cache_name.contains(name)){
         TreeItem * item = m_cache_name.value(name);
-
         item->setData(3,p->calcValue());
         item->setData(5,p->calculated());
     }
