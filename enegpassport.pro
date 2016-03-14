@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     fragment.cpp \
     section.cpp \
     entity.cpp \
-    t1t2dialog.cpp
+    t1t2dialog.cpp \
+    excelreport.cpp
 
 HEADERS  += mainwindow.h \
     treeitem.h \
@@ -35,7 +36,8 @@ HEADERS  += mainwindow.h \
     fragment.h \
     section.h \
     entity.h \
-    t1t2dialog.h
+    t1t2dialog.h \
+    excelreport.h
 
 FORMS    += mainwindow.ui \
     t1t2dialog.ui
