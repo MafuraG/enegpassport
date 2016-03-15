@@ -201,6 +201,7 @@ public:
     void loadModelDataFromFile(const QString fname);
 
 
+    void writeXlsReport(const QString template_, const QString output_);
 private:
     TreeModel *m_treeModel;
 

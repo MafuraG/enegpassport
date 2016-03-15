@@ -563,7 +563,7 @@ Cell *Worksheet::cellAt(const CellReference &row_column) const
  * Returns the cell at the given \a row and \a column. If there
  * is no cell at the specified position, the function returns 0.
  */
-Cell *Worksheet::cellAt(int row, int column) const
+Cell *Worksheet:: cellAt(int row, int column) const
 {
     Q_D(const Worksheet);
     if (!d->cellTable.contains(row))

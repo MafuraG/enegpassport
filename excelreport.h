@@ -2,6 +2,8 @@
 #define EXCELREPORT_H
 
 #include <QString>
+#include <QHash>
+#include <xlsxdocument.h>
 
 
 
@@ -10,7 +12,7 @@ class ExcelReport
 public:
     ExcelReport();
     ~ExcelReport();
-private:
+
    QString B_v = "val-1";
    QString rho_vent_f = "val-2";
    QString rho_vent = "val-3";
@@ -73,6 +75,8 @@ private:
    QString q_raskh_otop = "val-59";
    QString Q_year_otop = "val-60";
    QString Q_year_otop_area = "val-62";
+
+   void linkAddrrToVal(QXlsx::Worksheet *ws, QHash<QString,QString> &mapAddr );
 
 };
 

@@ -1,8 +1,11 @@
 #include "energypassportmodel.h"
+#include "excelreport.h"
 #include "treeitem.h"
 #include <QFile>
 #include <QTextStream>
 #include <QLocale>
+#include <xlsxdocument.h>
+#include <xlsxworkbook.h>
 
 
 EnergyPassportModel::EnergyPassportModel()
@@ -582,6 +585,19 @@ void EnergyPassportModel::raschetPakazateli()
     p.setId(thermal_wastage_heating_season);
     p.setCalcValue(obshieteplopoteriizaperiod());
     m_treeModel->setIndicatorByID(&p);
+
+}
+
+void EnergyPassportModel::writeXlsReport(const QString template_, const QString output_){
+
+    QHash<QString,QString> addr;
+    QXlsx::Document doc_t(template_);
+    QXlsx::Workbook *wb = doc_t.workbook();
+    QXlsx::Worksheet *ws =(QXlsx::Worksheet *) wb->sheet(0);
+
+    ExcelReport xls_utility;
+
+    xls_utility.linkAddrrToVal(ws,addr);
 
 }
 
