@@ -151,6 +151,7 @@ public:
     unsigned int coeff_proniknovenie_sontse_fon = 110;
     unsigned int coeff_zatenenie_okno = 112; //коэффициенты, учитывающие затенение светового проема соответственно окон и зенитных фонарей непрозрачными элементами заполнения, принимаемые по проектным данным; при отсутствии данных следует принимать по своду правил;
     unsigned int coeff_zatenenie_fon = 113;
+    unsigned int vysota_etazha = 128;
     //Calaculated indicators
 
     //Показатель компактности здания
