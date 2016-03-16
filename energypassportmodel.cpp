@@ -80,6 +80,13 @@ double EnergyPassportModel::kolichestvoinfiltrvozdukh(const double delta_P_dver,
     double G_inf = ( A_ok / R_ok )* (pow((delta_P_okna/10.0),0.666666667)) + (A_dv/R_dv) * sqrt(delta_P_dver/10);
     return G_inf;
 }
+double EnergyPassportModel::lventilyatsi(){
+    //Для Жилых зданий
+    Pakazatel * p_area_living_space = m_treeModel->getIndicatorByID(area_living_space);
+    double area_living = p_area_living_space->calcValue();
+    double l_vent = 3 * area_living;
+    return l_vent;
+}
 
 double EnergyPassportModel::kratnostvozdukhobmen()
 {
@@ -96,11 +103,11 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     Pakazatel * p_coeff_rekuperator = m_treeModel->getIndicatorByID(coeff_recuperation);
     Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByID(heating_period_temp_avg);
 
-    double lvent1 = 30 * p_kol_kvartiryi->calcValue() ;
-    double lvent2 = 0.35 * 3 * p_area_living_space->calcValue();
-    double lvent = 0;
-    if (lvent1 > lvent2) lvent = lvent1;
-    else lvent = lvent2;
+//    double lvent1 = 30 * p_kol_kvartiryi->calcValue() ;
+//    double lvent2 = 0.35 * 3 * p_area_living_space->calcValue();
+    double lvent = lventilyatsi();
+//    if (lvent1 > lvent2) lvent = lvent1;
+//    else lvent = lvent2;
 
     double y_ext = 12.68; //TODO Constant?
     double y_int = 12.68; //TODO Constant?
