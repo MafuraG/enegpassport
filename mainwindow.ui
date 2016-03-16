@@ -114,10 +114,11 @@
    <addaction name="action_5"/>
    <addaction name="separator"/>
    <addaction name="action_open_lookup"/>
+   <addaction name="action_sp_50_13330_2012_18_lookup"/>
   </widget>
   <action name="action_2">
    <property name="icon">
-    <iconset resource="enegresources.qrc">
+    <iconset>
      <normaloff>:/icons/basicons/file-folder.png</normaloff>:/icons/basicons/file-folder.png</iconset>
    </property>
    <property name="text">
@@ -126,7 +127,7 @@
   </action>
   <action name="action_3">
    <property name="icon">
-    <iconset resource="enegresources.qrc">
+    <iconset>
      <normaloff>:/icons/basicons/enter.png</normaloff>:/icons/basicons/enter.png</iconset>
    </property>
    <property name="text">
@@ -135,7 +136,7 @@
   </action>
   <action name="action_6">
    <property name="icon">
-    <iconset resource="enegresources.qrc">
+    <iconset>
      <normaloff>:/icons/basicons/save-icon.png</normaloff>:/icons/basicons/save-icon.png</iconset>
    </property>
    <property name="text">
@@ -144,7 +145,7 @@
   </action>
   <action name="action_4">
    <property name="icon">
-    <iconset resource="enegresources.qrc">
+    <iconset>
      <normaloff>:/icons/basicons/calculator-with-six-buttons.png</normaloff>:/icons/basicons/calculator-with-six-buttons.png</iconset>
    </property>
    <property name="text">
@@ -153,7 +154,7 @@
   </action>
   <action name="action">
    <property name="icon">
-    <iconset resource="enegresources.qrc">
+    <iconset>
      <normaloff>:/icons/basicons/book-with-bookmark.png</normaloff>:/icons/basicons/book-with-bookmark.png</iconset>
    </property>
    <property name="text">
@@ -165,7 +166,7 @@
     <bool>true</bool>
    </property>
    <property name="icon">
-    <iconset resource="enegresources.qrc">
+    <iconset>
      <normaloff>:/icons/basicons/black-wrench.png</normaloff>:/icons/basicons/black-wrench.png</iconset>
    </property>
    <property name="text">
@@ -177,7 +178,7 @@
   </action>
   <action name="action_open_lookup">
    <property name="icon">
-    <iconset resource="enegresources.qrc">
+    <iconset>
      <normaloff>:/icons/basicons/document-with-folded-corner.png</normaloff>:/icons/basicons/document-with-folded-corner.png</iconset>
    </property>
    <property name="text">
@@ -189,7 +190,7 @@
   </action>
   <action name="action_export_calculation">
    <property name="icon">
-    <iconset resource="enegresources.qrc">
+    <iconset>
      <normaloff>:/icons/basicons/up-arrow-upload-button.png</normaloff>:/icons/basicons/up-arrow-upload-button.png</iconset>
    </property>
    <property name="text">
@@ -199,13 +200,23 @@
     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Экспорт&lt;/span&gt; в &lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Excel&lt;/span&gt; расчётов с промежуточными результатами&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </action>
+  <action name="action_sp_50_13330_2012_18_lookup">
+   <property name="icon">
+    <iconset>
+     <normaloff>:/icons/basicons/new-document-button.png</normaloff>:/icons/basicons/new-document-button.png</iconset>
+   </property>
+   <property name="text">
+    <string>Просмотр СП 50.13330.2012 ст.18</string>
+   </property>
+   <property name="toolTip">
+    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;a name=&quot;sub_44&quot;/&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;Т&lt;/span&gt;&lt;span style=&quot; font-size:10pt; font-weight:600;&quot;&gt;аблица 9 - Нормируемая поперечная воздухопроницаемость ограждающих конструкций &lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <tabstops>
   <tabstop>treeView</tabstop>
  </tabstops>
- <resources>
-  <include location="enegresources.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>

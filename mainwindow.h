@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include "energypassportmodel.h"
+#include "sn50pg18dialog.h"
 #include "t1t2dialog.h"
 #include "treemodel.h"
 
@@ -39,9 +40,13 @@ private slots:
 
     void on_action_open_lookup_triggered();
 
+    void on_action_sp_50_13330_2012_18_lookup_triggered();
+
 private:
     Ui::MainWindow *ui;
     T1T2Dialog *t1t2_dialog;
+    SN50pg18dialog *sn50pg18_dialog;
+
     void resizeView(QAbstractItemView *view, const QString vtype, QAbstractItemModel *model);
 
     EnergyPassportModel *energyModel = nullptr ;
