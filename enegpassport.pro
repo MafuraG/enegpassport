@@ -25,7 +25,8 @@ SOURCES += main.cpp\
     section.cpp \
     entity.cpp \
     t1t2dialog.cpp \
-    excelreport.cpp
+    excelreport.cpp \
+    sn50pg18dialog.cpp
 
 HEADERS  += mainwindow.h \
     treeitem.h \
@@ -37,10 +38,12 @@ HEADERS  += mainwindow.h \
     section.h \
     entity.h \
     t1t2dialog.h \
-    excelreport.h
+    excelreport.h \
+    sn50pg18dialog.h
 
 FORMS    += mainwindow.ui \
-    t1t2dialog.ui
+    t1t2dialog.ui \
+    sn50pg18dialog.ui
 
 RESOURCES += \
     enegresources.qrc
