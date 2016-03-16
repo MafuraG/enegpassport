@@ -595,9 +595,9 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
     QXlsx::Workbook *wb = doc_t.workbook();
     QXlsx::Worksheet *ws =(QXlsx::Worksheet *) wb->sheet(0);
 
-    ExcelReport xls_utility;
+    ExcelReport util;
 
-    xls_utility.linkAddrrToVal(ws,addr);
+    util.linkAddrrToVal(ws,addr);
 
 }
 
