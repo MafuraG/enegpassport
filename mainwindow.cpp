@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->setupUi(this);
 
     t1t2_dialog = new T1T2Dialog();
+    sn50pg18_dialog = new SN50pg18dialog();
 
     if (!QSqlDatabase::drivers().contains("QSQLITE"))
     {
@@ -86,6 +87,7 @@ MainWindow::~MainWindow()
     delete ui;
     delete energyModel;
     delete t1t2_dialog;
+    delete sn50pg18_dialog;
 }
 
 
@@ -203,4 +205,9 @@ void MainWindow::on_action_5_triggered(bool checked)
 void MainWindow::on_action_open_lookup_triggered()
 {
     t1t2_dialog->show();
+}
+
+void MainWindow::on_action_sp_50_13330_2012_18_lookup_triggered()
+{
+    sn50pg18_dialog->show();
 }
