@@ -215,6 +215,7 @@ private:
     double totalCalcTeploZashita(QList<Entity *> fragments);
 
     double round(double n, unsigned d);
+    double lventilyatsi();
 };
 
 #endif // ENERGYPASSPORTMODEL_H
