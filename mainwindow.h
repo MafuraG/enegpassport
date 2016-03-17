@@ -1,6 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "buildingtype.h"
 #include "energypassportmodel.h"
 #include "sn50pg18dialog.h"
 #include "t1t2dialog.h"
@@ -46,6 +47,7 @@ private:
     Ui::MainWindow *ui;
     T1T2Dialog *t1t2_dialog;
     SN50pg18dialog *sn50pg18_dialog;
+    BuildingType *btype;
 
     void resizeView(QAbstractItemView *view, const QString vtype, QAbstractItemModel *model);
 

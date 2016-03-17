@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     t1t2_dialog = new T1T2Dialog();
     sn50pg18_dialog = new SN50pg18dialog();
+    btype = new BuildingType();
 
     if (!QSqlDatabase::drivers().contains("QSQLITE"))
     {
@@ -154,6 +155,7 @@ void MainWindow::on_action_6_triggered()
 
 void MainWindow::on_action_4_triggered()
 {
+    btype->show();
     energyModel->raschetPakazateli();
     ui->statusBar->showMessage(tr("Расчеты завершины."),3000);
 }
