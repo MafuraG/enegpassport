@@ -15,6 +15,14 @@ public:
     EnergyPassportModel();
     EnergyPassportModel(const QString dbname);
     ~EnergyPassportModel();
+	//общественных и административных зданий принимают условно: 
+	enum TipZdaniya{
+		type1, //для административных зданий, офисов, складов и супермаркетов - 4Ap
+		type2,//для магазинов шаговой доступности, учреждений здравоохранения, комбинатов бытового обслуживания, спортивных арен, музеев и выставок - 5Ap
+		type3,//для детских дошкольных учреждений, школ, среднетехнических и высших учебных заведений - 7Ap
+		type4,//для физкультурно-оздоровительных и культурно-досуговых комплексов, ресторанов, кафе, вокзалов 
+    };
+	
 	//Общая информация
     unsigned int data_zapolnenya  = 21 ;//"Дата заполнения (число, м-ц, год)";
     unsigned int address_zdaniya = 48 ;//"Адрес здания";
@@ -26,8 +34,7 @@ public:
     unsigned int kol_kvartir = 46; //"Количество квартир";
     unsigned int kol_zhitelej = 52; //"Расчетное количество жителей или служащих";
     unsigned int razmeshhenie_zastrojke = 36;//"Размещение в застройке";
-    unsigned int konstruktivnoe_reshenie = 6;//"Конструктивное решение";
-
+    unsigned int konstruktivnoe_reshenie = 6;//"Конструктивное решение";    
 
 	//Energy passport of building
     //unsigned int energy_passport_building = "ЭНЕРГЕТИЧЕСКИЙ ПАСПОРТ ЗДАНИЯ";
@@ -202,6 +209,9 @@ public:
 
 
     void writeXlsReport(const QString template_, const QString output_);
+    EnergyPassportModel::TipZdaniya tzdaniya() const;
+    void setTzdaniya(const EnergyPassportModel::TipZdaniya &tzdaniya);
+
 private:
     TreeModel *m_treeModel;
 
@@ -215,6 +225,9 @@ private:
     double totalCalcTeploZashita(QList<Entity *> fragments);
 
     double round(double n, unsigned d);
+
+    EnergyPassportModel::TipZdaniya m_tzdaniya;
+    double lVentilyatsi(EnergyPassportModel::TipZdaniya z_type);
 };
 
 #endif // ENERGYPASSPORTMODEL_H

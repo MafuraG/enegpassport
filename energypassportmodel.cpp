@@ -81,6 +81,21 @@ double EnergyPassportModel::kolichestvoinfiltrvozdukh(const double delta_P_dver,
     return G_inf;
 }
 
+double EnergyPassportModel::lVentilyatsi(EnergyPassportModel::TipZdaniya z_type){
+    Pakazatel * p_area_living_space = m_treeModel->getIndicatorByID(area_living_space);
+    double Ap = p_area_living_space->calcValue();
+    double lvent = 0;
+
+    switch(z_type){
+        case EnergyPassportModel::type1 : lvent = 4 * Ap;
+        case EnergyPassportModel::type2 : lvent = 5 * Ap;
+        case EnergyPassportModel::type3 : lvent = 7 * Ap;
+        case EnergyPassportModel::type4 : lvent = 10 * Ap;
+    }
+
+    return lvent;
+}
+
 double EnergyPassportModel::kratnostvozdukhobmen()
 {
     if (m_treeModel == nullptr) return 0;
@@ -95,19 +110,18 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     Pakazatel * p_skopost_veter = m_treeModel->getIndicatorByID(max_wind_velocity);
     Pakazatel * p_coeff_rekuperator = m_treeModel->getIndicatorByID(coeff_recuperation);
     Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByID(heating_period_temp_avg);
+    Pakazatel * p_Gn_ok = m_treeModel->getIndicatorByID(norm_vozdukh_pronisaemost_okon);
+    Pakazatel * p_Gn_dv = m_treeModel->getIndicatorByID(norm_vozdukh_pronisaemost_dver);
 
-    double lvent1 = 30 * p_kol_kvartiryi->calcValue() ;
-    double lvent2 = 0.35 * 3 * p_area_living_space->calcValue();
-    double lvent = 0;
-    if (lvent1 > lvent2) lvent = lvent1;
-    else lvent = lvent2;
+
+    double lvent = lVentilyatsi(m_tzdaniya);
 
     double y_ext = 12.68; //TODO Constant?
     double y_int = 12.68; //TODO Constant?
     double v = p_skopost_veter->calcValue();
     double delta_P = 10;
-    double Gn_ok = 5.00 ; //From snip
-    double Gn_dv = 7.00;
+    double Gn_ok = p_Gn_ok->calcValue() ; //From snip
+    double Gn_dv = p_Gn_dv->calcValue() ;
     double n_vent = 60; // TODO get from model or constant?
     double n_info = 168;
     double temp_ext_avg = p_temp_avg_ext->calcValue();
@@ -229,6 +243,16 @@ double EnergyPassportModel::udelnayabwitavayatenlovyidelenie()
 inline double EnergyPassportModel::round(double n , unsigned d){
     return floor( n * pow(10.  ,d) + 0.5) / pow(10.,d);
 }
+EnergyPassportModel::TipZdaniya EnergyPassportModel::tzdaniya() const
+{
+    return m_tzdaniya;
+}
+
+void EnergyPassportModel::setTzdaniya(const EnergyPassportModel::TipZdaniya &tzdaniya)
+{
+    m_tzdaniya = tzdaniya;
+}
+
 
 double EnergyPassportModel::raschetGSOP()
 {
