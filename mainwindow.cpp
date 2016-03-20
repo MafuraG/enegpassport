@@ -29,8 +29,8 @@ MainWindow::MainWindow(QWidget *parent) :
 
     //open model database
     //STRICTLY for testing on Production I will use current directory with exe
-    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
-//    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+//    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
+    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
 //    if  (energyModel != nullptr){
 //        //save current energy model then close db
 //        delete energyModel;
@@ -212,4 +212,21 @@ void MainWindow::on_action_open_lookup_triggered()
 void MainWindow::on_action_sp_50_13330_2012_18_lookup_triggered()
 {
     sn50pg18_dialog->show();
+}
+
+void MainWindow::on_action_export_calculation_triggered()
+{
+    //Export calcultion in xls file
+    //Save model data to file
+    QString selectedFilter;
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                tr("Сохранить расчета в Excel"),
+                                QDir::currentPath(),
+                                tr("Файл Excel (*.xlsx)"),
+                                &selectedFilter);
+    if (!fileName.isEmpty()){
+        QString xlsx_template = ":/EnergTemplate.xlsx";
+        energyModel->writeXlsReport(xlsx_template,fileName);
+        ui->statusBar->showMessage(tr("Файл сохранен."),3000);
+    }
 }

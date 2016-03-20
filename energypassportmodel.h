@@ -21,6 +21,8 @@ public:
 		type2,//для магазинов шаговой доступности, учреждений здравоохранения, комбинатов бытового обслуживания, спортивных арен, музеев и выставок - 5Ap
 		type3,//для детских дошкольных учреждений, школ, среднетехнических и высших учебных заведений - 7Ap
 		type4,//для физкультурно-оздоровительных и культурно-досуговых комплексов, ресторанов, кафе, вокзалов 
+        type5,//а) жилых зданий с расчетной заселенностью квартир менее 20 м  общей площади на человека
+        type6 //б) других жилых зданий -  , но не менее  ; где  - расчетное число жителей в здании;
     };
 	
 	//Общая информация
@@ -158,6 +160,7 @@ public:
     unsigned int coeff_proniknovenie_sontse_fon = 110;
     unsigned int coeff_zatenenie_okno = 112; //коэффициенты, учитывающие затенение светового проема соответственно окон и зенитных фонарей непрозрачными элементами заполнения, принимаемые по проектным данным; при отсутствии данных следует принимать по своду правил;
     unsigned int coeff_zatenenie_fon = 113;
+    unsigned int vysota_etazha = 128;
     //Calaculated indicators
 
     //Показатель компактности здания
@@ -227,7 +230,10 @@ private:
     double round(double n, unsigned d);
 
     EnergyPassportModel::TipZdaniya m_tzdaniya;
-    double lVentilyatsi(EnergyPassportModel::TipZdaniya z_type);
+    double lventilyatsi(EnergyPassportModel::TipZdaniya z_type);
+    double lventilyatsiV2();
+    double lventilyatsiV1();
+    double rhoVozdukh(QString *f);
 };
 
 #endif // ENERGYPASSPORTMODEL_H

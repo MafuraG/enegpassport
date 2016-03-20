@@ -43,6 +43,8 @@ private slots:
 
     void on_action_sp_50_13330_2012_18_lookup_triggered();
 
+    void on_action_export_calculation_triggered();
+
 private:
     Ui::MainWindow *ui;
     T1T2Dialog *t1t2_dialog;

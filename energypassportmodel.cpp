@@ -81,7 +81,33 @@ double EnergyPassportModel::kolichestvoinfiltrvozdukh(const double delta_P_dver,
     return G_inf;
 }
 
-double EnergyPassportModel::lVentilyatsi(EnergyPassportModel::TipZdaniya z_type){
+double EnergyPassportModel::lventilyatsiV1(){
+    //Для Жилых зданий
+    Pakazatel * p_area_living_space = m_treeModel->getIndicatorByID(area_living_space);
+    double area_living = p_area_living_space->calcValue();
+    double l_vent = 3 * area_living;
+    return l_vent;
+}
+
+double EnergyPassportModel::lventilyatsiV2(){
+    //b)других жилых зданий
+    Pakazatel * p_area_living_space = m_treeModel->getIndicatorByID(area_living_space);
+    Pakazatel * p_kol_zhitelej = m_treeModel->getIndicatorByID(kol_zhitelej);
+    Pakazatel * p_vysota_etazha = m_treeModel->getIndicatorByID(vysota_etazha);
+
+    double area_living = p_area_living_space->calcValue();
+    double zhitelej =p_kol_zhitelej->calcValue();
+    double H_etazha = p_vysota_etazha->calcValue();
+
+    double lvent1 = 0.35 * H_etazha * area_living;
+    double lvent2 = 30 * zhitelej;
+
+    double lvent = lvent1;
+    if (lvent < lvent2) lvent = lvent2;
+    return lvent;
+}
+
+double EnergyPassportModel::lventilyatsi(EnergyPassportModel::TipZdaniya z_type){
     Pakazatel * p_area_living_space = m_treeModel->getIndicatorByID(area_living_space);
     double Ap = p_area_living_space->calcValue();
     double lvent = 0;
@@ -91,9 +117,24 @@ double EnergyPassportModel::lVentilyatsi(EnergyPassportModel::TipZdaniya z_type)
         case EnergyPassportModel::type2 : lvent = 5 * Ap;
         case EnergyPassportModel::type3 : lvent = 7 * Ap;
         case EnergyPassportModel::type4 : lvent = 10 * Ap;
+        case EnergyPassportModel::type5 : lvent = lventilyatsiV1();
+        case EnergyPassportModel::type6 : lvent = lventilyatsiV2();
     }
 
     return lvent;
+}
+
+double EnergyPassportModel::rhoVozdukh(QString *f = nullptr){
+    Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByID(heating_period_temp_avg);
+    double temp_ext_avg = p_temp_avg_ext->calcValue();
+    double rho_vozdukh = 353/(273 + temp_ext_avg);
+
+    if (f != nullptr){
+        (*f) = "";
+        (*f) = "353 / (273 + " + QString::number(temp_ext_avg);
+    }
+    delete p_temp_avg_ext;
+    return rho_vozdukh;
 }
 
 double EnergyPassportModel::kratnostvozdukhobmen()
@@ -108,13 +149,12 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     Pakazatel * p_area_windows = m_treeModel->getIndicatorByID(area_windows_balcony);
     //Pakazatel * p_vysota_zdanya = m_treeModel->getIndicatorByID(vysota_zdaniya);
     Pakazatel * p_skopost_veter = m_treeModel->getIndicatorByID(max_wind_velocity);
-    Pakazatel * p_coeff_rekuperator = m_treeModel->getIndicatorByID(coeff_recuperation);
-    Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByID(heating_period_temp_avg);
+    Pakazatel * p_coeff_rekuperator = m_treeModel->getIndicatorByID(coeff_recuperation);    
     Pakazatel * p_Gn_ok = m_treeModel->getIndicatorByID(norm_vozdukh_pronisaemost_okon);
     Pakazatel * p_Gn_dv = m_treeModel->getIndicatorByID(norm_vozdukh_pronisaemost_dver);
 
 
-    double lvent = lVentilyatsi(m_tzdaniya);
+    double lvent = lventilyatsi(m_tzdaniya);
 
     double y_ext = 12.68; //TODO Constant?
     double y_int = 12.68; //TODO Constant?
@@ -124,8 +164,8 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     double Gn_dv = p_Gn_dv->calcValue() ;
     double n_vent = 60; // TODO get from model or constant?
     double n_info = 168;
-    double temp_ext_avg = p_temp_avg_ext->calcValue();
-    double rho_vozdukh = 353/(273 + temp_ext_avg);
+
+    double rho_vozdukh = rhoVozdukh();
     //double k_eff = p_coeff_rekuperator->calcValue();
 
     double delta_P_okna = paznostDavlenie(0.28, y_int, v, y_ext);
@@ -156,7 +196,7 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     //Pakazatel * p_vysota_zdanya = m_treeModel->getIndicatorByID(vysota_zdaniya);
     delete p_skopost_veter ;
     delete p_coeff_rekuperator ;
-    delete p_temp_avg_ext ;
+
 
     return n;
 
@@ -622,6 +662,37 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
     ExcelReport util;
 
     util.linkAddrrToVal(ws,addr);
+
+    Pakazatel *p;
+    double val;
+    QString f;
+
+    //writing values to xlsx report
+    //val-1 Bv
+    p = m_treeModel->getIndicatorByID(coeff_volume_reduction);
+    ws->write(addr[util.B_v],p->calcValue());
+    delete p;
+
+    //val-2 val-3
+    //function return formula
+    val = rhoVozdukh(&f);
+    ws->write(addr[util.rho_vent_f],f);
+    ws->write(addr[util.rho_vent],val);
+
+    //val-4
+    p = m_treeModel->getIndicatorByID(volume_heated_space);
+    ws->write(addr[util.V_otop],p->calcValue());
+    delete p;
+
+    //val-5
+    val = lventilyatsi(m_tzdaniya);
+    ws->write(addr[util.L_vent],val);
+
+    //val-6
+    val = 168;
+    ws->write(addr[util.n_inf],val);
+
+
 
 }
 

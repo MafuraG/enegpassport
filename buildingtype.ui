@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>806</width>
-    <height>230</height>
+    <width>808</width>
+    <height>326</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -23,7 +23,7 @@
       <string notr="true">font: 75 12pt &quot;MS Shell Dlg 2&quot;;</string>
      </property>
      <property name="title">
-      <string>Тип общественных и административных зданий</string>
+      <string>Тип  здании</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
@@ -91,6 +91,50 @@
         </property>
         <property name="text">
          <string>физкультурно-оздоровительные и культурно-досуговые комплекса, рестораны, кафе, вокзалы</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_5">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>800</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>жилых зданий с расчетной заселенностью квартир менее 20 м  общей площади на человека </string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QRadioButton" name="radioButton_6">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>0</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>800</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+        </property>
+        <property name="text">
+         <string>других жилых зданий </string>
         </property>
        </widget>
       </item>

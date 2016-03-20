@@ -48,3 +48,13 @@ void BuildingType::on_radioButton_4_clicked()
     //type 4
     setTipZdaniya(EnergyPassportModel::type4);
 }
+
+void BuildingType::on_radioButton_5_clicked()
+{
+    setTipZdaniya(EnergyPassportModel::type5);
+}
+
+void BuildingType::on_radioButton_6_clicked()
+{
+    setTipZdaniya(EnergyPassportModel::type6);
+}
