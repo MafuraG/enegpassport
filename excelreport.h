@@ -74,6 +74,7 @@ public:
    QString Q_year_rad = "val-58";
    QString q_raskh_otop = "val-59";
    QString Q_year_otop = "val-60";
+   QString Q_year_obshei = "val-61";
    QString Q_year_otop_area = "val-62";
 
    void linkAddrrToVal(QXlsx::Worksheet *ws, QHash<QString,QString> &mapAddr );

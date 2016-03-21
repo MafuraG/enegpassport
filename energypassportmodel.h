@@ -191,9 +191,9 @@ public:
 
     //Энергетические нагрузки здания
     //Удельный расход тепловой энергии на отопление зданий за отопительный период
-    double udelniiraskhodnaotopperiod();
+    double udelniiraskhodzaotopperiod();
     //Расход тепловой энергии на отопление зданий за отопительный период
-    double raskhodnaotopperiod();
+    double raskhodzaotopperiod();
     //Общие теплопотери здания за отопительный период
     double obshieteplopoteriizaperiod();
 
@@ -219,9 +219,9 @@ private:
     TreeModel *m_treeModel;
 
     Dbctx *ctx;
-    double paznostDavlenie(const double k, const double y_int, const double v, const double y_ext);
-    double soprativlenieVozdukhProniknovenie(const double Gn, const double delta_P_x, const double delta_P);
-    double kolichestvoinfiltrvozdukh(const double delta_P_okna, const double delta_P_dver, const double A_dv, const double R_ok, const double R_dv, const double A_ok);
+
+    double soprativlenieVozdukhProniknovenie(const double Gn = 0.0, const double delta_P_x = 0.0, const double delta_P = 0.0, QString *f = nullptr);
+    double kolichestvoinfiltrvozdukh(QString *f = nullptr);
     double raschetGSOP();
     double koeffOtlichieVnutrVneshTemp(const double tnorm);
     double subCalcTeploZashita(const double tnorm, const double area, const double rprev);
@@ -233,7 +233,17 @@ private:
     double lventilyatsi(EnergyPassportModel::TipZdaniya z_type);
     double lventilyatsiV2();
     double lventilyatsiV1();
-    double rhoVozdukh(QString *f);
+    double rhoVozdukh(QString *f = nullptr);
+    double udelniivesVozdukha(const double t);
+    double kratnostvozdukhobmen_nV1();
+    double kratnostvozdukhobmen_nV3();
+    double kratnostvozdukhobmen_nV2();
+    double lVent1();
+    double lVent2();
+    double Q_year_rad();
+    double soprativlenieVozdukhProniknovenie(const double Gn, const double delta_P_x, const double delta_P);
+
+    double raznostDavlenie(const double k, QString *f = nullptr);
 };
 
 #endif // ENERGYPASSPORTMODEL_H

@@ -308,6 +308,13 @@ Pakazatel* TreeModel::getIndicatorByID(const unsigned id)
 
 }
 
+double TreeModel::getCalcValueByID(const unsigned id){
+    Pakazatel * p = getIndicatorByID(id);
+    double calcValue = p->calcValue();
+    delete p;
+    return calcValue;
+}
+
 void TreeModel::setIndicatorByName(const QString name, Pakazatel *p)
 {
     if (m_cache_name.contains(name)){

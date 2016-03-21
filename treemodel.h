@@ -93,6 +93,7 @@ public:
     void setIndicatorByName(const QString name, Pakazatel* p);
     void getIndicators(QList<TreeItem*> &items);
     Pakazatel *getIndicatorByID(const unsigned id);
+    double getCalcValueByID(const unsigned id);
     void setIndicatorByID(Pakazatel *p);
 
 private:
@@ -113,6 +114,7 @@ private:
     static bool compareTreeItems(const TreeItem *t1, const TreeItem *t2);
     TreeItem *searchTree(TreeItem *tree, const unsigned int col, QVariant item);
     void getIndicators(QList<TreeItem*> &items, TreeItem *tree);
+
 };
 
 #endif // TREEMODEL_H
