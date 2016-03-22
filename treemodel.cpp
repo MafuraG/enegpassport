@@ -291,6 +291,7 @@ Pakazatel* TreeModel::getIndicatorByName(const QString name)
         mapTreeItemPakazatel(t,p);
         return p;
     }
+    return nullptr;
 
 }
 
@@ -310,6 +311,7 @@ Pakazatel* TreeModel::getIndicatorByID(const unsigned id)
 
 double TreeModel::getCalcValueByID(const unsigned id){
     Pakazatel * p = getIndicatorByID(id);
+
     double calcValue = p->calcValue();
     delete p;
     return calcValue;
