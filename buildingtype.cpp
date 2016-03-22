@@ -5,7 +5,7 @@ BuildingType::BuildingType(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::BuildingType)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);    
 }
 
 BuildingType::~BuildingType()
@@ -57,4 +57,9 @@ void BuildingType::on_radioButton_5_clicked()
 void BuildingType::on_radioButton_6_clicked()
 {
     setTipZdaniya(EnergyPassportModel::type6);
+}
+
+void BuildingType::on_BuildingType_finished(int result)
+{
+    emit run_calculations(m_TipZdaniya);
 }

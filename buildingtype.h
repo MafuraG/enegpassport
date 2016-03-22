@@ -19,6 +19,8 @@ public:
 
     EnergyPassportModel::TipZdaniya TipZdaniya() const;
     void setTipZdaniya(const EnergyPassportModel::TipZdaniya &TipZdaniya);
+signals:
+    run_calculations(EnergyPassportModel::TipZdaniya tzdaniya);
 
 private slots:
     void on_radioButton_clicked();
@@ -32,6 +34,8 @@ private slots:
     void on_radioButton_5_clicked();
 
     void on_radioButton_6_clicked();
+
+    void on_BuildingType_finished(int result);
 
 private:
     Ui::BuildingType *ui;

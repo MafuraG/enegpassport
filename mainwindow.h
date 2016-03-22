@@ -22,6 +22,9 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
+public slots:
+
+    void run_calculations(EnergyPassportModel::TipZdaniya tzdaniya);
 
 private slots:    
 

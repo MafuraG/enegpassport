@@ -21,6 +21,9 @@ MainWindow::MainWindow(QWidget *parent) :
     sn50pg18_dialog = new SN50pg18dialog();
     btype = new BuildingType();
 
+    //connections
+    connect(btype,&BuildingType::run_calculations,this,&MainWindow::run_calculations);
+
     if (!QSqlDatabase::drivers().contains("QSQLITE"))
     {
         QMessageBox::critical(this, "Программа не запускается", "Необходимо установить SQLITE drivers");
@@ -30,7 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
     //open model database
     //STRICTLY for testing on Production I will use current directory with exe
 //    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
-    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+//    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
+    dbname = "D:/Qtprojects/enegpassport/enegdb.sqlite";
 //    if  (energyModel != nullptr){
 //        //save current energy model then close db
 //        delete energyModel;
@@ -91,15 +95,23 @@ MainWindow::~MainWindow()
     delete sn50pg18_dialog;
 }
 
+void MainWindow::run_calculations(EnergyPassportModel::TipZdaniya tzdaniya)
+{
+    energyModel->setTzdaniya(tzdaniya);
+    energyModel->raschetPakazateli();
+    ui->statusBar->showMessage(tr("Расчеты завершины."),3000);
+}
+
 
 
 void MainWindow::on_action_2_triggered()
 {
     //load Passport data
     QString selectedFilter;
+    QString startdir;
     QString fileName = QFileDialog::getOpenFileName(this,
                                 tr("Загрузка данных"),
-                                QDir::currentPath(),
+                                startdir,
                                 tr("CSV Files (*.csv)"),
                                 &selectedFilter
                                 );
@@ -156,8 +168,6 @@ void MainWindow::on_action_6_triggered()
 void MainWindow::on_action_4_triggered()
 {
     btype->show();
-    energyModel->raschetPakazateli();
-    ui->statusBar->showMessage(tr("Расчеты завершины."),3000);
 }
 
 void MainWindow::on_action_triggered()

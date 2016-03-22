@@ -312,9 +312,14 @@ Pakazatel* TreeModel::getIndicatorByID(const unsigned id)
 double TreeModel::getCalcValueByID(const unsigned id){
     Pakazatel * p = getIndicatorByID(id);
 
-    double calcValue = p->calcValue();
-    delete p;
-    return calcValue;
+    double calcValue = 0;
+     if (p != nullptr) {
+         calcValue = p->calcValue();
+         delete p;
+         return calcValue;
+     }
+
+    return NAN;
 }
 
 void TreeModel::setIndicatorByName(const QString name, Pakazatel *p)

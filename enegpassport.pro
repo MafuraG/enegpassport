@@ -53,4 +53,4 @@ RESOURCES += \
 
 DISTFILES +=
 
-include(3rdparty/xlsx/qtxlsx.pri)
+include(3rdparty/QtXlsxWriter/src/xlsx/qtxlsx.pri)

@@ -50,18 +50,10 @@ double EnergyPassportModel::kompaktnost()
 {
     if (m_treeModel == nullptr) return 0;
 
-    Pakazatel *p_area = m_treeModel->getIndicatorByID(area_boundary);
-    Pakazatel *p_heated_volume = m_treeModel->getIndicatorByID(volume_heated_space);
+    double area = m_treeModel->getCalcValueByID(area_boundary);
+    double volume = m_treeModel->getCalcValueByID(volume_heated_space);
 
-    if (p_area != nullptr && p_heated_volume != nullptr && p_heated_volume->calcValue() != 0){
-        double area = p_area->calcValue(); delete p_area;
-        double volume = p_heated_volume->calcValue(); delete p_heated_volume;
-
-        delete p_area;
-        delete p_heated_volume;
-        return area / volume;
-    }
-    return 0;
+    return area / volume;
 }
 
 double EnergyPassportModel::soprativlenieVozdukhProniknovenie(const double Gn, const double delta_P_x, const double delta_P)
@@ -82,6 +74,7 @@ double EnergyPassportModel::soprativlenieVozdukhProniknovenie(const double Gn, c
                     russian.toString(delta_P_x,'f',2),
                     russian.toString(delta_P,'f',2)
                     );
+        (*f) = ss;
     }
     return R;
 }
@@ -132,11 +125,11 @@ double EnergyPassportModel::raznostDavlenie(const double k, QString *f)
 double EnergyPassportModel::kolichestvoinfiltrvozdukh( QString *f )
 {
     double Gn_ok = m_treeModel->getCalcValueByID(norm_vozdukh_pronisaemost_okon);
-    double p_ok = raznostDavlenie(0.55);
+    double p_ok = raznostDavlenie(0.28);
     double R_ok = soprativlenieVozdukhProniknovenie(Gn_ok,p_ok,10,f);
 
     double Gn_dv = m_treeModel->getCalcValueByID(norm_vozdukh_pronisaemost_dver);
-    double p_dv = raznostDavlenie(0.28);
+    double p_dv = raznostDavlenie(0.55);
     double R_dv = soprativlenieVozdukhProniknovenie(Gn_dv,p_dv,10,f);
 
     //A_ok and A_dv
@@ -213,16 +206,14 @@ double EnergyPassportModel::lventilyatsi(EnergyPassportModel::TipZdaniya z_type)
     return lvent;
 }
 
-double EnergyPassportModel::rhoVozdukh(QString *f){
-    Pakazatel * p_temp_avg_ext = m_treeModel->getIndicatorByID(heating_period_temp_avg);
-    double temp_ext_avg = p_temp_avg_ext->calcValue();
+double EnergyPassportModel::rhoVozdukh(QString *f){     
+    double temp_ext_avg = m_treeModel->getCalcValueByID(heating_period_temp_avg);;
     double rho_vozdukh = 353/(273 + temp_ext_avg);
 
     if (f != nullptr){
         (*f) = "";
-        (*f) = "353 / (273 + " + QString::number(temp_ext_avg);
-    }
-    delete p_temp_avg_ext;
+        (*f) = "353 / (273 + " + QString::number(temp_ext_avg) + ")";
+    }    
     return rho_vozdukh;
 }
 
@@ -618,7 +609,7 @@ void EnergyPassportModel::raschetPakazateli()
     m_treeModel->setIndicatorByID(&p);
 
     //coeff snijenie isplolzovanie teplopotreblenie
-    p.setId(coeff_reduction);
+    p.setId(coeff_snijenie_teplopostuplenie);
     p.setCalcValue(koeffsnijenieteplopastuplenia());
     m_treeModel->setIndicatorByID(&p);
 
@@ -695,12 +686,12 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
     delete p;
 
     //val-9 val-10
-    val = raznostDavlenie(0.28,&f);
+    val = raznostDavlenie(0.55,&f);
     ws->write(addr[util.Delta_P_dv_f],f);
     ws->write(addr[util.Delta_P_dv],val);
 
     //val-11 val-12
-    val = raznostDavlenie(0.55,&f);
+    val = raznostDavlenie(0.28,&f);
     ws->write(addr[util.Delta_P_ok_f],f);
     ws->write(addr[util.Delta_P_ok],val);
 
@@ -727,7 +718,7 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
     //val - 17 val- 18 okno
     p = m_treeModel->getIndicatorByID(norm_vozdukh_pronisaemost_okon);
     double Gn_ok = p->calcValue();
-    double p_ok = raznostDavlenie(0.55,&f);
+    double p_ok = raznostDavlenie(0.28);
     val = soprativlenieVozdukhProniknovenie(Gn_ok,p_ok,10,&f);
     ws->write(addr[util.R_tr_ok_f],f);
     ws->write(addr[util.R_tr_ok],val);
@@ -736,7 +727,7 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
     //val-19 val-20 dver
     p = m_treeModel->getIndicatorByID(norm_vozdukh_pronisaemost_dver);
     double Gn_dv = p->calcValue();
-    double p_dv = raznostDavlenie(0.28,&f);
+    double p_dv = raznostDavlenie(0.55);
     val = soprativlenieVozdukhProniknovenie(Gn_dv,p_dv,10,&f);
     ws->write(addr[util.R_tr_dv_f],f);
     ws->write(addr[util.R_tr_dv],val);
@@ -769,7 +760,7 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
 
     //val 28
     val = lventilyatsi(m_tzdaniya);
-    ws->write(addr[util.l_vent2],val);
+    ws->write(addr[util.l_vent_chosen],val);
 
     //val 29
     val = kratnostvozdukhobmen_nV2();
