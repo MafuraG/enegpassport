@@ -37,7 +37,7 @@ EnergyPassportModel::EnergyPassportModel(const QString dbname)
     m_treeModel = new TreeModel(headers,plist);
     //file.close();
 
-    ctx->initFragmentModel();
+    m_fragmentModel = new FragmentTableModel();
     ctx->initPakazatelModel();
 }
 
@@ -224,8 +224,25 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     double n_v1 = kratnostvozdukhobmen_nV1();
     double n_v2 = kratnostvozdukhobmen_nV2() ;
     double n_v3 = kratnostvozdukhobmen_nV3();
+    double n = 0;
 
-    double n = n_v1 + n_v2 + n_v3 ;
+    switch(z_type){
+        case EnergyPassportModel::type1 :
+        case EnergyPassportModel::type2 :
+        case EnergyPassportModel::type3 :
+    case EnergyPassportModel::type4 : {
+        n = n_v2 + n_v3;
+        break;
+    }
+    case EnergyPassportModel::type5 : {
+        n = n_v1 + n_v3;
+        break;
+    }
+    case EnergyPassportModel::type6 : {
+        n = n_v1 + n_v2 + n_v3;
+        break;
+    }
+    }
     return n;
 }
 
@@ -267,9 +284,7 @@ double EnergyPassportModel::kratnostvozdukhobmen_nV3(){
 double EnergyPassportModel::udelnayateplozashita(){
 
     double V_otop = m_treeModel->getCalcValueByID(volume_heated_space);
-    QList<Entity *> frags;
-    QStringList filter;
-    ctx->getFragments(frags,filter);
+    QList<Fragment *> frags = m_fragmentModel->getFragmentList();
     double total = totalCalcTeploZashita(frags);
 
     double res = (1/V_otop) * total;
@@ -332,6 +347,18 @@ void EnergyPassportModel::setTzdaniya(const EnergyPassportModel::TipZdaniya &tzd
     m_tzdaniya = tzdaniya;
 }
 
+void EnergyPassportModel::newFragment()
+{
+    m_fragmentModel->newFragment();
+}
+
+void EnergyPassportModel::removeFragment(int row)
+{
+    if (row >= 0 && row < m_fragmentModel->rowCount() ){
+        m_fragmentModel->removeRow(row);
+    }
+}
+
 
 double EnergyPassportModel::raschetGSOP()
 {
@@ -361,13 +388,13 @@ double EnergyPassportModel::subCalcTeploZashita(const double tnorm,const double 
     return res;
 }
 
-double EnergyPassportModel::totalCalcTeploZashita(QList<Entity *> fragments)
+double EnergyPassportModel::totalCalcTeploZashita(QList<Fragment *> fragments)
 {
     double res = 0.0,sub_res;
     double tnorm,area,rprev;
     Fragment *f;
     for(int i=0;i < fragments.count() ; i++){
-        f = (Fragment*)fragments[i];
+        f = fragments[i];
         tnorm = f->tnorm();
         area = f->area();
         rprev = f->resistance();
@@ -402,8 +429,7 @@ void EnergyPassportModel::saveModelDatatoFile(const QString fname)
 
     QFile file(fname);
     if (file.open(QIODevice::ReadWrite)){
-        QTextStream out(&file);
-        out<<Pakazatel::D_Name <<";"<<Pakazatel::D_CalcValue<<";"<<Pakazatel::D_ParentID<<"\n";
+        QTextStream out(&file);        
         for (int i = 0 ; i < list.count(); i++){
             TreeItem *t = list[i];
             //t not null(exists) and is a leaf on tree (no child elements)
@@ -413,10 +439,33 @@ void EnergyPassportModel::saveModelDatatoFile(const QString fname)
                 QString p = "--";
                 QVariant cal = t->data(3) ;
                 if (t->parent() != nullptr) p = t->parent()->data(0).toString();
-                out << val.toInt() <<";"<<russian.toString(cal.toDouble())<<"\n";
-
+                out <<Pakazatel::D_EntityName<<";"<< val.toInt() <<";"<<russian.toString(cal.toDouble())<<"\n";
             }
         }
+
+        for (int i = 0; i < m_fragmentModel->rowCount();i++){
+            out << Fragment::D_EntityName<<";";
+            Fragment *f = m_fragmentModel->getFragment(i) ;//= fmodel->data(i,j);
+            if (f == nullptr) continue;
+           for (int j= 0; j < m_fragmentModel->columnCount(); j++){
+              QVariant item = f->data(j);
+               switch(j){                
+                case 0:{
+                   //section
+                   out<<item.toString()<<";";
+                   break;
+               }
+                default:{
+                   //Tnorm / Area / Resistance
+                   out<<russian.toString(item.toDouble())<<";";
+                   break;
+               }
+               }
+           }
+           out<<"\n";
+        }
+
+
     }
 }
 
@@ -431,13 +480,15 @@ void EnergyPassportModel::loadModelDataFromFile(const QString fname)
     if (file.open(QIODevice::ReadOnly)){
         QTextStream in(&file);
         QString line;
+        //remove all present rows in fragment
+        m_fragmentModel->removeRows(0,m_fragmentModel->rowCount());
         while (!in.atEnd()){
             line = in.readLine();
             QStringList parts = line.split(QString(";"));
-            if (parts.count() > 1){
+            if (parts[0] == Pakazatel::D_EntityName){
                 Pakazatel p;
-                QString calcval = parts[1];                
-                QString id = parts[0];
+                QString calcval = parts[2];
+                QString id = parts[1];
                 bool isnum;
                 double dcalcval = russian.toDouble(calcval,&isnum);
                 if (isnum){
@@ -447,6 +498,19 @@ void EnergyPassportModel::loadModelDataFromFile(const QString fname)
                     m_treeModel->setIndicatorByID(&p);
                 }
                 else continue;                
+            }
+            if (parts[0] == Fragment::D_EntityName){
+                int last = m_fragmentModel->rowCount();
+                m_fragmentModel->insertRows(last,1);
+                Fragment *f = m_fragmentModel->getFragment(last);
+                QString section = parts[1];
+                double tnorm  = russian.toDouble(parts[2]);
+                double area = russian.toDouble(parts[3]);
+                double resistance = russian.toDouble(parts[4]);
+                f->setSection(section);
+                f->setArea(area);
+                f->setResistance(resistance);
+                f->setTnorm(tnorm);
             }
         }
     }
@@ -898,9 +962,9 @@ QSqlRelationalTableModel *EnergyPassportModel::pakazatelModel()
     return ctx->getPakazatelModel();
 }
 
-QSqlRelationalTableModel *EnergyPassportModel::fragmentModel()
+FragmentTableModel *EnergyPassportModel::fragmentModel()
 {
-    return ctx->getFragmentModel();
+    return m_fragmentModel;
 }
 
 

@@ -33,63 +33,6 @@ Dbctx::~Dbctx()
     db.close();
 }
 
-void Dbctx::getSections(QList<Entity*> &sectionList,const QStringList filter)
-{
-    sectionList.clear();
-    QStringList columns;
-    columns.append(Section::ID);
-    columns.append(Section::Name);
-
-    QString q;
-    Section *s;
-    buildSelectQuery(q,columns,Section::EntityName,filter);
-
-    if(query.exec(q))
-    {
-        while (query.next()){
-            s = new Section();
-            s->setId(query.value(Section::ID).toInt());
-            s->setName(query.value(Section::Name).toString());
-            sectionList.append(s);
-        }
-    }
-    //after getting inf from database we cache it
-    refreshCache(sectCache,sectionList);
-}
-
-void Dbctx::getFragments(QList<Entity *> &fragmentList, const QStringList filter)
-{
-    fragmentList.clear();
-    QStringList columns;
-    columns.append(Fragment::ID);
-    columns.append(Fragment::Area);
-    columns.append(Fragment::SectionID);
-    columns.append(Fragment::Tnorm);
-    columns.append(Fragment::Resistance);
-
-    QString q;
-    Fragment *f ;
-    Section *s;
-    buildSelectQuery(q,columns,Fragment::EntityName,filter);
-
-    if (query.exec(q))
-    {
-        while (query.next()){
-            f = new Fragment();
-            f->setId(query.value(Fragment::ID).toInt());
-            int s_id = query.value(Fragment::SectionID).toInt();
-            s = (Section*)getEntity(sectCache,s_id);
-            f->setSection(s);
-            f->setArea(query.value(Fragment::Area).toDouble());
-            f->setTnorm(query.value(Fragment::Tnorm).toDouble());
-            f->setResistance(query.value(Fragment::Resistance).toDouble());
-            fragmentList.append(f);
-        }
-    }
-
-    refreshCache(fragCache,fragmentList);
-}
-
 void Dbctx::getPakazateli(QList<Entity *> &pakazatelList, const QStringList filter)
 {
     pakazatelList.clear();
@@ -216,9 +159,7 @@ Entity *Dbctx::getEntity(QHash<int,Entity*> cache,const int id)
 void Dbctx::loadCache()
 {
     QList<Entity*> list;
-    QStringList f;
-    getFragments(list,f);
-    getSections(list,f);
+    QStringList f;    
     getPakazateli(list,f);
 }
 
@@ -353,25 +294,6 @@ void Dbctx::initPakazatelModel()
 }
 
 
-QSqlRelationalTableModel *Dbctx::getFragmentModel()
-{
-    return m_fragmentModel;
-}
 
-void Dbctx::initFragmentModel()
-{
-    m_fragmentModel = new QSqlRelationalTableModel();
-    m_fragmentModel->setTable(Fragment::EntityName);
 
-    m_fragmentModel->setEditStrategy(QSqlTableModel::OnManualSubmit);
-    m_fragmentModel->setRelation(1,QSqlRelation(Section::EntityName,Section::ID,Section::Name));
-
-    m_fragmentModel->setHeaderData(1,Qt::Horizontal,Fragment::D_SectionID);
-    m_fragmentModel->setHeaderData(2,Qt::Horizontal,Fragment::D_Tnorm);
-    m_fragmentModel->setHeaderData(3,Qt::Horizontal,Fragment::D_Area);
-    m_fragmentModel->setHeaderData(4,Qt::Horizontal,Fragment::D_Resistance);
-
-    m_fragmentModel->select();
-
-}
 

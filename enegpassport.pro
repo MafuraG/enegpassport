@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     t1t2dialog.cpp \
     excelreport.cpp \
     sn50pg18dialog.cpp \
-    buildingtype.cpp
+    buildingtype.cpp \
+    fragmenttablemodel.cpp
 
 HEADERS  += mainwindow.h \
     treeitem.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     t1t2dialog.h \
     excelreport.h \
     sn50pg18dialog.h \
-    buildingtype.h
+    buildingtype.h \
+    fragmenttablemodel.h
 
 FORMS    += mainwindow.ui \
     t1t2dialog.ui \

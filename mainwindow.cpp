@@ -19,10 +19,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     t1t2_dialog = new T1T2Dialog();
     sn50pg18_dialog = new SN50pg18dialog();
-    btype = new BuildingType();
-
-    //connections
-    connect(btype,&BuildingType::run_calculations,this,&MainWindow::run_calculations);
+    btype = new BuildingType();    
 
     if (!QSqlDatabase::drivers().contains("QSQLITE"))
     {
@@ -54,13 +51,15 @@ MainWindow::MainWindow(QWidget *parent) :
 //    ui->tableView->setColumnHidden(0,true);
 //    ui->tableView->setColumnHidden(3,true);
 //    ui->tableView->setColumnHidden(4,true);
-//    ui->tableView->setColumnHidden(5,true);
-
-    ui->tableView_2->setColumnHidden(0,true);
+//    ui->tableView->setColumnHidden(5,true);    
 
     SwitchToFullTree(false);
 
     //loadStyleSheet("custom");
+
+    //connections
+    connect(btype,&BuildingType::run_calculations,this,&MainWindow::run_calculations);
+    //connect(ui->tableView_2, &QTableView::doubleClicked, this, &MainWindow::on_tableView_2_doubleClicked);
 
 }
 
@@ -239,4 +238,22 @@ void MainWindow::on_action_export_calculation_triggered()
         energyModel->writeXlsReport(xlsx_template,fileName);
         ui->statusBar->showMessage(tr("Файл сохранен."),3000);
     }
+}
+
+void MainWindow::on_fragAddBtn_clicked()
+{
+    //add fragment
+    energyModel->newFragment();
+}
+
+void MainWindow::on_fragDeleteBtn_clicked()
+{
+    //remove fragment
+    energyModel->removeFragment(choosen_row);
+}
+
+void MainWindow::on_tableView_2_clicked(const QModelIndex &index)
+{
+    //choose fragment
+    if (index.isValid()) choosen_row = index.row();
 }

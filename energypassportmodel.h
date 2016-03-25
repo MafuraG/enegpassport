@@ -3,6 +3,7 @@
 
 #include "treemodel.h"
 #include "dbctx.h"
+#include "fragmenttablemodel.h"
 
 #include <QString>
 #include <QList>
@@ -204,7 +205,7 @@ public:
 
     TreeModel *treeModel() ;
     QSqlRelationalTableModel *pakazatelModel();
-    QSqlRelationalTableModel *fragmentModel();
+    FragmentTableModel *fragmentModel();
 
     void saveTreeModeltoDB();
     void saveModelDatatoFile(const QString fname);
@@ -215,8 +216,11 @@ public:
     EnergyPassportModel::TipZdaniya tzdaniya() const;
     void setTzdaniya(const EnergyPassportModel::TipZdaniya &tzdaniya);
 
+    void newFragment();
+    void removeFragment(int row);
 private:
     TreeModel *m_treeModel;
+    FragmentTableModel *m_fragmentModel;
 
     Dbctx *ctx;
 
@@ -225,7 +229,7 @@ private:
     double raschetGSOP();
     double koeffOtlichieVnutrVneshTemp(const double tnorm);
     double subCalcTeploZashita(const double tnorm, const double area, const double rprev);
-    double totalCalcTeploZashita(QList<Entity *> fragments);
+    double totalCalcTeploZashita(QList<Fragment *> fragments);
 
     double round(double n, unsigned d);
 

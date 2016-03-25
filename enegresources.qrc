@@ -10,6 +10,8 @@
         <file>basicons/black-wrench.png</file>
         <file>basicons/document-with-folded-corner.png</file>
         <file>basicons/up-arrow-upload-button.png</file>
+        <file>basicons/round-add-button.png</file>
+        <file>basicons/round-delete-button.png</file>
     </qresource>
     <qresource prefix="/qss">
         <file>custom.qss</file>

@@ -46,8 +46,13 @@ private slots:
 
     void on_action_sp_50_13330_2012_18_lookup_triggered();
 
-    void on_action_export_calculation_triggered();
+    void on_action_export_calculation_triggered();    
 
+    void on_fragAddBtn_clicked();
+
+    void on_fragDeleteBtn_clicked();
+
+    void on_tableView_2_clicked(const QModelIndex &index);
 private:
     Ui::MainWindow *ui;
     T1T2Dialog *t1t2_dialog;
@@ -61,6 +66,8 @@ private:
 
     void loadStyleSheet(const QString &sheetName);
     void SwitchToFullTree(const bool on);
+
+    int choosen_row;
 };
 
 #endif // MAINWINDOW_H

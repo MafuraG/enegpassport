@@ -20,17 +20,12 @@ public:
     Dbctx();
     Dbctx(const QString &dbtype, const QString &dbname);
     ~Dbctx();
-    void getSections(QList<Entity *> &sectionList, const QStringList filter);
-    void getFragments(QList<Entity *> &fragmentList, const QStringList filter);
+
     void getPakazateli(QList<Entity *> &pakazatelList, const QStringList filter);
 
     void insertPakazatel(const Pakazatel *p);
     Pakazatel *getPakazatelByName(const QString name);
     Pakazatel *getPakazatelByID(const unsigned int id);
-
-
-    QSqlRelationalTableModel *getFragmentModel();
-    void initFragmentModel();
 
     QSqlRelationalTableModel *getPakazatelModel();
     void initPakazatelModel();
@@ -49,12 +44,11 @@ private:
     Entity* getEntity(QHash<int, Entity *> cache, const int id);
     void loadCache();
 
-    QHash<int,Entity*> sectCache;
-    QHash<int,Entity*> fragCache;
+
     QHash<int,Entity*> pakCache;
 
     void refreshCache(QHash<int, Entity *> &cache, QList<Entity *> &list);
-    QSqlRelationalTableModel *m_fragmentModel;
+
     QSqlRelationalTableModel *m_pakazatelModel;
 
 
