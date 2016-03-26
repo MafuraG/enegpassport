@@ -226,7 +226,7 @@ double EnergyPassportModel::kratnostvozdukhobmen()
     double n_v3 = kratnostvozdukhobmen_nV3();
     double n = 0;
 
-    switch(z_type){
+    switch(m_tzdaniya){
         case EnergyPassportModel::type1 :
         case EnergyPassportModel::type2 :
         case EnergyPassportModel::type3 :
