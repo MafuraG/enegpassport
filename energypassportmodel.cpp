@@ -122,7 +122,28 @@ double EnergyPassportModel::raznostDavlenie(const double k, QString *f)
     return delta_P;
 }
 
-double EnergyPassportModel::kolichestvoinfiltrvozdukh( QString *f )
+double EnergyPassportModel::ploshadZdaniya(EnergyPassportModel::TipZdaniya z_type)
+{
+    double area = 0;
+
+    switch(z_type){
+        case EnergyPassportModel::type1 :
+        case EnergyPassportModel::type2 :
+        case EnergyPassportModel::type3 :
+    case EnergyPassportModel::type4 : {
+        area = m_treeModel->getCalcValueByID(area_common_space);
+        break;
+    }
+        case EnergyPassportModel::type5 :
+    case EnergyPassportModel::type6 : {
+        area = m_treeModel->getCalcValueByID(area_living_space);
+        break;
+    }
+    }
+    return area;
+}
+
+double EnergyPassportModel::kolichestvoinfiltrvozdukh2( QString *f )
 {
     double Gn_ok = m_treeModel->getCalcValueByID(norm_vozdukh_pronisaemost_okon);
     double p_ok = raznostDavlenie(0.28);
@@ -155,13 +176,36 @@ double EnergyPassportModel::kolichestvoinfiltrvozdukh( QString *f )
     return G_inf;
 }
 
+double EnergyPassportModel::kolichestvoinfiltrvozdukh3( QString *f )
+{
+    double p_ok = raznostDavlenie(0.28);
+    //double R_ok = soprativlenieVozdukhProniknovenie(Gn_ok,p_ok,10,f);
+    double R_ok = m_treeModel->getCalcValueByID(thermal_R_lifts);
+
+    //A_ok
+    double A_ok =  m_treeModel->getCalcValueByID(area_lift);
+
+
+    double G_inf = ( A_ok / R_ok )* (pow((p_ok/10.0),0.666666667)) ;
+
+    if (f != nullptr){
+        //Gинф = (Aок / Rок) · (DPок / 10)^2/3
+        QLocale russian;
+        QString formula = "(%0/%1 ) * (%2/10)^ (2/3) ";
+        QString ss = formula.arg(
+                    russian.toString(A_ok,'f',2),
+                    russian.toString(R_ok,'f',2),
+                    russian.toString(p_ok,'f',2));
+        (*f) = ss;
+    }
+    return G_inf;
+}
+
 double EnergyPassportModel::lventilyatsiV1(){
-    //Для Жилых зданий
-    Pakazatel * p_area_living_space = m_treeModel->getIndicatorByID(area_living_space);
-    double area_living = p_area_living_space->calcValue();
+    //Для Жилых зданий   
+    double area_living = m_treeModel->getCalcValueByID(area_living_space);
     double l_vent = 3 * area_living;
 
-    delete p_area_living_space;
     return l_vent;
 }
 
@@ -192,7 +236,7 @@ double EnergyPassportModel::lVent2(){
 
 double EnergyPassportModel::lventilyatsi(EnergyPassportModel::TipZdaniya z_type){
 
-    double Ap = m_treeModel->getCalcValueByID(area_living_space);
+    double Ap = m_treeModel->getCalcValueByID(area_common_space);
     double lvent = 0;
 
     switch(z_type){
@@ -260,9 +304,9 @@ double EnergyPassportModel::kratnostvozdukhobmen_nV2(){
     double V_otop = m_treeModel->getCalcValueByID(volume_heated_space);
     double B_v = m_treeModel->getCalcValueByID(coeff_volume_reduction);
     double rho_vozdukh = rhoVozdukh();
-    double n_vent = 60;
-    double n_info = 168;
-    double G_inf = kolichestvoinfiltrvozdukh();
+    double n_vent = m_treeModel->getCalcValueByID(n_vent2);;
+    double n_info = 168 - n_vent;
+    double G_inf = kolichestvoinfiltrvozdukh2();
 
     double lvent = lventilyatsi(m_tzdaniya);
     double n_v2 = (((lvent * n_vent)/168) + (G_inf *0.8* n_info)/(168 * rho_vozdukh))/(B_v * V_otop) ;
@@ -274,8 +318,8 @@ double EnergyPassportModel::kratnostvozdukhobmen_nV3(){
     double V_otop = m_treeModel->getCalcValueByID(volume_heated_space);
     double B_v = m_treeModel->getCalcValueByID(coeff_volume_reduction);
     double rho_vozdukh = rhoVozdukh();
-    double n_info = 168;
-    double G_inf = kolichestvoinfiltrvozdukh();
+    double n_info = m_treeModel->getCalcValueByID(n_inf3);
+    double G_inf = kolichestvoinfiltrvozdukh3();
 
     double n_v3 = ((G_inf * n_info)/(168 * rho_vozdukh))/(B_v * V_otop);
 
@@ -737,7 +781,7 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
 
     //val-6
     val = 168;
-    ws->write(addr[util.n_inf],val);
+    ws->write(addr[util.n_inf2],val);
 
     //val-7
     p = m_treeModel->getIndicatorByID(area_windows_balcony);
@@ -806,9 +850,9 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
     ws->write(addr[util.Gn_dv_naruj],val);
 
     //val 23 val 24
-    val = kolichestvoinfiltrvozdukh(&f);
-    ws->write(addr[util.G_inf_f],f);
-    ws->write(addr[util.G_inf],val);
+    val = kolichestvoinfiltrvozdukh2(&f);
+    ws->write(addr[util.G_inf2_f],f);
+    ws->write(addr[util.G_inf2],val);
 
     //val 25
     val = kratnostvozdukhobmen_nV1();
@@ -947,6 +991,18 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
     //val 62
     val = udelniiraskhodzaotopperiod();
     ws->write(addr[util.Q_year_otop_area],val);
+
+    //val 63
+    val = kolichestvoinfiltrvozdukh3();
+    ws->write(addr[util.G_inf3],val);
+
+    //val 64
+    val = m_treeModel->getCalcValueByID(n_inf3);
+    ws->write(addr[util.n_inf3],val);
+
+    //val 65
+    val = ploshadZdaniya(m_tzdaniya);
+    ws->write(addr[util.A],val);
 
     doc_t.saveAs(output_);
 

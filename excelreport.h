@@ -18,7 +18,7 @@ public:
    QString rho_vent = "val-3";
    QString V_otop = "val-4";
    QString L_vent = "val-5";
-   QString n_inf = "val-6";
+   QString n_inf2 = "val-6";
    QString A_ok = "val-7";
    QString A_dv = "val-8";
    QString Delta_P_ok_f = "val-9";
@@ -35,8 +35,8 @@ public:
    QString R_tr_dv = "val-20";
    QString Gn_dv_bal = "val-21";
    QString Gn_dv_naruj = "val-22";
-   QString G_inf_f = "val-23";
-   QString G_inf = "val-24";
+   QString G_inf2_f = "val-23";
+   QString G_inf2 = "val-24";
    QString n_vent1= "val-25";
    QString l_vent1 = "val-26";
    QString l_vent2 = "val-27";
@@ -76,6 +76,10 @@ public:
    QString Q_year_otop = "val-60";
    QString Q_year_obshei = "val-61";
    QString Q_year_otop_area = "val-62";
+
+   QString G_inf3 = "val-63";
+   QString n_inf3 = "val-64";
+   QString A = "val-65";
 
    void linkAddrrToVal(QXlsx::Worksheet *ws, QHash<QString,QString> &mapAddr );
 

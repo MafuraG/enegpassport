@@ -141,7 +141,9 @@ public:
     unsigned int thermal_wastage_heating_season = 14;//"Общие теплопотери здания за отопительный период";
 
     //Дополнительные показатели Other indicators not directly mentioned but used
-    unsigned int  n_chisov_ventilyatsi = 0; //"число часов работы вентиляции в течение недели, равное для рассматриваемого здания";
+    unsigned int  n_vent2 = 129; //"число часов работы вентиляции в течение недели, равное для рассматриваемого здания";
+    unsigned int n_inf2 = 130; //nинф2 — число часов учета инфильтрации в течение недели, равное для рассматриваемого здания
+    unsigned int n_inf3 = 131;
     unsigned int norm_vozdukh_pronisaemost_dver = 84; //"нормируемая воздухопроницаемость дверей";
     unsigned int norm_vozdukh_pronisaemost_okon = 38; //"нормируемая воздухопроницаемость окон";  //Таблица 11 СниП 23-02
     unsigned int vysota_zdaniya = 33; //"высота здания";
@@ -225,7 +227,8 @@ private:
     Dbctx *ctx;
 
     double soprativlenieVozdukhProniknovenie(const double Gn = 0.0, const double delta_P_x = 0.0, const double delta_P = 0.0, QString *f = nullptr);
-    double kolichestvoinfiltrvozdukh(QString *f = nullptr);
+    double kolichestvoinfiltrvozdukh2(QString *f = nullptr);
+    double kolichestvoinfiltrvozdukh3(QString *f = nullptr);
     double raschetGSOP();
     double koeffOtlichieVnutrVneshTemp(const double tnorm);
     double subCalcTeploZashita(const double tnorm, const double area, const double rprev);
@@ -248,6 +251,7 @@ private:
     double soprativlenieVozdukhProniknovenie(const double Gn, const double delta_P_x, const double delta_P);
 
     double raznostDavlenie(const double k, QString *f = nullptr);
+    double ploshadZdaniya(TipZdaniya z_type);
 };
 
 #endif // ENERGYPASSPORTMODEL_H
