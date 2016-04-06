@@ -23,7 +23,7 @@ void ExcelReport::linkAddrrToVal(QXlsx::Worksheet *ws, QHash<QString, QString> &
                 key = val.toString();
                 QXlsx::CellReference c(i,j);
                 QString addr = c.toString();
-                qDebug() << "Key = " << key << "; addr = " << addr;
+                //qDebug() << "Key = " << key << "; addr = " << addr;
                 mapAddr[key] = addr;                
             }
         }

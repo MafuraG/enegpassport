@@ -11,6 +11,8 @@
 #include <QFile>
 #include <xlsxdocument.h>
 
+QString MainWindow::DB_NAME = "enegdb.sqlite";
+
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
@@ -31,7 +33,10 @@ MainWindow::MainWindow(QWidget *parent) :
     //STRICTLY for testing on Production I will use current directory with exe
 //    dbname = "C:/qt_projects/enegpassport/enegdb.sqlite";
 //    dbname = "C:/Users/MafuraG/Documents/GitHub/enegpassport/enegdb.sqlite";
-    dbname = "D:/Qtprojects/enegpassport/enegdb.sqlite";
+    dbname = QString("%0/%1").arg(qApp->applicationDirPath(),MainWindow::DB_NAME);
+
+    //qDebug()<<dbname;
+
 //    if  (energyModel != nullptr){
 //        //save current energy model then close db
 //        delete energyModel;
@@ -191,7 +196,7 @@ void MainWindow::on_action_5_triggered(bool checked)
 
     QXlsx::Document doc(":/EnergTemplate.xlsx");
 
-    qDebug()<<doc.sheetNames()<<endl;
+    //qDebug()<<doc.sheetNames()<<endl;
 }
 
 //void MainWindow::on_treeView_doubleClicked(const QModelIndex &index)

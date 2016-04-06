@@ -37,8 +37,8 @@ bool FragmentTableModel::setData(const QModelIndex &index, const QVariant &value
     Fragment * item = getItem(index);
     bool result = item->setData(index.column(), value);
 
-    qDebug()<< "Setting data row:" << index.row()<<" col:"<<index.column()<<" val:"<<value
-            <<" result:"<<result<<" \n";
+//    qDebug()<< "Setting data row:" << index.row()<<" col:"<<index.column()<<" val:"<<value
+//            <<" result:"<<result<<" \n";
     if (result)
         emit dataChanged(index, index);
 
@@ -61,7 +61,7 @@ bool FragmentTableModel::insertRows(int row, int count, const QModelIndex &paren
     for(int i = row; i < row + count; i++){
         Fragment *f = new Fragment();
         m_fragmentList.insert(i,f);
-        qDebug()<<"row inserted row:"<<i;
+        //qDebug()<<"row inserted row:"<<i;
     }
     endInsertRows();
 

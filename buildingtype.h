@@ -20,7 +20,7 @@ public:
     EnergyPassportModel::TipZdaniya TipZdaniya() const;
     void setTipZdaniya(const EnergyPassportModel::TipZdaniya &TipZdaniya);
 signals:
-    run_calculations(EnergyPassportModel::TipZdaniya tzdaniya);
+    void run_calculations(EnergyPassportModel::TipZdaniya tzdaniya);
 
 private slots:
     void on_radioButton_clicked();

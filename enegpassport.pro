@@ -53,6 +53,7 @@ FORMS    += mainwindow.ui \
 RESOURCES += \
     enegresources.qrc
 
-DISTFILES +=
+DISTFILES += \
+    enegdb.sqlite
 
 include(QtXlsxWriter/src/xlsx/qtxlsx.pri)

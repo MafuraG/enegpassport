@@ -252,6 +252,7 @@ private:
 
     double raznostDavlenie(const double k, QString *f = nullptr);
     double ploshadZdaniya(TipZdaniya z_type);
+    QString d2StrRUS(const double number);
 };
 
 #endif // ENERGYPASSPORTMODEL_H

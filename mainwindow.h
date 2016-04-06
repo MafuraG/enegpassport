@@ -68,6 +68,8 @@ private:
     void SwitchToFullTree(const bool on);
 
     int choosen_row;
+
+    static QString DB_NAME;
 };
 
 #endif // MAINWINDOW_H

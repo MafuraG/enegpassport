@@ -465,6 +465,12 @@ void EnergyPassportModel::saveTreeModeltoDB()
     ctx->endTransaction();
 }
 
+QString EnergyPassportModel::d2StrRUS(const double number)
+{
+    QLocale russian(QLocale::Russian);
+    return russian.toString(number,'f',2);
+}
+
 void EnergyPassportModel::saveModelDatatoFile(const QString fname)
 {
     QList<TreeItem*> list;
@@ -754,255 +760,244 @@ void EnergyPassportModel::writeXlsReport(const QString template_, const QString 
 
     util.linkAddrrToVal(ws,addr);
 
-    Pakazatel *p;
     double val;
     QString f;
 
     //writing values to xlsx report
     //val-1 Bv
-    p = m_treeModel->getIndicatorByID(coeff_volume_reduction);
-    ws->write(addr[util.B_v],p->calcValue());
-    delete p;
+    val = m_treeModel->getCalcValueByID(coeff_volume_reduction);
+    ws->write(addr[util.B_v],d2StrRUS(val));
 
     //val-2 val-3
     //function return formula
     val = rhoVozdukh(&f);
     ws->write(addr[util.rho_vent_f],f);
-    ws->write(addr[util.rho_vent],val);
+    ws->write(addr[util.rho_vent],d2StrRUS(val));
 
     //val-4
-    p = m_treeModel->getIndicatorByID(volume_heated_space);
-    ws->write(addr[util.V_otop],p->calcValue());
-    delete p;
+    val = m_treeModel->getCalcValueByID(volume_heated_space);
+    ws->write(addr[util.V_otop],d2StrRUS(val));
 
     //val-5
     val = lventilyatsi(m_tzdaniya);
-    ws->write(addr[util.L_vent],val);
+    ws->write(addr[util.L_vent],d2StrRUS(val));
 
     //val-6
-    val = 168;
-    ws->write(addr[util.n_inf2],val);
+    val = m_treeModel->getCalcValueByID(n_inf2);
+    ws->write(addr[util.n_inf2],d2StrRUS(val));
 
     //val-7
-    p = m_treeModel->getIndicatorByID(area_windows_balcony);
-    ws->write(addr[util.A_ok],p->calcValue());
-    delete p;
+    val = m_treeModel->getCalcValueByID(area_windows_balcony);
+    ws->write(addr[util.A_ok],d2StrRUS(val));
 
     //val-8
-    p = m_treeModel->getIndicatorByID(area_doors);
-    ws->write(addr[util.A_dv],p->calcValue());
-    delete p;
+    val = m_treeModel->getCalcValueByID(area_doors);
+    ws->write(addr[util.A_dv],d2StrRUS(val));
 
     //val-9 val-10
     val = raznostDavlenie(0.55,&f);
     ws->write(addr[util.Delta_P_dv_f],f);
-    ws->write(addr[util.Delta_P_dv],val);
+    ws->write(addr[util.Delta_P_dv],d2StrRUS(val));
 
     //val-11 val-12
     val = raznostDavlenie(0.28,&f);
     ws->write(addr[util.Delta_P_ok_f],f);
-    ws->write(addr[util.Delta_P_ok],val);
+    ws->write(addr[util.Delta_P_ok],d2StrRUS(val));
 
     //val-13
-    p =  m_treeModel->getIndicatorByID(temp_air_external);
-    val = udelniivesVozdukha(p->calcValue());
-    ws->write(addr[util.gamma_naruj],val);
-    delete p;
+    val =  m_treeModel->getCalcValueByID(temp_air_external);
+    val = udelniivesVozdukha(val);
+    ws->write(addr[util.gamma_naruj],d2StrRUS(val));
 
     //val-14
-    p = m_treeModel->getIndicatorByID(temp_air_internal);
-    val = udelniivesVozdukha(p->calcValue());
-    ws->write(addr[util.gamma_vnutr],val);
-    delete p;
+    val= m_treeModel->getCalcValueByID(temp_air_internal);
+    val = udelniivesVozdukha(val);
+    ws->write(addr[util.gamma_vnutr],d2StrRUS(val));
 
     //val-15
-    p = m_treeModel->getIndicatorByID(vysota_zdaniya);
-    ws->write(addr[util.H],p->calcValue());
+    val = m_treeModel->getCalcValueByID(vysota_zdaniya);
+    ws->write(addr[util.H],d2StrRUS(val));
 
     //val-16
-    p = m_treeModel->getIndicatorByID(max_wind_velocity);
-    ws->write(addr[util.v],p->calcValue());
+    val = m_treeModel->getCalcValueByID(max_wind_velocity);
+    ws->write(addr[util.v],d2StrRUS(val));
 
-    //val - 17 val- 18 okno
-    p = m_treeModel->getIndicatorByID(norm_vozdukh_pronisaemost_okon);
-    double Gn_ok = p->calcValue();
+    //val - 17 val- 18 okno    
+    double Gn_ok = m_treeModel->getCalcValueByID(norm_vozdukh_pronisaemost_okon);
     double p_ok = raznostDavlenie(0.28);
     val = soprativlenieVozdukhProniknovenie(Gn_ok,p_ok,10,&f);
     ws->write(addr[util.R_tr_ok_f],f);
-    ws->write(addr[util.R_tr_ok],val);
-    delete p;
+    ws->write(addr[util.R_tr_ok],d2StrRUS(val));
 
-    //val-19 val-20 dver
-    p = m_treeModel->getIndicatorByID(norm_vozdukh_pronisaemost_dver);
-    double Gn_dv = p->calcValue();
+    //val-19 val-20 dver   
+    double Gn_dv = m_treeModel->getCalcValueByID(norm_vozdukh_pronisaemost_dver);
     double p_dv = raznostDavlenie(0.55);
     val = soprativlenieVozdukhProniknovenie(Gn_dv,p_dv,10,&f);
     ws->write(addr[util.R_tr_dv_f],f);
-    ws->write(addr[util.R_tr_dv],val);
-    delete p;
+    ws->write(addr[util.R_tr_dv],d2StrRUS(val));
 
     //val 21
     val = Gn_ok;
-    ws->write(addr[util.Gn_dv_bal],val);
+    ws->write(addr[util.Gn_dv_bal],d2StrRUS(val));
 
     //val 22
     val = Gn_dv;
-    ws->write(addr[util.Gn_dv_naruj],val);
+    ws->write(addr[util.Gn_dv_naruj],d2StrRUS(val));
 
     //val 23 val 24
     val = kolichestvoinfiltrvozdukh2(&f);
     ws->write(addr[util.G_inf2_f],f);
-    ws->write(addr[util.G_inf2],val);
+    ws->write(addr[util.G_inf2],d2StrRUS(val));
 
     //val 25
     val = kratnostvozdukhobmen_nV1();
-    ws->write(addr[util.n_vent1],val);
+    ws->write(addr[util.n_vent1],d2StrRUS(val));
 
     //val 26
     val = lVent1();
-    ws->write(addr[util.l_vent1],val);
+    ws->write(addr[util.l_vent1],d2StrRUS(val));
 
     //val 27
     val = lVent2();
-    ws->write(addr[util.l_vent2],val);
+    ws->write(addr[util.l_vent2],d2StrRUS(val));
 
     //val 28
     val = lventilyatsi(m_tzdaniya);
-    ws->write(addr[util.l_vent_chosen],val);
+    ws->write(addr[util.l_vent_chosen],d2StrRUS(val));
 
     //val 29
     val = kratnostvozdukhobmen_nV2();
-    ws->write(addr[util.n_vent2],val);
+    ws->write(addr[util.n_vent2],d2StrRUS(val));
 
     //val 30
     val = kratnostvozdukhobmen_nV3();
-    ws->write(addr[util.n_vent3],val);
+    ws->write(addr[util.n_vent3],d2StrRUS(val));
 
     //val 31
     val = kratnostvozdukhobmen();
-    ws->write(addr[util.n_vent],val);
+    ws->write(addr[util.n_vent],d2StrRUS(val));
 
     //val 32
     val = udelnayaventilyatsii();
-    ws->write(addr[util.K_vent],val);
+    ws->write(addr[util.K_vent],d2StrRUS(val));
 
     //val 33
     val = koeffsnijenieteplopastuplenia();
-    ws->write(addr[util.coeff_v],val);
+    ws->write(addr[util.coeff_v],d2StrRUS(val));
 
     //val 34
     val = m_treeModel->getCalcValueByID(coeff_auto_reg);
-    ws->write(addr[util.coeff_sigma],val);
+    ws->write(addr[util.coeff_sigma],d2StrRUS(val));
 
     //val 35
     val = m_treeModel->getCalcValueByID(coeff_additional);
-    ws->write(addr[util.coeff_Bh],val);
+    ws->write(addr[util.coeff_Bh],d2StrRUS(val));
 
     //val 36
     val = udelnayabwitavayatenlovyidelenie();
-    ws->write(addr[util.K_bwit],val);
+    ws->write(addr[util.K_bwit],d2StrRUS(val));
 
     //val 37
     val = udelnayatenlopostunleniesontse();
-    ws->write(addr[util.K_rad],val);
+    ws->write(addr[util.K_rad],d2StrRUS(val));
 
     //val 38
     val = m_treeModel->getCalcValueByID(coeff_proniknovenie_sontse_okno);
-    ws->write(addr[util.t1_ok],val);
+    ws->write(addr[util.t1_ok],d2StrRUS(val));
 
     //val 39
     val = m_treeModel->getCalcValueByID(coeff_proniknovenie_sontse_fon);
-    ws->write(addr[util.t1_fon],val);
+    ws->write(addr[util.t1_fon],d2StrRUS(val));
 
     //val 40
     val = m_treeModel->getCalcValueByID(coeff_zatenenie_okno);
-    ws->write(addr[util.t2_ok],val);
+    ws->write(addr[util.t2_ok],d2StrRUS(val));
 
     //val 41
     val = m_treeModel->getCalcValueByID(coeff_zatenenie_fon);
-    ws->write(addr[util.t2_fon],val);
+    ws->write(addr[util.t2_fon],d2StrRUS(val));
 
     //val 42 - 49
     val = m_treeModel->getCalcValueByID(area_facing_N);
-    ws->write(addr[util.A_ok1],val);
+    ws->write(addr[util.A_ok1],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(area_facing_NE);
-    ws->write(addr[util.A_ok2],val);
+    ws->write(addr[util.A_ok2],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(area_facing_E);
-    ws->write(addr[util.A_ok3],val);
+    ws->write(addr[util.A_ok3],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(area_facing_SE);
-    ws->write(addr[util.A_ok4],val);
+    ws->write(addr[util.A_ok4],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(area_facing_S);
-    ws->write(addr[util.A_ok5],val);
+    ws->write(addr[util.A_ok5],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(area_facing_SW);
-    ws->write(addr[util.A_ok6],val);
+    ws->write(addr[util.A_ok6],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(area_facing_W);
-    ws->write(addr[util.A_ok7],val);
+    ws->write(addr[util.A_ok7],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(area_facing_NW);
-    ws->write(addr[util.A_ok8],val);
+    ws->write(addr[util.A_ok8],d2StrRUS(val));
 
     //val 50 - 57
     val = m_treeModel->getCalcValueByID(sontse_vert_rad_avg_N);
-    ws->write(addr[util.I1],val);
+    ws->write(addr[util.I1],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(sontse_vert_rad_avg_NE);
-    ws->write(addr[util.I2],val);
+    ws->write(addr[util.I2],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(sontse_vert_rad_avg_E);
-    ws->write(addr[util.I3],val);
+    ws->write(addr[util.I3],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(sontse_vert_rad_avg_SE);
-    ws->write(addr[util.I4],val);
+    ws->write(addr[util.I4],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(sontse_vert_rad_avg_S);
-    ws->write(addr[util.I5],val);
+    ws->write(addr[util.I5],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(sontse_vert_rad_avg_SW);
-    ws->write(addr[util.I6],val);
+    ws->write(addr[util.I6],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(sontse_vert_rad_avg_W);
-    ws->write(addr[util.I7],val);
+    ws->write(addr[util.I7],d2StrRUS(val));
 
     val = m_treeModel->getCalcValueByID(sontse_vert_rad_avg_NW);
-    ws->write(addr[util.I8],val);
+    ws->write(addr[util.I8],d2StrRUS(val));
 
     //val 58
     val = Q_year_rad();
-    ws->write(addr[util.Q_year_rad],val);
+    ws->write(addr[util.Q_year_rad],d2StrRUS(val));
 
     //val 59
     val = udelniraskhodteplovoienergii();
-    ws->write(addr[util.q_raskh_otop],val);
+    ws->write(addr[util.q_raskh_otop],d2StrRUS(val));
 
     //val 60
     val = raskhodzaotopperiod();
-    ws->write(addr[util.Q_year_otop],val);
+    ws->write(addr[util.Q_year_otop],d2StrRUS(val));
 
     //val 61
     val = obshieteplopoteriizaperiod();
-    ws->write(addr[util.Q_year_obshei],val);
+    ws->write(addr[util.Q_year_obshei],d2StrRUS(val));
 
     //val 62
     val = udelniiraskhodzaotopperiod();
-    ws->write(addr[util.Q_year_otop_area],val);
+    ws->write(addr[util.Q_year_otop_area],d2StrRUS(val));
 
     //val 63
     val = kolichestvoinfiltrvozdukh3();
-    ws->write(addr[util.G_inf3],val);
+    ws->write(addr[util.G_inf3],d2StrRUS(val));
 
     //val 64
     val = m_treeModel->getCalcValueByID(n_inf3);
-    ws->write(addr[util.n_inf3],val);
+    ws->write(addr[util.n_inf3],d2StrRUS(val));
 
     //val 65
     val = ploshadZdaniya(m_tzdaniya);
-    ws->write(addr[util.A],val);
+    ws->write(addr[util.A],d2StrRUS(val));
 
     doc_t.saveAs(output_);
 
